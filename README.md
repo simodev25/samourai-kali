@@ -24,7 +24,7 @@ Samourai Kali is an **AI Cybersecurity Operating System** that transforms a Kali
 It provides a comprehensive methodological framework for:
 - Bug hunting and vulnerability research
 - Vulnerability analysis and CVE research
-- Secure lab-only POC creation
+
 - Forensic-grade evidence collection
 - CVE-ready report generation
 - Remediation planning

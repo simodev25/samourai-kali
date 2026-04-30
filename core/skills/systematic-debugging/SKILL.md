@@ -209,9 +209,9 @@ If you catch yourself thinking:
 
 ## Supporting Techniques
 
-- `root-cause-tracing.md` — trace source condition through boundaries
-- `defense-in-depth.md` — analyze control layering after root-cause discovery
-- `condition-based-waiting.md` — avoid timing assumptions in investigations
+- **Root-cause tracing:** trace source condition through each trust boundary until the originating control failure is identified.
+- **Defense-in-depth analysis:** after root-cause discovery, evaluate which preventive/detective controls failed, were bypassed, or were absent.
+- **Condition-based waiting:** avoid timing assumptions; wait on explicit system conditions (logs, states, events) before concluding exploit success/failure.
 
 **Related skills:**
 - `test-driven-development` — reproducibility discipline for POC/test harness

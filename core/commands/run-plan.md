@@ -1,7 +1,6 @@
 ---
 #
 description: Execute investigation phases for a tracked finding.
-agent: fixer
 subtask: true
 ---
 
@@ -95,7 +94,7 @@ For each selected phase:
 2. For each pending task:
    a. Form internal contract (goal, inputs, outputs, success checks).
    b. Discover relevant files and assets in: src/, app/, packages/, modules/, lib/, services/, infra/, config/, scripts/, tests/, logs/, docs/.
-   c. Execute minimal investigation actions; avoid unrelated refactors.
+   c. Delegate and execute minimal investigation actions via `<delegation_rules>`; avoid unrelated refactors.
    d. Add/adjust validation checks when investigative behavior changes.
    e. Run quick validations (targeted scans/checks/test subset).
    f. Mark task completed with concise evidence note.
@@ -116,18 +115,27 @@ Preferred investigation phases:
 - evidence
 - reporting
 
-If plan includes additional phases (e.g., remediation validation), execute them with the same checkpoint logic.
+If plan includes additional phases (e.g., remediation implementation/validation), execute them with the same checkpoint logic and route tasks via `<delegation_rules>`.
 </phase_model>
 
 <delegation_rules>
 Delegate by task type:
-- reconnaissance / scanning-heavy → `@runner`
-- vulnerability validation / exploit checks → `@fixer`
-- finding review alignment → `@reviewer`
-- documentation/report-only updates → `@doc-syncer`
-- commits only → `@committer`
+- Reconnaissance / attack surface mapping → `@attack-surface-agent` (fallback: `@runner`)
+- Vulnerability discovery / bug hunting → `@bug-hunting-agent` (fallback: `@runner`)
+- Deep vulnerability analysis → `@vulnerability-analysis-agent`
+- CVE correlation / intelligence → `@cve-intelligence-agent` (fallback: `@external-researcher`)
+- Exploitability scoring (CVSS/EPSS) → `@exploitability-agent`
+- POC development (lab-only) → `@safe-poc-agent`
+- Evidence collection & hashing → `@evidence-agent`
+- CVE report generation → `@cve-report-agent`
+- Remediation & fix verification → `@remediation-agent` (fallback: `@fixer`)
+- Command execution (scans, tools) → `@runner`
+- Peer review of findings → `@reviewer`
+- Documentation / archiving → `@doc-syncer`
+- Commits only → `@committer`
 
 Do not delegate investigation execution to `@coder`.
+For remediation implementation, delegate to `@remediation-agent` (not `@coder`).
 </delegation_rules>
 
 <commit_rules>
@@ -175,7 +183,7 @@ No file edits, no commits. Output structured summary: starting phase, phasesToRu
 8. If dryRun: output summary; STOP.
 9. Read project profile per <project_profile_activation> if present.
 10. Detect evidence/scan gate commands (cache).
-11. Loop phases applying phase_execution_rules & partial_failure_policy.
+11. Loop phases applying phase_execution_rules, delegation_rules & partial_failure_policy.
 12. Perform commits per policy.
 13. Summarize; if askForReview=true and remaining phases exist → pause.
 14. If all phases complete → final summary.

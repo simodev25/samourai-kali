@@ -599,11 +599,11 @@ artifacts: []
 <model id="gpt-5.2">
 <primary_format>Markdown</primary_format>
 <secondary_format>JSON</secondary_format>
-<best_for>Real-time chat, token-constrained tasks, rapid iteration, user-facing apps</best_for>
+<best_for>Real-time chat, token-constrained tasks, rapid iteration, user-facing apps, code generation requiring speed, multi-tool sequential workflows, deterministic format-compliant classification, and cost-optimized workflows</best_for>
 <performance>92/100</performance>
-<cost>$$</cost>
-<speed>fastest (187 tok/s)</speed>
-<notes>Place output verbosity at beginning; pin reasoning_effort explicitly; 34-38% fewer tokens than JSON</notes>
+<cost>$-$$</cost>
+<speed>fastest (187 tok/s; up to 4x faster than competitors)</speed>
+<notes>Place output verbosity at beginning; pin reasoning_effort explicitly; 34-38% fewer tokens than JSON. Prefer Markdown for speed/chat and JSON for deterministic schema-constrained outputs. Detailed system prompt is critical; place reusable instructions at prompt start for cache hits. CONTEXT THEN INSTRUCTIONS order matters; format specification mandatory; use CSV for batch processing when applicable.</notes>
 </model>
 <model id="grok-4-1">
 <primary_format>XML</primary_format>
@@ -612,23 +612,6 @@ artifacts: []
 <performance>92/100 (thinking), Elo 1483 highest LMArena</performance>
 <cost>$$</cost>
 <notes>Break tasks into 4-6 numbered phases; native tool awareness pre-wired</notes>
-</model>
-<model id="gpt-5.2">
-<primary_format>JSON</primary_format>
-<secondary_format>Markdown</secondary_format>
-<best_for>Code generation requiring speed, multi-tool sequential workflows, cache optimization</best_for>
-<performance>92/100 tool use</performance>
-<cost>$</cost>
-<speed>4x faster than competitors</speed>
-<notes>Detailed system prompt is critical; place reusable instructions at prompt start for cache hits</notes>
-</model>
-<model id="gpt-5.2">
-<primary_format>JSON</primary_format>
-<secondary_format>CSV</secondary_format>
-<best_for>Deterministic output, format compliance, cost-optimized workflows, classification</best_for>
-<performance>88/100</performance>
-<cost>$ (94% cheaper than Claude Opus)</cost>
-<notes>CONTEXT THEN INSTRUCTIONS order matters; format specification mandatory; use CSV for batch processing</notes>
 </model>
 <model id="gemini-3.0-pro">
 <primary_format>Markdown</primary_format>

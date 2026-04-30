@@ -66,6 +66,43 @@ gobuster dir -u https://target.example.com -w /usr/share/wordlists/dirb/common.t
 nikto -h https://target.example.com -output nikto.txt
 ```
 
+## Output Interpretation
+
+### nmap output
+- Key indicators: `open` ports, detected `service/version`, and `OS details` confidence.
+- Example output snippet (1-3 lines)
+  ```text
+  80/tcp open  http  Apache httpd 2.4.57
+  OS details: Linux 5.4 - 5.15
+  ```
+- What it means: exposed service is reachable; version and OS hints drive vulnerability matching and targeting confidence.
+
+### amass output
+- Key indicators: discovered subdomains, ASN/IP linkage, and repeated assets across sources.
+- Example output snippet (1-3 lines)
+  ```text
+  api.example.com
+  dev-admin.example.com
+  ```
+- What it means: each new hostname is a potential entry point; prioritize internet-facing and auth-related subdomains first.
+
+### whatweb output
+- Key indicators: web server, framework/CMS, plugin/module fingerprints.
+- Example output snippet (1-3 lines)
+  ```text
+  https://target [200 OK] Apache[2.4.57], PHP[8.1.2], WordPress[6.4]
+  ```
+- What it means: technology stack narrows exploit classes (e.g., CMS/plugin CVEs) and guides focused testing.
+
+### gobuster output
+- Key indicators: discovered paths with status codes (200/301/403) and endpoint naming patterns.
+- Example output snippet (1-3 lines)
+  ```text
+  /admin (Status: 302)
+  /backup (Status: 200)
+  ```
+- What it means: 200/302 paths are actionable attack surface; 403 still proves resource existence and access-control target.
+
 ## Verification
 - [ ] Scope authorization is present, current, and explicitly covers all tested assets
 - [ ] Passive recon artifacts are captured and referenced
@@ -85,9 +122,3 @@ nikto -h https://target.example.com -output nikto.txt
 - Failing to de-duplicate results, causing blind spots and noisy prioritization
 - Assigning risk labels without consistent criteria or evidence
 
-## Safety Guardrails
-- LAB-ONLY unless a signed authorization explicitly permits the target.
-- NO WEAPONIZATION: do not develop or deploy offensive payloads in this phase.
-- Respect provider and customer terms of engagement, including prohibited techniques.
-- Minimize operational impact with conservative scan rates and retry settings.
-- Stop and escalate any accidental sensitive data exposure to authorized stakeholders only.

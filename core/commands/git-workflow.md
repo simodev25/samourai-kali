@@ -5,11 +5,11 @@ subtask: true
 ---
 
 <purpose>
-Orchestrer le pipeline git complet depuis les changements non committés jusqu'à la PR créée, avec checkpoints utilisateur bloquants avant chaque opération irréversible (commit, push, PR).
+Orchestrate the complete git pipeline from uncommitted changes to created PR, with blocking user checkpoints before each irreversible operation (commit, push, PR).
 
-Complémente /commit et /pr en ajoutant : pre-commit review via @code-reviewer, validation des tests, génération de commit message Conventional Commits, et description PR enrichie.
+Complements /commit and /pr by adding: pre-commit review via @code-reviewer, test validation, Conventional Commits message generation, and enriched PR description.
 
-Utilisé en fin de delivery après /review et /check, comme alternative plus structurée à /commit + /pr séquentiels.
+Used at the end of delivery after /review and /check, as a more structured alternative to sequential /commit + /pr.
 </purpose>
 
 <command>
@@ -24,20 +24,20 @@ Examples:
 </command>
 
 <inputs>
-  <item>target-branch='$1' — Branche cible pour la PR (défaut: main). REQUIRED.</item>
-  <item>flags='$ARGUMENTS' — Flags optionnels.</item>
+  <item>target-branch='$1' — Target branch for the PR (default: main). REQUIRED.</item>
+  <item>flags='$ARGUMENTS' — Optional flags.</item>
 </inputs>
 
 <flags>
-- `--skip-tests` : passer la phase de validation des tests (Phase 2)
-- `--draft-pr` : créer la PR en mode draft
-- `--no-push` : s'arrêter après le commit, ne pas pousser ni créer de PR
-- `--conventional` : forcer le format Conventional Commits (activé par défaut)
-- `--dry-run` : simuler sans exécuter d'opérations git
+- `--skip-tests` : skip the test validation phase (Phase 2)
+- `--draft-pr` : create the PR in draft mode
+- `--no-push` : stop after commit, do not push or create a PR
+- `--conventional` : enforce Conventional Commits format (enabled by default)
+- `--dry-run` : simulate without executing git operations
 </flags>
 
 <session_state>
-Maintenir l'état dans `.git-workflow/state.json` pour permettre la reprise :
+Maintain state in `.git-workflow/state.json` to enable resuming:
 ```json
 {
   "target_branch": "main",
@@ -48,14 +48,14 @@ Maintenir l'état dans `.git-workflow/state.json` pour permettre la reprise :
   "started_at": "ISO_TIMESTAMP"
 }
 ```
-Au démarrage : vérifier si une session existante est en cours et proposer reprise ou restart.
+At startup: check whether an existing session is in progress and offer resume or restart.
 </session_state>
 
 <pipeline>
 
-## Phase 1 — Pré-commit review
+## Phase 1 — Pre-commit review
 
-Collecter le contexte git :
+Collect git context:
 ```bash
 git status
 git diff --stat
@@ -64,41 +64,41 @@ git log --oneline -10
 git branch --show-current
 ```
 
-Déléguer à @code-reviewer pour analyser les changements :
-- Sécurité, correctness, performance, testing gaps
-- Produire rapport dans `.git-workflow/01-code-review.md`
+Delegate to @code-reviewer to analyze changes:
+- Security, correctness, performance, testing gaps
+- Produce report in `.git-workflow/01-code-review.md`
 
-### CHECKPOINT 1 — Approbation requise
+### CHECKPOINT 1 — Approval required
 ```
-Pré-commit review terminé.
-Issues trouvés : [X critical, Y major, Z minor, W nit]
+Pre-commit review completed.
+Issues found: [X critical, Y major, Z minor, W nit]
 
-1. Approuver → continuer vers les tests
-2. Corriger d'abord → adresser les issues critical/major
-3. Pause → sauvegarder et arrêter
+1. Approve → continue to tests
+2. Fix first → address critical/major issues
+3. Pause → save and stop
 ```
-Ne pas continuer sans approbation explicite.
+Do not continue without explicit approval.
 
 ---
 
 ## Phase 2 — Tests & validation
 
-Si `--skip-tests` : documenter le skip, passer à Phase 3.
+If `--skip-tests`: document the skip, move to Phase 3.
 
-Détecter et exécuter les tests du projet (selon conventions repo) :
-- Tests unitaires
-- Tests d'intégration
-- Vérification de couverture si disponible
+Detect and run project tests (according to repo conventions):
+- Unit tests
+- Integration tests
+- Coverage check if available
 
-Produire rapport dans `.git-workflow/03-test-results.md`.
+Produce report in `.git-workflow/03-test-results.md`.
 
-### CHECKPOINT 2 — Approbation requise
+### CHECKPOINT 2 — Approval required
 ```
-Tests terminés.
-Résultats : [X passed, Y failed, Z skipped]
+Tests completed.
+Results: [X passed, Y failed, Z skipped]
 
-1. Approuver → générer commit message
-2. Corriger les tests en échec
+1. Approve → generate commit message
+2. Fix failing tests
 3. Pause
 ```
 
@@ -106,104 +106,104 @@ Résultats : [X passed, Y failed, Z skipped]
 
 ## Phase 3 — Commit message (Conventional Commits)
 
-Analyser les changements et catégoriser :
+Analyze changes and categorize:
 
 **Types** : `feat` | `fix` | `docs` | `style` | `refactor` | `perf` | `test` | `build` | `ci` | `chore` | `revert`
 
-Format strict :
+Strict format:
 ```
-<type>(<scope>): <subject>    ← 72 chars max, impératif, pas de point final
+<type>(<scope>): <subject>    ← 72 chars max, imperative, no final period
 <blank line>
-<body>                         ← why + what (pas how), 1-4 lignes
+<body>                         ← why + what (not how), 1-4 lines
 <blank line>
-BREAKING CHANGE: <desc>        ← si applicable
+BREAKING CHANGE: <desc>        ← if applicable
 Refs: #<issue> / <workItemRef>
 ```
 
-Proposer dans `.git-workflow/06-commit-messages.md`.
+Propose in `.git-workflow/06-commit-messages.md`.
 
-### CHECKPOINT 3 — Approbation requise
+### CHECKPOINT 3 — Approval required
 ```
-Commit message proposé :
-[afficher le message complet]
+Proposed commit message:
+[show full message]
 
-1. Approuver → exécuter les opérations git
-2. Modifier → indiquer les changements
+1. Approve → execute git operations
+2. Modify → specify changes
 3. Pause
 ```
 
 ---
 
-## Phase 4 — Push & branch (sauf --no-push)
+## Phase 4 — Push & branch (except --no-push)
 
-Vérifications pré-push :
-- Branch name conforme aux conventions du repo
-- Pas de conflits avec la branche cible
-- Pas de données sensibles dans les commits
-- Règles de protection respectées
+Pre-push checks:
+- Branch name compliant with repo conventions
+- No conflicts with target branch
+- No sensitive data in commits
+- Protection rules respected
 
-Afficher les commandes exactes planifiées :
+Display exact planned commands:
 ```
-Opérations planifiées :
+Planned operations:
   git add -A
   git commit -F .git-workflow/06-commit-messages.md
   git push origin <branch> -u
 
-1. Exécuter
-2. Modifier
-3. Annuler
+1. Execute
+2. Modify
+3. Cancel
 ```
 
-Exécuter uniquement après confirmation explicite (option 1).
+Execute only after explicit confirmation (option 1).
 
-### CHECKPOINT 4 (si --no-push non activé)
+### CHECKPOINT 4 (if --no-push is not enabled)
 ```
-Push terminé. Branch : <branch>
-1. Approuver → créer la PR
+Push completed. Branch: <branch>
+1. Approve → create the PR
 2. Pause
 ```
 
 ---
 
-## Phase 5 — PR creation (sauf --no-push)
+## Phase 5 — PR creation (except --no-push)
 
-Générer description PR complète :
-- Résumé des changements (quoi + pourquoi)
-- Type de changement
-- Tests effectués
-- Breaking changes si applicable
-- Checklist reviewer
-- Références aux issues/tickets (extraits du commit message)
+Generate complete PR description:
+- Summary of changes (what + why)
+- Type of change
+- Tests performed
+- Breaking changes if applicable
+- Reviewer checklist
+- References to issues/tickets (extracted from commit message)
 
-Créer via `gh pr create` :
-- Titre = commit subject
-- Body = description générée
-- Draft si `--draft-pr`
+Create via `gh pr create`:
+- Title = commit subject
+- Body = generated description
+- Draft if `--draft-pr`
 - Base = target-branch
 
-Afficher la commande avant exécution et demander confirmation.
+Display the command before execution and ask for confirmation.
 
 </pipeline>
 
 <output>
-Rapport final :
-- Phases complétées
-- Issues trouvés en review (counts par sévérité)
-- Résultats de tests
+Final report:
+- Completed phases
+- Issues found in review (counts by severity)
+- Test results
 - Commit SHA + message
-- PR URL (si créée)
-- Fichiers produits dans `.git-workflow/`
+- PR URL (if created)
+- Produced files in `.git-workflow/`
 </output>
 
 <cleanup>
-Les fichiers `.git-workflow/` sont temporaires.
-Ajouter `.git-workflow/` au `.gitignore` si absent.
-Ne jamais committer le contenu de `.git-workflow/`.
+`.git-workflow/` files are temporary.
+Add `.git-workflow/` to `.gitignore` if missing.
+Never commit `.git-workflow/` contents.
 </cleanup>
 
 <errors>
-- Working tree propre (rien à committer) → informer et STOP
-- Tests en échec non approuvés → bloquer Phase 4
-- `gh` non disponible → Phase 5 : afficher la commande manuelle PR
-- Branch protection empêche le push → informer, ne pas forcer
+- Clean working tree (nothing to commit) → inform and STOP
+- Failing tests not approved → block Phase 4
+- `gh` unavailable → Phase 5: display manual PR command
+- Branch protection prevents push → inform, do not force
 </errors>

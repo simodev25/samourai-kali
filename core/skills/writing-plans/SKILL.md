@@ -15,7 +15,7 @@ Assume they are a skilled researcher, but know almost nothing about local toolin
 
 **Context:** This should be run in a dedicated worktree (created by brainstorming skill).
 
-**Save plans to:** `docs/investigations/plans/YYYY-MM-DD-<investigation-name>.md`
+**Save plans to:** `.samourai/docai/changes/YYYY-MM/YYYY-MM-DD--<workItemRef>--<slug>/chg-<workItemRef>-plan.md`
 - (User preferences for plan location override this default)
 
 ## Scope Check
@@ -49,7 +49,7 @@ This structure informs task decomposition. Each task should produce self-contain
 ```markdown
 # [Investigation Name] Investigation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to execute this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use `subagent-driven-development` (recommended) or `executing-plans` to execute this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** [One sentence describing what this investigation proves or disproves]
 
@@ -63,14 +63,16 @@ This structure informs task decomposition. Each task should produce self-contain
 ## Task Structure
 
 ````markdown
-### Task N: [Surface or Vector Name]
+### Phase N: [Recon / Analysis / POC / Evidence / Reporting]
+
+### Task N.M: [Surface or Vector Name]
 
 **Files/Artifacts:**
 - Create: `exact/path/to/poc_or_notes`
 - Modify: `exact/path/to/config_or_script`
 - Evidence: `exact/path/to/evidence-file`
 
-- [ ] **Step 1: Define exploitation hypothesis**
+- [ ] **Step 1: Define reconnaissance/analysis hypothesis**
 
 ```text
 Hypothesis: [Specific, falsifiable security claim]
@@ -88,7 +90,7 @@ Expected: [clear expected output]
 # minimal reproducible POC snippet
 ```
 
-- [ ] **Step 4: Capture evidence**
+- [ ] **Step 4: Capture evidence (hash + timestamp)**
 
 Run: `exact evidence capture command`
 Expected: [evidence artifact path + signal]
@@ -125,7 +127,7 @@ Every step must contain exact content needed by a security researcher. These are
 ## Remember
 - Exact file/artifact paths always
 - Exact commands with expected output
-- Investigation tasks include recon, scanning, analysis, POC, evidence, reporting
+- Plan phases should explicitly cover recon, analysis, POC, evidence, and reporting
 - Frequent commits with traceable evidence progression
 
 ## Self-Review
@@ -142,7 +144,7 @@ Fix issues inline before handoff.
 
 After saving the plan, offer execution choice:
 
-**"Plan complete and saved to `docs/investigations/plans/<filename>.md`. Two execution options:**
+**"Plan complete and saved to `.samourai/docai/changes/<YYYY-MM>/<YYYY-MM-DD--workItemRef--slug>/chg-<workItemRef>-plan.md`. Two execution options:**
 
 **1. Subagent-Driven (recommended)** - dispatch a fresh subagent per task, review between tasks
 
@@ -151,10 +153,10 @@ After saving the plan, offer execution choice:
 **Which approach?"**
 
 **If Subagent-Driven chosen:**
-- **REQUIRED SUB-SKILL:** Use superpowers:subagent-driven-development
+- **REQUIRED SUB-SKILL:** Use `subagent-driven-development`
 
 **If Inline Execution chosen:**
-- **REQUIRED SUB-SKILL:** Use superpowers:executing-plans
+- **REQUIRED SUB-SKILL:** Use `executing-plans`
 
 ## Safety Guardrails
 - **LAB-ONLY**: All testing and exploitation MUST occur in isolated lab environments

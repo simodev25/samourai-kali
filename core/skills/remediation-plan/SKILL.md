@@ -69,6 +69,33 @@ semgrep --config "p/owasp-top-ten" ./src/
 diff before.conf after.conf
 ```
 
+## Output Interpretation
+
+### nmap before/after output
+- Key indicators: vulnerable port state transition (`open` -> `closed|filtered`) and service banner removal.
+- Example output snippet (1-3 lines)
+  ```text
+  BEFORE: 8080/tcp open  http-proxy
+  AFTER:  8080/tcp closed http-proxy
+  ```
+- What it means: closed/filtered post-fix indicates exposure reduction; verify this matches intended architecture.
+
+### nuclei re-scan output
+- Key indicators: prior template IDs absent on re-test, no critical/high matches on fixed asset.
+- Example output snippet (1-3 lines)
+  ```text
+  [INF] No results found. Better luck next time!
+  ```
+- What it means: no matches is expected after patching; investigate if templates still trigger to confirm incomplete remediation.
+
+### sqlmap re-test output
+- Key indicators: parameter reported as not injectable and payload tests failing safely.
+- Example output snippet (1-3 lines)
+  ```text
+  Parameter 'id' does not seem to be injectable
+  ```
+- What it means: injection path likely remediated; cross-check with manual negative tests to avoid false assurance.
+
 ## Recommended Plan Template
 - Vulnerability Reference:
 - Root Cause Summary:

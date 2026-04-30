@@ -1,5 +1,5 @@
 ---
-description: Run security scans through the repository's configured scan command(s).
+description: Run security scanning/security audit workflows through the repository's configured scan command(s).
 agent: runner
 ---
 

@@ -27,3 +27,14 @@ After quality gates pass, verify remediation effectiveness:
 4. Update remediation evidence with reproducible validation notes.
 
 Finally, create a single high-quality Conventional Commit with a clear message summarizing all changes made to verify and harden remediation by delegating entirely to the @committer agent.
+
+<inputs>
+  <item>arguments='$ARGUMENTS' — Optional user directives for scope, priorities, or execution mode.</item>
+  <item>context — Existing remediation changes and evidence quality gate configuration in the repository.</item>
+</inputs>
+
+<output>
+  <item>On success: all required evidence quality gates pass, remediation validation is confirmed, and a single Conventional Commit is created via @committer.</item>
+  <item>On failure: blocked gates or unresolved remediation gaps are reported with actionable next steps; no false success claim is made.</item>
+  <item>Final summary must include `project_skills_applied` and `project_profile_applied`.</item>
+</output>

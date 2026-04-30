@@ -69,6 +69,35 @@ nc -lvnp 4444
 python3 poc.py --target lab-target --safe-mode --log output.log
 ```
 
+## Output Interpretation
+
+### curl output
+- Key indicators: HTTP status code, controlled error message, and reflected/injected marker in response body.
+- Example output snippet (1-3 lines)
+  ```text
+  HTTP/1.1 500 Internal Server Error
+  SQL syntax error near '1'='1'
+  ```
+- What it means: behavior indicates unsafe input handling; confirms vulnerability signal, not full compromise proof.
+
+### msfconsole output
+- Key indicators: module result, session type (meterpreter/shell), and privilege context.
+- Example output snippet (1-3 lines)
+  ```text
+  Meterpreter session 1 opened
+  uid=33(www-data)
+  ```
+- What it means: session success proves exploit path viability; access level shows impact boundary (service user vs root).
+
+### nmap NSE output
+- Key indicators: script ID result, `VULNERABLE` marker, and affected service endpoint.
+- Example output snippet (1-3 lines)
+  ```text
+  | http-vuln-cve2017-5638:
+  |   VULNERABLE: Apache Struts RCE
+  ```
+- What it means: NSE indicates likely vulnerable state; validate with a minimal non-destructive POC before final claim.
+
 ## Verification
 - [ ] Safety header exists and is complete.
 - [ ] Lab isolation was verified before execution.
@@ -99,5 +128,3 @@ python3 poc.py --target lab-target --safe-mode --log output.log
 - Cleanup/rollback guide.
 - Traceability metadata committed with the POC.
 
-## Exit Criteria
-The POC is accepted only if it is minimal, safely bounded, lab-only verified, reproducible, and accompanied by tested cleanup instructions.

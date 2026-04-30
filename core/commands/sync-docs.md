@@ -64,6 +64,7 @@ From the investigation documentation folder for this work item (at minimum vulne
 - Remediation status and residual risk notes confirmed by validation steps.
 - Evidence inventory additions (hashes, timestamps, chain-of-custody anchors).
 - Sensitive data handling and redaction outcomes.
+</source_extraction>
 
 <target_updates>
 Evidence and archive documentation areas potentially updated:
@@ -76,6 +77,7 @@ Evidence and archive documentation areas potentially updated:
 6. Evidence indexes/manifests under repository conventions (hashes, timestamps, custody metadata).
 7. Remediation tracking records under repository conventions.
 8. Cross-links: Update front matter with `links.related_changes: ["<workItemRef>"]` and references to evidence artifacts.
+</target_updates>
 
 <front_matter_update_rules>
 
@@ -104,6 +106,7 @@ Evidence and archive documentation areas potentially updated:
 - Collapse multiple exploratory notes into coherent findings/evidence narrative bullets.
 - Acceptance Criteria: include only durable finding, remediation, and validation outcomes.
 - Interfaces: provide final impacted-surface snapshot; omit unchanged details.
+</transformation_rules>
 
 <diff_generation>
 
@@ -111,6 +114,7 @@ Evidence and archive documentation areas potentially updated:
   - If unchanged after transformation, skip write.
   - If changed, stage file unless `dry run` or `no commit`.
 - Provide summary: added files, updated files, skipped (unchanged), warnings (preconditions not met or forced).
+</diff_generation>
 
 <commit_behavior>
 
@@ -119,6 +123,7 @@ Evidence and archive documentation areas potentially updated:
 - If `findings only` directive: scope becomes `findings` instead of `evidence`.
 - If >10 files updated: split into two commits (findings/indexes and evidence/archive) preserving atomic groupings.
 - `no commit`: skip committing, show summary only.
+</commit_behavior>
 
 <dry_run_behavior>
 
@@ -129,6 +134,7 @@ Evidence and archive documentation areas potentially updated:
   - Evidence index changes
   - Remediation tracking updates
 - No file writes or commits.
+</dry_run_behavior>
 
 <error_handling>
 Abort with descriptive message if:
@@ -138,6 +144,7 @@ Abort with descriptive message if:
 - Preconditions fail and `force` absent.
 - Archive parse/format errors in target files (present failing snippet lines).
   On abort: no writes, no partial commits.
+</error_handling>
 
 <validation>
 - Verify all referenced IDs (F-, API-, EVT-, DM-, NFR-, DEC-, AC-) copied appear in some target section or are intentionally omitted (log omissions).
@@ -145,6 +152,7 @@ Abort with descriptive message if:
 - Ensure front matter arrays deduplicated.
 - Ensure evidence references are resolvable to existing artifacts when available.
 - Ensure deterministic ordering in indexes and tables.
+</validation>
 
 <output_contract>
 User-visible summary MUST include:

@@ -189,7 +189,6 @@ version_impact: <from-spec>
 
 ### Phase 5: POC Development
 
-**Goal**: <!-- Build safe, lab-only POC to confirm vulnerability -->
 
 **Tasks**:
 

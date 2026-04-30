@@ -7,7 +7,7 @@ description: Use when about to claim work is complete, fixed, or passing, before
 
 ## Overview
 
-Claiming work is complete without verification is dishonesty, not efficiency.
+Claiming security work is complete without verification is a process failure, not efficiency.
 
 **Core principle:** Evidence before claims, always.
 
@@ -41,11 +41,11 @@ Skip any step = lying, not verifying
 
 | Claim | Requires | Not Sufficient |
 |-------|----------|----------------|
-| Tests pass | Test command output: 0 failures | Previous run, "should pass" |
-| Linter clean | Linter output: 0 errors | Partial check, extrapolation |
-| Build succeeds | Build command: exit 0 | Linter passing, logs look good |
-| Bug fixed | Test original symptom: passes | Code changed, assumed fixed |
-| Regression test works | Red-green cycle verified | Test passes once |
+| Vulnerability confirmed | Fresh POC run reproduces expected behavior | Old screenshots, one-off anomaly |
+| Remediation complete | Original exploit re-run now fails as expected | Config changed, assumed fixed |
+| Evidence package complete | Hashes/timestamps/artifact paths verified | "Files are there" assumption |
+| Finding reproducible | Independent re-run matches documented steps | "Worked once" memory |
+| Scope respected | Logs/commands show authorized targets only | Verbal claim without audit trail |
 | Agent completed | VCS diff shows changes | Agent reports "success" |
 | Requirements met | Line-by-line checklist | Tests passing |
 
@@ -67,7 +67,7 @@ Skip any step = lying, not verifying
 | "Should work now" | RUN the verification |
 | "I'm confident" | Confidence ≠ evidence |
 | "Just this once" | No exceptions |
-| "Linter passed" | Linter ≠ compiler |
+| "One payload worked" | Re-run to prove reproducibility |
 | "Agent said success" | Verify independently |
 | "I'm tired" | Exhaustion ≠ excuse |
 | "Partial check is enough" | Partial proves nothing |
@@ -75,22 +75,22 @@ Skip any step = lying, not verifying
 
 ## Key Patterns
 
-**Tests:**
+**Vulnerability confirmation:**
 ```
-✅ [Run test command] [See: 34/34 pass] "All tests pass"
-❌ "Should pass now" / "Looks correct"
-```
-
-**Regression tests (TDD Red-Green):**
-```
-✅ Write → Run (pass) → Revert fix → Run (MUST FAIL) → Restore → Run (pass)
-❌ "I've written a regression test" (without red-green verification)
+✅ [Re-run POC] [See expected vulnerable behavior] "Vulnerability confirmed"
+❌ "Looks exploitable" / "Probably vulnerable"
 ```
 
-**Build:**
+**Remediation verification:**
 ```
-✅ [Run build] [See: exit 0] "Build passes"
-❌ "Linter passed" (linter doesn't check compilation)
+✅ Run original exploit before fix (works) → apply remediation → re-run exploit (fails) → document both outputs
+❌ "Patch applied so issue is fixed"
+```
+
+**Evidence integrity:**
+```
+✅ Verify artifact hashes + timestamps + chain-of-custody notes present
+❌ "Screenshots/logs exist somewhere"
 ```
 
 **Requirements:**
@@ -107,12 +107,7 @@ Skip any step = lying, not verifying
 
 ## Why This Matters
 
-From 24 failure memories:
-- your human partner said "I don't believe you" - trust broken
-- Undefined functions shipped - would crash
-- Missing requirements shipped - incomplete features
-- Time wasted on false completion → redirect → rework
-- Violates: "Honesty is a core value. If you lie, you'll be replaced."
+Security conclusions drive risk decisions. Unverified claims can produce false confidence, missed exposure, and expensive rework during incident response or remediation.
 
 ## When To Apply
 
@@ -123,6 +118,9 @@ From 24 failure memories:
 - Committing, PR creation, task completion
 - Moving to next task
 - Delegating to agents
+- Declaring a finding confirmed/exploitable
+- Declaring a fix validated/closed
+- Handing off evidence to stakeholders
 
 **Rule applies to:**
 - Exact phrases

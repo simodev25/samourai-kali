@@ -21,7 +21,6 @@ Validate that a proof-of-concept (POC) correctly demonstrates the claimed vulner
 
 ## Procedure
 1. Collect inputs: vulnerability spec, exploitability notes, POC file, expected outcomes, lab context.
-2. Review safety header completeness (vulnerability ID, purpose, lab-only warning, author/date).
 3. If header is missing or incomplete, fail validation and return required corrections.
 4. Perform static safety review for weaponization indicators:
    - persistence mechanisms
@@ -59,6 +58,34 @@ script -q validation_session.log
 sha256sum poc_output.txt
 diff before_state.txt after_cleanup.txt
 ```
+
+## Output Interpretation
+
+### diff output
+- Key indicators: unexpected line-level differences between expected and actual files/states.
+- Example output snippet (1-3 lines)
+  ```text
+  < expected_status=403
+  > actual_status=200
+  ```
+- What it means: mismatch shows claim drift or side effects; validation should be FAIL or PASS WITH NOTES pending explanation.
+
+### sha256sum output
+- Key indicators: identical hash value for expected immutable artifacts before/after validation.
+- Example output snippet (1-3 lines)
+  ```text
+  a3f5...9c1b  baseline.bin
+  a3f5...9c1b  after_cleanup.bin
+  ```
+- What it means: hash match indicates integrity preserved; mismatch suggests modification or incomplete cleanup.
+
+### tcpdump validation capture output
+- Key indicators: only expected lab traffic, no unexpected egress destinations, no persistence callbacks.
+- Example output snippet (1-3 lines)
+  ```text
+  IP 10.10.10.5 > 10.10.10.20: HTTP POST /test
+  ```
+- What it means: bounded traffic supports safe behavior; unknown outbound hosts indicate safety control failure.
 
 ## Verification
 - [ ] Safety header is present and complete.

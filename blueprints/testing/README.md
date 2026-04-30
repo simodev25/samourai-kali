@@ -18,5 +18,5 @@ This blueprint produces a clear POC validation plan tied to vulnerability findin
 ## Minimal Example
 
 ```text
-Generate a POC validation plan for ticket GH-123 with lab-only reproduction and evidence capture.
+Generate a POC validation plan for ticket GH-123 
 ```

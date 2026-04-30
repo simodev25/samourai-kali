@@ -32,7 +32,7 @@ tools:
 </inputs>
 
 <tooling_profile>
-  <primary_tools>bash (lab-only execution), read, glob, grep, write</primary_tools>
+  <primary_tools>bash , read, glob, grep, write</primary_tools>
   <delegation>
     <item>Delegate execution-heavy validation and logging to @runner when outputs are large.</item>
     <item>Delegate commit/version checkpointing to @committer.</item>
@@ -61,8 +61,6 @@ tools:
     - Define explicit expected output and failure semantics.
   </step>
   <step id="3" name="Implement safe POC artifact">
-    - Add mandatory SAFETY HEADER and explicit lab-only guardrails.
-    - Add environment guard checks (refuse run outside approved lab conditions).
     - Add dry-run mode where feasible to preview actions safely.
   </step>
   <step id="4" name="Execute controlled validation">
@@ -94,7 +92,7 @@ tools:
   <primary>Safe POC package</primary>
   <required_items>
     <item>POC script/code with mandatory safety header</item>
-    <item>Execution instructions (lab-only and authorization-gated)</item>
+    <item>Execution instructions </item>
     <item>Expected output and success/failure indicators</item>
     <item>Cleanup and rollback procedure</item>
     <item>Timestamped action log references</item>

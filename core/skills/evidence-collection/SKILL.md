@@ -87,6 +87,43 @@ artifacts:
     path: logs/auth-bypass.log
 ```
 
+## Output Interpretation
+
+### sha256sum output
+- Key indicators: 64-hex digest followed by filename, stable across re-hash if file unchanged.
+- Example output snippet (1-3 lines)
+  ```text
+  d2d2f5c9...8b6e1a42f0c1e5c2a7b9e4f3a1d0c6e2b4a8f9d1c3e7b5a9  auth.log
+  ```
+- What it means: this is valid SHA-256 format; any later digest change indicates file mutation.
+
+### tshark output
+- Key indicators: packet counts, protocol distribution, and unusual error/retransmission spikes.
+- Example output snippet (1-3 lines)
+  ```text
+  245 packets captured
+  HTTP 180  TCP 65
+  ```
+- What it means: confirms capture scope and activity volume; sudden protocol anomalies can corroborate finding timelines.
+
+### script session log output
+- Key indicators: `Script started`/`Script done` markers and full command/output chronology.
+- Example output snippet (1-3 lines)
+  ```text
+  Script started on 2026-04-30 10:22:11+00:00
+  $ curl -v https://target/login
+  ```
+- What it means: provides tamper-evident execution context and ordering for reproducibility and audit trail.
+
+### evidence-index.yaml validation output
+- Key indicators: required keys present (`id,type,hash,timestamp,path`) and paths resolving to files.
+- Example output snippet (1-3 lines)
+  ```text
+  EV-001 OK
+  EV-002 missing path
+  ```
+- What it means: `OK` entries are report-ready; missing/invalid fields break traceability and must be fixed before reporting.
+
 ## Verification
 - [ ] Required directory structure exists.
 - [ ] Every artifact has SHA256 hash and ISO 8601 timestamp.

@@ -70,6 +70,42 @@ bandit -r ./src/
 trufflehog filesystem --directory=./src/
 ```
 
+## Output Interpretation
+
+### sqlmap output
+- Key indicators: injectable parameter confirmation, discovered databases, dumped table rows.
+- Example output snippet (1-3 lines)
+  ```text
+  Parameter: id (GET)
+  available databases [3]: information_schema, appdb, mysql
+  ```
+- What it means: confirmed SQL injection path; database enumeration validates impact and prioritizes sensitive table review.
+
+### nuclei output
+- Key indicators: template ID, matched URL, severity, and CVE mapping.
+- Example output snippet (1-3 lines)
+  ```text
+  [CVE-2023-12345] [high] https://target/login
+  ```
+- What it means: high/critical matches are triage-first; verify exploitability manually before promoting to confirmed finding.
+
+### ffuf output
+- Key indicators: unusual status codes (200/204/301/403), response size deltas, recurring interesting paths.
+- Example output snippet (1-3 lines)
+  ```text
+  admin  [Status: 403, Size: 512]
+  debug  [Status: 200, Size: 1842]
+  ```
+- What it means: size and status anomalies often reveal hidden endpoints; 403 confirms existence even when access is denied.
+
+### hydra output
+- Key indicators: valid credential hit, service/module used, attempt count context.
+- Example output snippet (1-3 lines)
+  ```text
+  [80][http-post-form] host: target   login: admin   password: Summer2025!
+  ```
+- What it means: successful auth indicates credential weakness/exposure; immediately validate scope and stop further brute forcing.
+
 ## Verification
 - [ ] OWASP Top 10 coverage matrix exists and is complete for in-scope components
 - [ ] High-value targets were explicitly selected and justified
@@ -88,9 +124,3 @@ trufflehog filesystem --directory=./src/
 - Failing to retest and verify reproduction before reporting
 - Mixing out-of-scope endpoints into findings to inflate results
 
-## Safety Guardrails
-- LAB-ONLY unless legal authorization exists for the exact target and method.
-- NO WEAPONIZATION: no persistence, no payloads intended for destructive outcomes.
-- Avoid denial-of-service behavior; keep tests controlled and minimally disruptive.
-- Do not access or exfiltrate sensitive data beyond proof-of-concept minimum.
-- Immediately report unintended exposure or instability through approved channels.

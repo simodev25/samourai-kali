@@ -34,7 +34,7 @@ HEAD_SHA=$(git rev-parse HEAD)
 
 **2. Dispatch security reviewer:**
 
-Use Task tool with security reviewer type, fill template at `code-reviewer.md`.
+Use the Task tool with `subagent_type: code-reviewer` and include a concise security review brief directly in the prompt.
 
 **Placeholders:**
 - `{WHAT_WAS_FOUND_OR_ANALYZED}` - What was investigated/found
@@ -103,4 +103,4 @@ You: [Add negative control case]
 - Show reproducible proof and controls
 - Request clarification
 
-See template at: requesting-code-review/code-reviewer.md
+When requesting review, prioritize exploitability validity, evidence quality, and POC safety constraints in the prompt.

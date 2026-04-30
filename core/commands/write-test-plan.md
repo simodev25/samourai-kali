@@ -16,7 +16,7 @@ The POC VALIDATION PLAN:
 
 - Ensures safe validation of exploit hypotheses and constraints
 - Aligns with investigation plan phases
-- Maps validation scenarios to test types per `.samourai/ai/rules/testing-strategy.md`
+- Uses `.samourai/ai/rules/testing-strategy.md` for enrichment when available; if missing, proceed with spec/plan defaults
   </purpose>
 
 <inputs>
@@ -39,7 +39,7 @@ Given `workItemRef`:
 1. Search for folder: `.samourai/docai/changes/**/*--<workItemRef>--*/`
 2. Locate spec: `chg-<workItemRef>-spec.md` (required)
 3. Locate plan: `chg-<workItemRef>-plan.md` (optional)
-4. Read: `.samourai/ai/rules/testing-strategy.md` (required)
+4. Read: `.samourai/ai/rules/testing-strategy.md` (optional enrichment)
 
 Files:
 
@@ -52,7 +52,7 @@ Files:
 <process>
 1. Parse `workItemRef` and options from $ARGUMENTS
 2. Locate change folder, spec, plan per <discovery_rules>
-3. Read `.samourai/ai/rules/testing-strategy.md`; FAIL if missing
+3. If `.samourai/ai/rules/testing-strategy.md` is available, read it for enrichment; if missing, proceed with spec-based test strategy (and plan defaults when present)
 4. Read `.samourai/blueprints/testing/` when available and pass it to
    `@test-plan-writer` as structural guidance only.
 5. Extract vulnerability requirements, AC-#, API-#, NFR-#, and evidence requirements from spec
@@ -76,7 +76,7 @@ After successful execution:
 
 <constraints>
 - Spec must exist; fail if not found
-- Testing strategy must exist; fail if not found
+- Testing strategy file is optional: if available, use for enrichment; if missing, proceed with spec-based test strategy (and plan defaults when present)
 - Only the test plan file may be written
 - Derive all context from vulnerability spec/plan; do not invent requirements
 - Mark uncovered AC-# as TODO with open questions
