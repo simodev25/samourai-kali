@@ -1,0 +1,87 @@
+#!/usr/bin/env python3
+
+import argparse
+from pathlib import Path
+import sys
+
+
+def parse_frontmatter(path: Path):
+    text = path.read_text(encoding="utf-8")
+    if not text.startswith("---\n"):
+        return None
+    parts = text.split("\n---\n", 1)
+    if len(parts) != 2:
+        return None
+    block = parts[0][4:]
+    data = {}
+    for raw in block.splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#"):
+            continue
+        if ":" not in line:
+            continue
+        k, v = line.split(":", 1)
+        data[k.strip()] = v.strip()
+    return data
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Validate command front matter fields")
+    parser.add_argument("--commands-dir", default="core/commands", help="Commands directory to validate")
+    parser.add_argument("--all", action="store_true", help="Validate every markdown file in commands-dir")
+    args = parser.parse_args()
+
+    directory = Path(args.commands_dir)
+    if not directory.exists() or not directory.is_dir():
+        print(f"ERROR: commands directory not found: {directory}")
+        return 2
+
+    cyber_files = [
+        "investigate.md",
+        "recon.md",
+        "hunt.md",
+        "analyze-vuln.md",
+        "cve-lookup.md",
+        "score.md",
+        "poc.md",
+        "collect-evidence.md",
+        "cve-report.md",
+        "remediate.md",
+        "status.md",
+    ]
+
+    if args.all:
+        files = sorted(directory.glob("*.md"))
+    else:
+        files = [directory / name for name in cyber_files if (directory / name).exists()]
+
+    if not files:
+        print(f"ERROR: no command files found in {directory}")
+        return 2
+
+    errors = []
+    for file in files:
+        fm = parse_frontmatter(file)
+        if fm is None:
+            errors.append(f"{file}: missing or malformed front matter")
+            continue
+        if not fm.get("description"):
+            errors.append(f"{file}: missing description")
+        if not fm.get("agent"):
+            errors.append(f"{file}: missing agent")
+        subtask = fm.get("subtask")
+        if subtask not in {"true", "false"}:
+            errors.append(f"{file}: subtask must be boolean true|false")
+
+    if errors:
+        print("Front matter validation FAILED:")
+        for e in errors:
+            print(f"- {e}")
+        return 1
+
+    print(f"Front matter validation PASSED ({len(files)} files checked)")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

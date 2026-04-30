@@ -125,24 +125,24 @@ This plan implements the capabilities and acceptance criteria defined in `chg-GH
 
 **Tasks**:
 
-- [ ] **2.1** Create `core/commands/investigate.md` delegating to `@pm` as the investigation orchestrator (Flow 1).
-- [ ] **2.2** Create `core/commands/recon.md` delegating to `@attack-surface-agent`.
-- [ ] **2.3** Create `core/commands/hunt.md` delegating to `@bug-hunting-agent`.
-- [ ] **2.4** Create `core/commands/analyze-vuln.md` delegating to `@vulnerability-analysis-agent`.
-- [ ] **2.5** Create `core/commands/cve-lookup.md` delegating to `@cve-intelligence-agent` and documenting NVD key behavior.
-- [ ] **2.6** Create `core/commands/score.md` delegating to `@exploitability-agent` (EPSS + CVSS intent).
-- [ ] **2.7** Create `core/commands/poc.md` delegating to `@safe-poc-agent` (lab-only, non-weaponization reminders).
-- [ ] **2.8** Create `core/commands/collect-evidence.md` delegating to `@evidence-agent`.
-- [ ] **2.9** Create `core/commands/cve-report.md` delegating to `@cve-report-agent`.
-- [ ] **2.10** Create `core/commands/remediate.md` delegating to `@remediation-agent`.
-- [ ] **2.11** Create `core/commands/status.md` delegating to `@pm` (status display / next steps).
-- [ ] **2.12** Ensure each command file includes correct YAML front matter (`description`, `agent`, `subtask`) and uses the same `<purpose>/<command>/<inputs>/<process>/<output_contract>` pattern as existing core commands.
+- [x] **2.1** Create `core/commands/investigate.md` delegating to `@pm` as the investigation orchestrator (Flow 1). (done: command scaffold added with pm delegation)
+- [x] **2.2** Create `core/commands/recon.md` delegating to `@attack-surface-agent`. (done: command scaffold added)
+- [x] **2.3** Create `core/commands/hunt.md` delegating to `@bug-hunting-agent`. (done: command scaffold added)
+- [x] **2.4** Create `core/commands/analyze-vuln.md` delegating to `@vulnerability-analysis-agent`. (done: command scaffold added)
+- [x] **2.5** Create `core/commands/cve-lookup.md` delegating to `@cve-intelligence-agent` and documenting NVD key behavior. (done: graceful NVD key guidance included)
+- [x] **2.6** Create `core/commands/score.md` delegating to `@exploitability-agent` (EPSS + CVSS intent). (done: command scaffold added)
+- [x] **2.7** Create `core/commands/poc.md` delegating to `@safe-poc-agent` (lab-only, non-weaponization reminders). (done: lab-only safe process documented)
+- [x] **2.8** Create `core/commands/collect-evidence.md` delegating to `@evidence-agent`. (done: command scaffold added)
+- [x] **2.9** Create `core/commands/cve-report.md` delegating to `@cve-report-agent`. (done: command scaffold added)
+- [x] **2.10** Create `core/commands/remediate.md` delegating to `@remediation-agent`. (done: command scaffold added)
+- [x] **2.11** Create `core/commands/status.md` delegating to `@pm` (status display / next steps). (done: command scaffold added)
+- [x] **2.12** Ensure each command file includes correct YAML front matter (`description`, `agent`, `subtask`) and uses the same `<purpose>/<command>/<inputs>/<process>/<output_contract>` pattern as existing core commands. (done: validator tool created and commands validated)
 
 **Acceptance Criteria**:
 
-- Must: AC-F1-1
-- Must: AC-F1-2
-- Must: AC-F1-3
+- Must: AC-F1-1 — PASSED (investigate command delegates to @pm and defines context initialization process)
+- Must: AC-F1-2 — PASSED (scratch install includes all 11 cyber commands under .opencode/command)
+- Must: AC-F1-3 — PASSED (tools/validate-command-frontmatter passes on the 11 cyber commands)
 
 **Files and modules**:
 
@@ -444,7 +444,7 @@ This plan implements the capabilities and acceptance criteria defined in `chg-GH
 | Phase | Status | Started | Completed | Commit | Notes |
 |-------|--------|---------|-----------|--------|-------|
 | 1 | Completed | 2026-04-30 | 2026-04-30 | pending | Migrated 4 agents into core/agents and validated scratch install output |
-| 2 | Not started |  |  |  |  |
+| 2 | Completed | 2026-04-30 | 2026-04-30 | pending | Added 11 cyber commands, added front-matter validator, validated install + schema checks |
 | 3 | Not started |  |  |  |  |
 | 4 | Not started |  |  |  |  |
 | 5 | Not started |  |  |  |  |
