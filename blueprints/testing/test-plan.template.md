@@ -1,14 +1,20 @@
 # Test Plan: <scope>
 
-## Scope
+## Vulnerability Scope
 
 <scope>
 
-## Covered Acceptance Criteria
+## Validated Findings
 
-| AC | Test | Type | Priority |
+| Finding | POC | Validation Type | Severity |
 | --- | --- | --- | --- |
-| <AC-1> | <test_name> | unit/integration/e2e/manual | P0 |
+| <FND-1> | <poc_name> | reproduction/validation/regression/manual | critical |
+
+## Lab Environment
+
+- Isolation status: <verified_or_blocked>
+- Lab profile: <vm_container_network_setup>
+- Safety controls: <egress_restrictions_snapshots_monitoring>
 
 ## Test Data
 
@@ -27,4 +33,5 @@
 ## Security Rules
 
 - Never use a real secret.
-- Mark external or destructive tests before execution.
+- Verify lab isolation before executing any POC.
+- Mark external or destructive validation steps before execution.

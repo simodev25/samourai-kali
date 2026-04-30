@@ -1,11 +1,11 @@
 schema_version: 1
 kind: code_review
 name: code-review
-description: "Samourai code review contract."
+description: "Samourai security review contract."
 inputs:
   required:
-    - diff_scope
-    - acceptance_criteria
+    - finding_scope
+    - vulnerability_criteria
     - test_evidence
   optional:
     - ticket_context
@@ -23,5 +23,5 @@ tools_allowed:
   - search
   - shell_readonly
 validation:
-  - "Findings cite file and line when possible."
+  - "Security findings cite evidence source and reproduction trace when possible."
   - "Severity levels are justified."

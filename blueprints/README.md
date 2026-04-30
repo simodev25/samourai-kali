@@ -26,16 +26,16 @@ Render the result to .opencode/agent/release.md after human approval.
 
 | Blueprint | Purpose |
 | --- | --- |
-| `project-bootstrap/` | Initialize project instructions and Samourai conventions. |
+| `project-bootstrap/` | Initialize security lab instructions and Samourai conventions. |
 | `agents/` | Generate an OpenCode-compatible agent. |
 | `skills/` | Generate a reusable operational skill. |
 | `workflows/` | Describe a team or agent workflow. |
-| `code-review/` | Structure code review criteria and findings. |
-| `jira/` | Draft an actionable Jira ticket. |
-| `github/` | Prepare a GitHub PR and review. |
-| `debugging/` | Produce a diagnostic report. |
-| `testing/` | Produce a test plan. |
-| `security/` | Draft a security policy or checklist. |
+| `code-review/` | Structure security review criteria and findings. |
+| `jira/` | Draft an actionable Jira ticket, including vulnerability metadata. |
+| `github/` | Prepare a GitHub PR/review, including security advisory context. |
+| `debugging/` | Produce a vulnerability investigation report. |
+| `testing/` | Produce a POC validation plan. |
+| `security/` | Draft a security policy with CVE/disclosure guidance. |
 
 ## Naming Conventions
 

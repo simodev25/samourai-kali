@@ -2,39 +2,43 @@ version: 1
 policy: review
 
 objectives:
-  - enforce_spec_plan_alignment
-  - detect_behavioral_regressions
-  - verify_quality_gates
+  - validate_finding_accuracy
+  - ensure_safe_reproducibility
+  - verify_evidence_integrity
+  - confirm_risk_scoring_correctness
+  - enforce_report_completeness
 
 severity:
   major:
-    meaning: "Bloque la livraison"
+    meaning: "Bloque la validation de la vulnérabilité"
     examples:
-      - acceptance_criteria_not_met
-      - security_or_data_integrity_risk
-      - failing_required_tests
+      - incorrect_or_unverifiable_finding
+      - unsafe_poc_or_uncontrolled_exploitation_step
+      - evidence_chain_of_custody_broken
+      - critical_cvss_or_epss_error
   minor:
-    meaning: "Doit être traité avant clôture si impact fonctionnel"
+    meaning: "Doit être traité avant publication si impact sur la qualité du dossier"
     examples:
-      - missing_test_coverage_on_changed_path
-      - incomplete_error_handling
+      - incomplete_reproduction_steps
+      - partial_evidence_metadata
+      - unclear_scope_or_preconditions
   nit:
     meaning: "Amélioration non bloquante"
     examples:
-      - naming_or_readability
-      - small_doc_gap
+      - wording_or_formatting_cleanup
+      - small_reference_gap
 
 required_checks:
-  - spec_consistency
-  - plan_task_consistency
-  - regression_risk_scan
-  - test_evidence
-  - docs_impact
+  - finding_accuracy
+  - poc_safety
+  - evidence_integrity
+  - cvss_epss_correctness
+  - report_completeness
 
 exit_criteria:
   pass:
     - no_open_major
-    - quality_gates_green
+    - required_checks_complete
   conditional_pass:
     - only_nit_remaining
     - explicit_followup_recorded

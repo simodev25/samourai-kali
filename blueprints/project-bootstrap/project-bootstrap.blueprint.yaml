@@ -1,13 +1,13 @@
 schema_version: 1
 kind: project_bootstrap
 name: project-bootstrap
-description: "Initialize Samourai project instructions."
+description: "Initialize Samourai security lab instructions."
 inputs:
   required:
-    - project_name
+    - lab_name
     - repository_summary
-    - tech_stack
-    - quality_commands
+    - target_technologies
+    - security_tools
   optional:
     - documentation_paths
     - deployment_notes
@@ -29,4 +29,4 @@ tools_allowed:
   - shell_readonly
 validation:
   - "Referenced paths exist or are clearly marked as to-create."
-  - "Test and build commands are exact."
+  - "Security scan and validation commands are exact."

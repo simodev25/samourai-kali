@@ -12,6 +12,9 @@ inputs:
     - priority
     - labels
     - links
+    - cve_id
+    - cvss_score
+    - cwe_id
 outputs:
   primary:
     - "jira-ticket-description.md"
@@ -25,3 +28,4 @@ tools_allowed:
 validation:
   - "The ticket contains testable acceptance criteria."
   - "The description does not duplicate comments unnecessarily."
+  - "For vulnerability work, include the 'vulnerability' label suggestion."

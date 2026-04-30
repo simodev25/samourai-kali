@@ -9,6 +9,7 @@ This blueprint helps draft a clear, actionable, and testable Jira ticket.
 - To create a story, bug, or technical task.
 - To turn an unclear request into an actionable ticket.
 - Before running a Samourai workflow linked to Jira.
+- To prepare vulnerability tickets with CVE/CVSS/CWE metadata.
 
 ## Expected Files
 
@@ -20,3 +21,5 @@ This blueprint helps draft a clear, actionable, and testable Jira ticket.
 ```text
 Prepare a Jira bug ticket for a 500 error on POST /orders.
 ```
+
+For security issues, include CVE reference, CVSS score, CWE classification, and suggest the `vulnerability` label.

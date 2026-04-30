@@ -1,47 +1,47 @@
 ---
 name: systematic-debugging
-description: Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes
+description: "Use when investigating any vulnerability finding — enforce root-cause investigation before claiming a vulnerability"
 ---
 
-# Systematic Debugging
+# Systematic Vulnerability Investigation
 
 ## Overview
 
-Random fixes waste time and create new bugs. Quick patches mask underlying issues.
+Random exploitation attempts waste time and create false positives. Quick claims mask underlying causes.
 
-**Core principle:** ALWAYS find root cause before attempting fixes. Symptom fixes are failure.
+**Core principle:** ALWAYS find root cause before claiming a vulnerability. Symptom-only evidence is failure.
 
-**Violating the letter of this process is violating the spirit of debugging.**
+**Violating the letter of this process is violating the spirit of investigation.**
 
 ## The Iron Law
 
 ```
-NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST
+NO VULNERABILITY CLAIM WITHOUT ROOT CAUSE INVESTIGATION FIRST
 ```
 
-If you haven't completed Phase 1, you cannot propose fixes.
+If you haven't completed Phase 1, you cannot claim a vulnerability.
 
 ## When to Use
 
-Use for ANY technical issue:
-- Test failures
-- Bugs in production
-- Unexpected behavior
-- Performance problems
-- Build failures
-- Integration issues
+Use for ANY potential security issue:
+- Scanner findings (SAST/DAST)
+- Suspected vulnerability reports
+- Unexpected security behavior
+- Access-control anomalies
+- Auth/session/token concerns
+- Unsafe configuration findings
 
 **Use this ESPECIALLY when:**
-- Under time pressure (emergencies make guessing tempting)
-- "Just one quick fix" seems obvious
-- You've already tried multiple fixes
-- Previous fix didn't work
-- You don't fully understand the issue
+- Under time pressure (guessing is tempting)
+- "Just report it now" feels obvious
+- You've already tried multiple exploitation ideas
+- Previous hypothesis failed
+- You don't fully understand impact/preconditions
 
 **Don't skip when:**
-- Issue seems simple (simple bugs have root causes too)
+- Finding seems simple (simple findings still need proof)
 - You're in a hurry (rushing guarantees rework)
-- Manager wants it fixed NOW (systematic is faster than thrashing)
+- Someone wants immediate severity labeling
 
 ## The Four Phases
 
@@ -49,248 +49,170 @@ You MUST complete each phase before proceeding to the next.
 
 ### Phase 1: Root Cause Investigation
 
-**BEFORE attempting ANY fix:**
+**BEFORE attempting ANY vulnerability claim:**
 
-1. **Read Error Messages Carefully**
-   - Don't skip past errors or warnings
-   - They often contain the exact solution
-   - Read stack traces completely
-   - Note line numbers, file paths, error codes
+1. **Read Finding Details Carefully**
+   - Don't skip scanner metadata, traces, request/response details
+   - Read evidence completely
+   - Note endpoints, parameters, code paths, trust boundaries
 
 2. **Reproduce Consistently**
    - Can you trigger it reliably?
-   - What are the exact steps?
-   - Does it happen every time?
-   - If not reproducible → gather more data, don't guess
+   - What are exact steps/inputs/environment?
+   - Is impact consistent or conditional?
+   - If not reproducible → gather data, don't guess
 
-3. **Check Recent Changes**
-   - What changed that could cause this?
-   - Git diff, recent commits
-   - New dependencies, config changes
-   - Environmental differences
+3. **Check Relevant Context**
+   - What changed that could affect exposure?
+   - Git diff, recent commits, config/deploy drift
+   - Auth rules, dependency changes, permission model changes
 
-4. **Gather Evidence in Multi-Component Systems**
+4. **Gather Evidence Across Trust Boundaries**
 
-   **WHEN system has multiple components (CI → build → signing, API → service → database):**
+   **WHEN system has multiple components (edge → API → service → datastore):**
 
-   **BEFORE proposing fixes, add diagnostic instrumentation:**
+   **BEFORE claiming vulnerability, add diagnostic instrumentation:**
    ```
-   For EACH component boundary:
-     - Log what data enters component
-     - Log what data exits component
-     - Verify environment/config propagation
-     - Check state at each layer
+   For EACH trust boundary:
+     - Capture what enters boundary
+     - Capture what exits boundary
+     - Verify identity/authz propagation
+     - Check policy state at each layer
 
-   Run once to gather evidence showing WHERE it breaks
-   THEN analyze evidence to identify failing component
-   THEN investigate that specific component
-   ```
-
-   **Example (multi-layer system):**
-   ```bash
-   # Layer 1: Workflow
-   echo "=== Secrets available in workflow: ==="
-   echo "IDENTITY: ${IDENTITY:+SET}${IDENTITY:-UNSET}"
-
-   # Layer 2: Build script
-   echo "=== Env vars in build script: ==="
-   env | grep IDENTITY || echo "IDENTITY not in environment"
-
-   # Layer 3: Signing script
-   echo "=== Keychain state: ==="
-   security list-keychains
-   security find-identity -v
-
-   # Layer 4: Actual signing
-   codesign --sign "$IDENTITY" --verbose=4 "$APP"
+   Run once to gather evidence showing WHERE control fails
+   THEN analyze evidence to identify failing layer
+   THEN investigate that specific layer
    ```
 
-   **This reveals:** Which layer fails (secrets → workflow ✓, workflow → build ✗)
+5. **Trace Attack/Data Flow**
 
-5. **Trace Data Flow**
+   **WHEN behavior is deep in stack:**
 
-   **WHEN error is deep in call stack:**
-
-   See `root-cause-tracing.md` in this directory for the complete backward tracing technique.
-
-   **Quick version:**
-   - Where does bad value originate?
-   - What called this with bad value?
-   - Keep tracing up until you find the source
-   - Fix at source, not at symptom
+   - Where does exploitable condition originate?
+   - What called this with unsafe state?
+   - Keep tracing until source is found
+   - Focus on source condition, not terminal symptom
 
 ### Phase 2: Pattern Analysis
 
-**Find the pattern before fixing:**
+**Compare against known vulnerability patterns before claiming:**
 
-1. **Find Working Examples**
-   - Locate similar working code in same codebase
-   - What works that's similar to what's broken?
+1. **Map to Known Patterns**
+   - Compare finding with CWE and OWASP categories
+   - Identify likely class and required preconditions
 
 2. **Compare Against References**
-   - If implementing pattern, read reference implementation COMPLETELY
-   - Don't skim - read every line
-   - Understand the pattern fully before applying
+   - Read relevant CWE/OWASP guidance COMPLETELY
+   - Verify assumptions, exploitability requirements, impacts
 
 3. **Identify Differences**
-   - What's different between working and broken?
+   - What's different between this finding and canonical patterns?
    - List every difference, however small
-   - Don't assume "that can't matter"
 
-4. **Understand Dependencies**
-   - What other components does this need?
-   - What settings, config, environment?
-   - What assumptions does it make?
+4. **Understand Preconditions**
+   - Required attacker capabilities?
+   - Required environment/configuration?
+   - Required privileges or prior foothold?
 
 ### Phase 3: Hypothesis and Testing
 
 **Scientific method:**
 
-1. **Form Single Hypothesis**
-   - State clearly: "I think X is the root cause because Y"
-   - Write it down
-   - Be specific, not vague
+1. **Form Single Exploitation Hypothesis**
+   - State clearly: "I think X is exploitable because Y"
+   - Be specific and falsifiable
 
 2. **Test Minimally**
-   - Make the SMALLEST possible change to test hypothesis
+   - Execute smallest safe test to validate hypothesis
    - One variable at a time
-   - Don't fix multiple things at once
+   - Don't alter multiple conditions at once
 
 3. **Verify Before Continuing**
-   - Did it work? Yes → Phase 4
-   - Didn't work? Form NEW hypothesis
-   - DON'T add more fixes on top
+   - Hypothesis supported? Yes → Phase 4
+   - Not supported? Form NEW hypothesis
+   - Don't stack assumptions
 
 4. **When You Don't Know**
    - Say "I don't understand X"
-   - Don't pretend to know
-   - Ask for help
-   - Research more
+   - Ask for help / investigate further
+   - Don't infer severity without evidence
 
 ### Phase 4: Implementation
 
-**Fix the root cause, not the symptom:**
+**Prove the root cause, not the symptom:**
 
-1. **Create Failing Test Case**
-   - Simplest possible reproduction
-   - Automated test if possible
-   - One-off test script if no framework
-   - MUST have before fixing
-   - Use the `superpowers:test-driven-development` skill for writing proper failing tests
+1. **Create Minimal POC**
+   - Simplest reproducible exploit path
+   - Safe and controlled by default
+   - Script/requests/log capture as needed
+   - MUST exist before claiming vulnerability
 
-2. **Implement Single Fix**
-   - Address the root cause identified
-   - ONE change at a time
-   - No "while I'm here" improvements
-   - No bundled refactoring
+2. **Implement One Change at a Time**
+   - One payload/condition change per attempt
+   - No bundled scenario changes
 
-3. **Verify Fix**
-   - Test passes now?
-   - No other tests broken?
-   - Issue actually resolved?
+3. **Verify Proof**
+   - Reproduces reliably?
+   - Evidence captured (logs/request-response/traces)?
+   - Impact and constraints documented?
 
-4. **If Fix Doesn't Work**
+4. **If Hypothesis Doesn't Work**
    - STOP
-   - Count: How many fixes have you tried?
-   - If < 3: Return to Phase 1, re-analyze with new information
-   - **If ≥ 3: STOP and question the architecture (step 5 below)**
-   - DON'T attempt Fix #4 without architectural discussion
+   - Count failed exploitation hypotheses
+   - If < 3: Return to Phase 1 with new data
+   - **If ≥ 3: STOP and question whether this is actually a vulnerability**
+   - DON'T attempt hypothesis #4 blindly
 
-5. **If 3+ Fixes Failed: Question Architecture**
+5. **If 3+ Hypotheses Failed: Reassess Vulnerability Claim**
 
-   **Pattern indicating architectural problem:**
-   - Each fix reveals new shared state/coupling/problem in different place
-   - Fixes require "massive refactoring" to implement
-   - Each fix creates new symptoms elsewhere
+   **Pattern indicating possible false positive:**
+   - Core exploit preconditions cannot be met
+   - Impact cannot be demonstrated under realistic assumptions
+   - Repro only works with unrealistic attacker capabilities
 
    **STOP and question fundamentals:**
-   - Is this pattern fundamentally sound?
-   - Are we "sticking with it through sheer inertia"?
-   - Should we refactor architecture vs. continue fixing symptoms?
-
-   **Discuss with your human partner before attempting more fixes**
-
-   This is NOT a failed hypothesis - this is a wrong architecture.
+   - Is this truly exploitable?
+   - Are we forcing a claim through confirmation bias?
+   - Should this be reframed/downgraded/closed?
 
 ## Red Flags - STOP and Follow Process
 
 If you catch yourself thinking:
-- "Quick fix for now, investigate later"
-- "Just try changing X and see if it works"
-- "Add multiple changes, run tests"
-- "Skip the test, I'll manually verify"
-- "It's probably X, let me fix that"
-- "I don't fully understand but this might work"
-- "Pattern says X but I'll adapt it differently"
-- "Here are the main problems: [lists fixes without investigation]"
-- Proposing solutions before tracing data flow
-- **"One more fix attempt" (when already tried 2+)**
-- **Each fix reveals new problem in different place**
+- "Quick claim now, investigate later"
+- "Just try random payloads"
+- "Let's change multiple variables"
+- "One screenshot is enough proof"
+- "It's probably critical, report now"
+- "One more hypothesis" (after 2+ failures)
 
 **ALL of these mean: STOP. Return to Phase 1.**
 
-**If 3+ fixes failed:** Question the architecture (see Phase 4.5)
-
-## your human partner's Signals You're Doing It Wrong
-
-**Watch for these redirections:**
-- "Is that not happening?" - You assumed without verifying
-- "Will it show us...?" - You should have added evidence gathering
-- "Stop guessing" - You're proposing fixes without understanding
-- "Ultrathink this" - Question fundamentals, not just symptoms
-- "We're stuck?" (frustrated) - Your approach isn't working
-
-**When you see these:** STOP. Return to Phase 1.
+**If 3+ exploitation hypotheses failed:** question whether it's actually a vulnerability.
 
 ## Common Rationalizations
 
 | Excuse | Reality |
 |--------|---------|
-| "Issue is simple, don't need process" | Simple issues have root causes too. Process is fast for simple bugs. |
-| "Emergency, no time for process" | Systematic debugging is FASTER than guess-and-check thrashing. |
-| "Just try this first, then investigate" | First fix sets the pattern. Do it right from the start. |
-| "I'll write test after confirming fix works" | Untested fixes don't stick. Test first proves it. |
-| "Multiple fixes at once saves time" | Can't isolate what worked. Causes new bugs. |
-| "Reference too long, I'll adapt the pattern" | Partial understanding guarantees bugs. Read it completely. |
-| "I see the problem, let me fix it" | Seeing symptoms ≠ understanding root cause. |
-| "One more fix attempt" (after 2+ failures) | 3+ failures = architectural problem. Question pattern, don't fix again. |
+| "It's obvious" | Obvious findings still need reproducible proof. |
+| "No time for process" | Systematic investigation is faster than exploit thrashing. |
+| "I'll document later" | Unstructured proof fails peer review. |
+| "One more attempt" | 3+ failures often indicates non-vulnerability or wrong model. |
 
 ## Quick Reference
 
 | Phase | Key Activities | Success Criteria |
 |-------|---------------|------------------|
-| **1. Root Cause** | Read errors, reproduce, check changes, gather evidence | Understand WHAT and WHY |
-| **2. Pattern** | Find working examples, compare | Identify differences |
-| **3. Hypothesis** | Form theory, test minimally | Confirmed or new hypothesis |
-| **4. Implementation** | Create test, fix, verify | Bug resolved, tests pass |
-
-## When Process Reveals "No Root Cause"
-
-If systematic investigation reveals issue is truly environmental, timing-dependent, or external:
-
-1. You've completed the process
-2. Document what you investigated
-3. Implement appropriate handling (retry, timeout, error message)
-4. Add monitoring/logging for future investigation
-
-**But:** 95% of "no root cause" cases are incomplete investigation.
+| **1. Root Cause** | Read finding, reproduce, gather boundary evidence | Understand WHAT and WHY |
+| **2. Pattern** | Compare with CWE/OWASP patterns | Realistic exploit class identified |
+| **3. Hypothesis** | Form and minimally test exploit hypothesis | Supported or rejected hypothesis |
+| **4. Implementation** | Build/validate POC and evidence | Reproducible proof or claim rejected |
 
 ## Supporting Techniques
 
-These techniques are part of systematic debugging and available in this directory:
-
-- **`root-cause-tracing.md`** - Trace bugs backward through call stack to find original trigger
-- **`defense-in-depth.md`** - Add validation at multiple layers after finding root cause
-- **`condition-based-waiting.md`** - Replace arbitrary timeouts with condition polling
+- `root-cause-tracing.md` — trace source condition through boundaries
+- `defense-in-depth.md` — analyze control layering after root-cause discovery
+- `condition-based-waiting.md` — avoid timing assumptions in investigations
 
 **Related skills:**
-- **superpowers:test-driven-development** - For creating failing test case (Phase 4, Step 1)
-- **superpowers:verification-before-completion** - Verify fix worked before claiming success
-
-## Real-World Impact
-
-From debugging sessions:
-- Systematic approach: 15-30 minutes to fix
-- Random fixes approach: 2-3 hours of thrashing
-- First-time fix rate: 95% vs 40%
-- New bugs introduced: Near zero vs common
+- `test-driven-development` — reproducibility discipline for POC/test harness
+- `verification-before-completion` — evidence check before final claims

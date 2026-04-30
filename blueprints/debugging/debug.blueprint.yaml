@@ -1,18 +1,18 @@
 schema_version: 1
 kind: debugging
 name: debug
-description: "Generation contract for a debugging report."
+description: "Generation contract for a vulnerability investigation report."
 inputs:
   required:
-    - symptom
-    - reproduction_steps
+    - finding
+    - reproduction_evidence
     - observed_evidence
   optional:
     - environment
     - suspected_area
 outputs:
   primary:
-    - ".samourai/tmpai/debugging/debug-report.md"
+    - ".samourai/tmpai/debugging/investigation-report.md"
 safety:
   secrets_policy: "Mask any observed secret; never copy it."
   external_actions: "Do not call external services without approval."
@@ -22,5 +22,5 @@ tools_allowed:
   - search
   - shell_readonly
 validation:
-  - "Root cause is separated from hypotheses."
-  - "Reproduction commands are listed."
+  - "Vulnerability root cause is separated from exploitation hypotheses."
+  - "Reproduction evidence and commands are listed."

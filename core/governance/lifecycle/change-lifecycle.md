@@ -1,68 +1,95 @@
-# Change Lifecycle
+# Investigation Lifecycle
 
 ## Vue d’ensemble
 
-Cycle V1 orienté delivery incrémental, dérivé de Samourai:
+Cycle V1 orienté investigation cybersécurité, dérivé du framework Samourai:
 
-1. Cadrer
-2. Spécifier
-3. Planifier les tests
-4. Planifier l’implémentation
-5. Implémenter
-6. Revoir
-7. Qualifier
-8. Synchroniser la doc
-9. Committer
-10. Ouvrir PR
+1. Intake & triage
+2. Reconnaissance
+3. Discovery de vulnérabilités
+4. Analyse de vulnérabilités
+5. Intelligence CVE
+6. Évaluation de l’exploitabilité
+7. Développement PoC (safe)
+8. Validation PoC
+9. Collecte de preuves
+10. Reporting
+11. Remédiation
+12. Peer review
+13. Publication
 
 ## Entrées et sorties par phase
 
-### 1) Cadrer (`@pm`)
+### 1) Intake triage (`@pm`)
 
-- Entrée: demande utilisateur + backlog
-- Sortie: périmètre clair + `workItemRef`
+- Entrée: signalement, cible, backlog sécurité
+- Sortie: périmètre autorisé + classification + `workItemRef`
 
-### 2) Spécifier (`@spec-writer`)
+### 2) Reconnaissance (`@attack-surface`)
 
-- Entrée: contexte cadré
-- Sortie: `chg-<workItemRef>-spec.md`
+- Entrée: scope validé
+- Sortie: cartographie de surface d’attaque (`chg-<workItemRef>-recon.*`)
 
-### 3) Plan de test (`@test-plan-writer`)
+### 3) Vulnerability discovery (`@bug-hunting`)
 
-- Entrée: spec
-- Sortie: `chg-<workItemRef>-test-plan.md`
+- Entrée: reconnaissance
+- Sortie: findings initiaux (`chg-<workItemRef>-findings.*`)
 
-### 4) Plan d’implémentation (`@plan-writer`)
+### 4) Vulnerability analysis (`@vulnerability-analysis`)
 
-- Entrée: spec + test plan
-- Sortie: `chg-<workItemRef>-plan.md`
+- Entrée: findings
+- Sortie: causes racines et impacts validés (`chg-<workItemRef>-analysis.*`)
 
-### 5) Exécution (`@coder`)
+### 5) CVE intelligence (`@cve-intelligence`)
 
-- Entrée: plan validé
-- Sortie: code + tâches cochées + preuves d’exécution
+- Entrée: analyse technique
+- Sortie: corrélation CVE/CWE + veille (`chg-<workItemRef>-cve-intel.*`)
 
-### 6) Review (`@reviewer`)
+### 6) Exploitability assessment (`@exploitability`)
 
-- Entrée: diff + spec + plan
-- Sortie: findings (ou validation)
+- Entrée: analyse + intelligence
+- Sortie: scoring CVSS/EPSS et justification (`chg-<workItemRef>-exploitability.*`)
 
-### 7) Quality gates (`@runner`/`@fixer`)
+### 7) PoC development (`@safe-poc`)
 
-- Entrée: build/test/lint scripts
-- Sortie: état qualité final (pass/fail)
+- Entrée: scénario validé
+- Sortie: PoC en environnement isolé + protocole d’exécution
 
-### 8) Sync docs (`@doc-syncer`)
+### 8) PoC validation (`@reviewer`/`@runner`)
 
-- Entrée: changement implémenté
-- Sortie: docs système alignées
+- Entrée: PoC
+- Sortie: reproductibilité et sécurité validées (logs + traces)
 
-### 9) Commit (`@committer`)
+### 9) Evidence collection (`@evidence`)
 
-- Entrée: modifications prêtes
-- Sortie: un commit Conventional Commits
+- Entrée: logs, captures, résultats PoC
+- Sortie: package de preuves structuré, hashé, horodaté
 
-### 10) PR (`@pr-manager`)
+### 10) Reporting (`@cve-report`)
 
-- Entrée: branche prête
-- Sortie: PR ouverte/à jour, prête pour review humaine
+- Entrée: package d’évidence + scoring
+- Sortie: rapport de vulnérabilité prêt à divulgation (`chg-<workItemRef>-report.*`)
+
+### 11) Remediation (`@remediation`)
+
+- Entrée: finding validé + rapport
+- Sortie: recommandations de correction + validation d’efficacité
+
+### 12) Peer review (`@reviewer`)
+
+- Entrée: dossier complet (finding + PoC + preuves + rapport)
+- Sortie: validation finale ou actions de reprise
+
+### 13) Publication (`@pr-manager` + humain)
+
+- Entrée: dossier validé
+- Sortie: publication/divulgation orchestrée et tracée
+
+## Réouverture de phase
+
+Les phases peuvent être rouvertes si une lacune est détectée plus tard:
+
+- Si la validation PoC échoue: retour à `poc_development`
+- Si le peer review trouve un défaut de preuve: retour à `evidence_collection`
+- Si le scoring est incohérent: retour à `exploitability_assessment`
+- Si la remédiation ne couvre pas la cause racine: retour à `vulnerability_analysis`

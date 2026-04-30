@@ -1,11 +1,11 @@
 ---
 #
-description: Execute quality gates, fix any issues found, and create a single high-quality Conventional Commit summarizing all changes made.
+description: Execute evidence quality gates, verify remediation effectiveness, and create a single high-quality Conventional Commit summarizing all changes made.
 agent: fixer
 subtask: true
 ---
 
-Before starting, discover generated project skills in `.opencode/skills/project/**/SKILL.md`, select up to 2 relevant to build/test/ci/debug, and apply them as local constraints.
+Before starting, discover generated project skills in `.opencode/skills/project/**/SKILL.md`, select up to 2 relevant to security validation/forensics/ci/debug, and apply them as local constraints.
 Report `project_skills_applied` in the final summary (or an empty list if none).
 
 Before starting, read `.samourai/ai/agent/project-profile.md` when present and apply it to the correction strategy:
@@ -15,9 +15,15 @@ Before starting, read `.samourai/ai/agent/project-profile.md` when present and a
 - Mix: classify the failure and apply the matching mode.
 Report `project_profile_applied` in the final summary (or `none` if absent).
 
-Run quality gates and make sure everything is fine.
+Run evidence quality gates and make sure everything is fine.
 If you find any issues then systematically fix them.
-If project specifies fast quality gates check the first execute only those.
-Once fast quality gates are passed then proceed to run the full quality gates and fix any issues found.
-Finally, create a single high-quality Conventional Commit with a clear message summarizing all changes made to fix the
-issues by delegating entirely to the @committer agent.
+If project specifies fast evidence checks then first execute only those.
+Once fast evidence quality gates are passed then proceed to run the full evidence quality gates and fix any issues found.
+
+After quality gates pass, verify remediation effectiveness:
+1. Re-run vulnerability validation in the approved scope.
+2. Confirm the vulnerability is resolved.
+3. Check for regressions or newly introduced exposure paths.
+4. Update remediation evidence with reproducible validation notes.
+
+Finally, create a single high-quality Conventional Commit with a clear message summarizing all changes made to verify and harden remediation by delegating entirely to the @committer agent.

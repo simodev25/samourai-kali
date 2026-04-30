@@ -1,12 +1,12 @@
 schema_version: 1
 kind: testing
 name: test
-description: "Generation contract for a test plan."
+description: "Generation contract for a POC validation plan."
 inputs:
   required:
     - scope
-    - acceptance_criteria
-    - risk_areas
+    - vulnerability_spec
+    - exploitation_conditions
   optional:
     - existing_tests
     - test_data
@@ -15,6 +15,7 @@ outputs:
     - ".samourai/docai/changes/<change>/chg-<ref>-test-plan.md"
 safety:
   secrets_policy: "Never use real credentials as test data."
+  lab_isolation: "Verify lab isolation before any POC execution."
   external_actions: "Tests against external services require approval."
   destructive_actions: "Destructive tests require a dedicated environment and human approval."
 tools_allowed:
@@ -22,5 +23,5 @@ tools_allowed:
   - search
   - shell_readonly
 validation:
-  - "Each acceptance criterion has at least one test."
-  - "External or destructive tests are marked."
+  - "Each vulnerability finding has at least one validation POC."
+  - "External or destructive validation steps are clearly marked."

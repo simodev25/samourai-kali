@@ -1,51 +1,50 @@
 # Stage Gates
 
-## Gate G1 - Scope Ready
+## Gate 1 - Scope Authorization Verified
 
 - `workItemRef` validé
-- objectifs et contraintes explicités
-- ambiguïtés bloquantes traitées
+- périmètre de test explicitement autorisé
+- cibles hors-scope identifiées
 
-## Gate G2 - Spec Ready
+## Gate 2 - Attack Surface Mapped
 
-- spec créée
-- critères d’acceptation présents
-- périmètre in/out explicite
+- cartographie recon disponible
+- points d’entrée documentés
+- journal des outils/commandes conservé
 
-## Gate G3 - Test Plan Ready
+## Gate 3 - Findings Documented with Evidence
 
-- couverture AC tracée
-- stratégie de test alignée repo
-- zones TODO explicites
+- findings décrits de façon reproductible
+- contexte, préconditions et impact initial précisés
+- liens vers preuves brutes présents
 
-## Gate G4 - Plan Ready
+## Gate 4 - PoC Created and Validated (Safe)
 
-- tâches ordonnées par phase
-- fichiers/modules ciblés
-- commandes de vérification définies
+- PoC implémenté en environnement lab isolé
+- reproductibilité confirmée par rerun
+- contrôles de sécurité (cleanup/rollback) vérifiés
 
-## Gate G5 - Implementation Ready
+## Gate 5 - Evidence Package Complete (Hashed, Timestamped)
 
-- tâches plan cochées ou documentées
-- tests ajoutés/mis à jour
-- preuves d’exécution disponibles
+- package d’évidence structuré
+- hash des artefacts enregistré
+- horodatage disponible et traçable
+- données sensibles redigées
 
-## Gate G6 - Review Ready
+## Gate 6 - Report Peer-Reviewed
 
-- findings traités ou justifiés
-- pas de divergence critique spec/implémentation
+- exactitude technique validée
+- cohérence CVE/CWE/CVSS vérifiée
+- qualité rédactionnelle et neutralité confirmées
 
-## Gate G7 - Quality Ready
+## Gate 7 - Remediation Verified
 
-- quality gates verts
-- sinon correctifs réalisés et revérifiés
+- recommandations de remédiation documentées
+- efficacité validée en lab
+- risque résiduel explicité
 
-## Gate G8 - Docs Ready
+## Gate 8 - Ready for Disclosure / Publication
 
-- docs système synchronisées
-- traçabilité `workItemRef` maintenue
-
-## Gate G9 - Release Ready
-
-- commit propre
-- PR ouverte avec contexte et test plan
+- contraintes de divulgation respectées
+- artefacts de publication à jour
+- validation humaine finale enregistrée

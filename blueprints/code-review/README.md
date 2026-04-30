@@ -1,22 +1,22 @@
-# Code Review Blueprint
+# Security Review Blueprint
 
 ## Role
 
-This blueprint structures professional code review: risk, security, tests, maintainability, and plan compliance.
+This blueprint structures professional security review: finding accuracy, evidence quality, POC safety, report quality, and vulnerability-criteria compliance.
 
 ## When To Use
 
-- Before merge or PR creation.
-- For a local branch review.
-- For a remote GitHub/GitLab review with ticket context.
+- Before publishing a security finding report.
+- For a local validation review of vulnerability evidence.
+- For a remote security review with ticket and disclosure context.
 
 ## Expected Files
 
-- `code-review.blueprint.yaml`: review contract.
-- `code-review-checklist.md`: directly usable checklist.
+- `code-review.blueprint.yaml`: security review contract.
+- `code-review-checklist.md`: directly usable security checklist.
 
 ## Minimal Example
 
 ```text
-Use the code-review checklist to review the current branch before opening a PR.
+Use the security-review checklist to validate the current findings package before disclosure.
 ```

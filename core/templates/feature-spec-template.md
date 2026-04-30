@@ -18,67 +18,67 @@ links:
 4. This is the "source of truth" for a specific system feature — describe current behavior in present tense
 -->
 
-# Feature Specification: <Feature Name>
+# Security Finding Specification: <Finding Name>
 
-> **Role of this Document:** Source of truth for a specific system feature. Captures current state, business logic, technical architecture, and operational details. Serves as the baseline for understanding the feature and planning future changes.
+> **Role of this Document:** Source of truth for a specific security finding. Captures current vulnerability state, impact context, attack surface mapping, and operational details. Serves as the baseline for understanding the finding and planning remediation.
 
 ## 1. Overview
 
-<!-- One-paragraph summary: What is this feature, who is it for, what value does it deliver? -->
+<!-- One-paragraph summary: What is this security finding, who is affected, and what risk does it introduce? -->
 
 ## 2. Business Context
 
 ### 2.1 Problem Statement
 
-<!-- - **Problem:** Description of the pain point or opportunity
-     - **Affected Users:** Target personas
-     - **Business Impact:** Consequences of not having this feature -->
+<!-- - **Problem:** Description of the vulnerability condition
+     - **Affected Users/Systems:** Exposed personas, assets, or services
+     - **Business Impact:** Consequences if vulnerability remains unaddressed -->
 
 ### 2.2 Goals & Success Metrics
 
 <!-- - **Primary Goal:** Main measurable objective
      - **KPIs:** Metric → Baseline → Target -->
 
-## 3. User Experience & Functionality
+## 3. Vulnerability Context & Behavior
 
-### 3.1 Capabilities
+### 3.1 Current Vulnerability State
 
-<!-- Bulleted list of what the user can do:
-- **Capability 1:** Description
-- **Capability 2:** Description
+<!-- Bulleted list of current vulnerable behavior:
+- **State 1:** Description
+- **State 2:** Description
 -->
 
-### 3.2 User Flows
+### 3.2 Exploitation Flows
 
-<!-- Primary user journeys. Use Mermaid diagrams for complex logic. -->
+<!-- Primary attacker/victim journeys. Use Mermaid diagrams for complex logic. -->
 
-### 3.3 UI States & References
+### 3.3 Vulnerability Details
 
-<!-- Happy path, loading/empty, error states, design source links -->
+<!-- CWE/CVSS, affected versions, entry points, and constraints -->
 
-### 3.4 Edge Cases & Error Handling
+### 3.4 Edge Cases & Failure Conditions
 
 <!-- Network failures, validation rules, concurrency, empty states -->
 
-## 4. Technical Architecture & Codebase Map
+## 4. Technical Architecture & Attack Surface Mapping
 
-### 4.1 High-Level Design
+### 4.1 High-Level Attack Surface
 
 <!-- Brief architectural pattern description -->
 
-### 4.2 Core Components & Directory Structure
+### 4.2 Exposed Components & Directory Structure
 
 <!-- Table: Path | Component | Responsibility -->
 
-### 4.3 Key Classes & Functions
+### 4.3 Key Classes, Functions, and Entry Points
 
 <!-- Key code artifacts where the logic lives -->
 
-### 4.4 Data Architecture
+### 4.4 Data and Trust Boundaries
 
 <!-- Entities, schema, storage, data flow -->
 
-### 4.5 API & Interface Contracts
+### 4.5 API & Interface Exposure
 
 <!-- Endpoints, events, external integrations -->
 
@@ -96,13 +96,13 @@ links:
 
 <!-- a11y, i18n considerations -->
 
-## 6. Quality Assurance Strategy
+## 6. Validation Strategy
 
-### 6.1 Testing Approach
+### 6.1 Validation Approach
 
 <!-- Table: Level | Location | Scope/Goal -->
 
-### 6.2 Test Data & Scenarios
+### 6.2 Evidence Data & Scenarios
 
 <!-- Critical scenarios, test data seeding -->
 

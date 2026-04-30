@@ -11,6 +11,9 @@ inputs:
   optional:
     - compliance_notes
     - incident_contacts
+    - cve_references
+    - cvss_vector
+    - disclosure_policy
 outputs:
   primary:
     - ".samourai/docai/guides/security-policy.md"

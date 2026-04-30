@@ -1,22 +1,22 @@
 ---
 #
-description: Generate or update change test plan
+description: Generate or update POC validation plan
 agent: test-plan-writer
 subtask: true
 ---
 
 <purpose>
-Create or update a COMPLETE, requirements-driven TEST PLAN for a change.
+Create or update a COMPLETE, requirements-driven POC VALIDATION PLAN for a vulnerability investigation.
 
 User invocation: `/write-test-plan <workItemRef> [options]`
 
 Options: `focus=backend`, `nfr-only`, `no-manual`, etc.
 
-The TEST PLAN:
+The POC VALIDATION PLAN:
 
-- Ensures full coverage of capabilities, interfaces, and acceptance criteria
-- Aligns with implementation plan phases
-- Maps scenarios to test types per `.samourai/ai/rules/testing-strategy.md`
+- Ensures safe validation of exploit hypotheses and constraints
+- Aligns with investigation plan phases
+- Maps validation scenarios to test types per `.samourai/ai/rules/testing-strategy.md`
   </purpose>
 
 <inputs>
@@ -55,10 +55,15 @@ Files:
 3. Read `.samourai/ai/rules/testing-strategy.md`; FAIL if missing
 4. Read `.samourai/blueprints/testing/` when available and pass it to
    `@test-plan-writer` as structural guidance only.
-5. Extract F-#, AC-#, API-#, NFR-# from spec
+5. Extract vulnerability requirements, AC-#, API-#, NFR-#, and evidence requirements from spec
 6. Checkout/create branch
 7. Delegate to `@test-plan-writer` agent (it has full template and rules)
-8. Report: path to created test plan, next step: `/run-plan <workItemRef>`
+8. Ensure resulting validation plan covers:
+   - POC safety validation
+   - reproducibility testing
+   - environment isolation verification
+   - evidence completeness checks
+9. Report: path to created POC validation plan, next step: `/run-plan <workItemRef>`
 </process>
 
 <output>
@@ -66,13 +71,13 @@ After successful execution:
 - Created/updated file path
 - Branch name
 - Coverage summary (how many AC-# covered, any TODOs)
-- Recommendation: "Run `/run-plan <workItemRef>` to begin execution"
+- Recommendation: "Run `/run-plan <workItemRef>` to begin investigation execution"
 </output>
 
 <constraints>
 - Spec must exist; fail if not found
 - Testing strategy must exist; fail if not found
 - Only the test plan file may be written
-- Derive all context from spec/plan; do not invent requirements
+- Derive all context from vulnerability spec/plan; do not invent requirements
 - Mark uncovered AC-# as TODO with open questions
 </constraints>

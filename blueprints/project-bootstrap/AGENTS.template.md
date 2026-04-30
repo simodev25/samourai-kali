@@ -1,17 +1,17 @@
-# <project_name> - Agent Instructions
+# <lab_name> - Agent Instructions
 
-## What This Repository Is
+## What This Security Lab Is
 
 <repository_summary>
 
-## Technical Stack
+## Target Environment & Tools
 
 - Language/runtime: <runtime>
 - Frameworks: <frameworks>
 - Tests: <test_tools>
 - Build/deployment: <build_deploy_tools>
 
-## Working Rules
+## Engagement Rules & Scope
 
 - Read this file before modifying the project.
 - Keep changes scoped to the request.
@@ -26,10 +26,10 @@
 - Project rules: `.samourai/ai/rules/`
 - Temporary files: `.samourai/tmpai/`
 
-## Verification Commands
+## Security Scan Commands
 
 ```bash
-<quality_command>
+<security_command>
 ```
 
 ## Key References

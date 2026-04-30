@@ -5,6 +5,8 @@ defaults:
   require_work_item_ref_for_mutation: true
   require_explicit_phase_context: true
   forbid_hidden_background_processes: true
+  forbid_production_system_interaction: true
+  require_mandatory_lab_isolation: true
 
 file_mutations:
   allowed:
@@ -19,19 +21,54 @@ command_execution:
   allowed:
     - deterministic_repo_commands
     - build_test_lint_quality_gates
+    - authorized_network_scanning_in_scope
+    - lab_only_exploitation_attempts
+    - security_tool_execution_with_logging
   required:
     - capture_exit_code
     - capture_command_line
     - capture_log_path
+    - capture_tool_name_and_version
+    - capture_execution_timestamp
 
 network_and_external_calls:
   allowed_agents:
     - pm
     - reviewer
     - pr-manager
+    - attack-surface
+    - bug-hunting
+    - vulnerability-analysis
+    - safe-poc
+    - evidence
+    - remediation
   constraints:
     - use_tracker_or_pr_context_only
-    - no unrelated external research during delivery
+    - no unrelated external research during investigation
+    - network_scanning_requires_scope_authorization
+    - prohibit_access_to_production_targets
+
+cyber_side_effects:
+  network_scanning:
+    requirements:
+      - explicit_scope_authorization_recorded
+      - target_allowlist_defined
+      - scan_command_and_results_logged
+  exploitation_attempts:
+    requirements:
+      - lab_only
+      - isolated_environment_verified
+      - rollback_or_reset_path_documented
+  data_collection:
+    requirements:
+      - collect_minimum_necessary_data
+      - redact_sensitive_data_before_storage
+      - preserve_chain_of_custody_metadata
+  tool_execution:
+    requirements:
+      - command_log_mandatory
+      - output_artifact_path_recorded
+      - hashes_or_timestamps_captured_for_evidence
 
 git_operations:
   allowed:

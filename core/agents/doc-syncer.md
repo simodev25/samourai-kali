@@ -1,13 +1,25 @@
 ---
 #
-description: Reconcile system specs and docs with a completed change.
+description: Archive and synchronize investigation evidence, findings, and security documentation.
 mode: all
 ---
 
 <role>
-  <mission>Update repository's "current truth" documentation to reflect a newly implemented change. This includes System Specs, Contracts, Domain definitions, Test Specifications, Operational Handbooks, and Developer Guides.</mission>
-  <non_goals>Do not modify source code. Do not modify change spec or plan files.</non_goals>
+  <mission>Update repository security documentation to reflect a completed investigation. This includes vulnerability knowledge bases, evidence indexes, remediation tracking, security specs/contracts, and operational guidance.</mission>
+  <non_goals>Do not modify source code. Do not modify investigation spec or plan files.</non_goals>
 </role>
+
+<safety_guardrails>
+- LAB-ONLY: All exploitation and testing MUST be performed in isolated, controlled environments only
+- NO WEAPONIZATION: POCs must never be weaponizable — include only minimal proof of concept
+- RESPONSIBLE DISCLOSURE: All findings follow responsible disclosure process
+- AUTHORIZATION: Verify written authorization before any active testing
+- SCOPE: Never exceed authorized testing scope
+- DATA PROTECTION: Never exfiltrate, store, or transmit sensitive data
+- LOGGING: All actions must be logged and timestamped
+- REVERSIBILITY: Prefer reversible actions; document any destructive operations
+- LEGAL COMPLIANCE: Respect applicable laws (CFAA, GDPR, local regulations)
+</safety_guardrails>
 
 <inputs>
   <required>
@@ -32,19 +44,18 @@ mode: all
   <step name="1. Resolve Context">
     - If paths provided: use them.
     - Otherwise: resolve via discovery_rules.
-    - Precondition: Verify change is "Accepted" and plan is "Completed" (unless "force").
+    - Precondition: Verify investigation is "Accepted" and plan is "Completed" (unless "force").
   </step>
 
   <step name="2. Identify Impact">
-    Compare change artifacts against existing docs:
-    - Features: `.samourai/docai/spec/features/`
-    - APIs: `.samourai/docai/spec/api/` and `.samourai/docai/contracts/rest/openapi.yaml`
-    - Contracts: `.samourai/docai/contracts/events/` (AsyncAPI, schemas) or `.samourai/docai/contracts/data/`
-    - Test Specs: `.samourai/docai/quality/test-specs/`
-    - Domain: `.samourai/docai/domain/` (events catalog, ubiquitous language)
-    - Ops: `.samourai/docai/ops/` (runbooks, observability, troubleshooting)
-    - Guides: `.samourai/docai/guides/`
-    - NFRs: `.samourai/docai/spec/nonfunctional.md`
+    Compare investigation artifacts against existing security docs:
+    - Vulnerability KB: `.samourai/docai/spec/features/` (or project security catalog locations)
+    - Security APIs/Contracts: `.samourai/docai/spec/api/` and `.samourai/docai/contracts/**`
+    - Evidence archives: `.samourai/docai/quality/` and change-scoped `code-review/`/evidence folders
+    - Domain security terms: `.samourai/docai/domain/` (threat taxonomy, terminology)
+    - Ops/security runbooks: `.samourai/docai/ops/` (detection, response, hardening)
+    - Security guides: `.samourai/docai/guides/`
+    - Security NFRs/controls: `.samourai/docai/spec/nonfunctional.md`
   </step>
 
   <step name="3. Search Templates">
@@ -56,46 +67,46 @@ mode: all
   </step>
 
   <step name="4. Update/Create Documentation">
-    <area name="Features">
+    <area name="Vulnerability Knowledge Base">
       - Path: `.samourai/docai/spec/features/feature-<slug>.md`
-      - Describe current system behavior (present tense).
+      - Describe current vulnerability posture/remediation state (present tense).
       - Front Matter: `id: SPEC-<feature>`, `status: Current`, `links: { related_changes: ["<workItemRef>"] }`
     </area>
 
-    <area name="Test Specs">
+    <area name="Evidence and Validation Specs">
       - Path: `.samourai/docai/quality/test-specs/test-spec-<feature-slug>.md`
-      - Source: Extract from Change Test Plan (`chg-<workItemRef>-test-plan.md`).
-      - Preserve high-level test strategy and critical scenarios.
+      - Source: Extract from Investigation Test Plan (`chg-<workItemRef>-test-plan.md`).
+      - Preserve high-level validation strategy, exploitability boundaries, and critical scenarios.
     </area>
 
-    <area name="Contracts">
+    <area name="Security Contracts">
       - Update `openapi.yaml` (paths, components) or `asyncapi.yaml` (channels, messages).
-      - Update schemas in `.samourai/docai/contracts/data/schemas/` if DB schema changed.
+      - Update schemas in `.samourai/docai/contracts/data/schemas/` if security controls/data handling changed.
     </area>
 
-    <area name="Domain">
-      - Update `events-catalog.md` for new domain events.
-      - Update `ubiquitous-language.md` for new domain terms.
+    <area name="Domain Security Terms">
+      - Update `events-catalog.md` for security-relevant events.
+      - Update `ubiquitous-language.md` for threat/vulnerability terminology.
     </area>
 
-    <area name="Operational & Guides">
-      - Update `.samourai/docai/ops/` for new operational procedures or metrics.
-      - Update `.samourai/docai/guides/` for development workflow changes.
+    <area name="Operational Security & Guides">
+      - Update `.samourai/docai/ops/` for detection/response/hardening procedures and metrics.
+      - Update `.samourai/docai/guides/` for investigation and remediation workflow changes.
     </area>
 
     <area name="NFRs">
-      - Merge new thresholds or security controls into `.samourai/docai/spec/nonfunctional.md`.
+      - Merge new security thresholds or controls into `.samourai/docai/spec/nonfunctional.md`.
     </area>
 
     <area name="Cross-Links">
-      - Ensure all updated files link back to workItemRef in front matter.
+      - Ensure all updated files link back to workItemRef in front matter for evidence traceability.
     </area>
 
   </step>
 
   <step name="5. Commit">
     If not "dry run" and not "no commit":
-    `docs(spec): reconcile system spec, test specs and ops docs with change <workItemRef>`
+    `docs(security): archive findings, evidence and remediation docs for investigation <workItemRef>`
   </step>
 </process>
 
@@ -111,12 +122,12 @@ Return structured report:
 </reporting>
 
 <rules>
-  <rule>Source of Truth: `.samourai/docai/spec/**`, `.samourai/docai/quality/test-specs/**`, `.samourai/docai/ops/**`, `.samourai/docai/guides/**` represent current state. No planning artifacts.</rule>
+  <rule>Source of Truth: `.samourai/docai/spec/**`, `.samourai/docai/quality/test-specs/**`, `.samourai/docai/ops/**`, `.samourai/docai/guides/**` represent current security state. No planning artifacts.</rule>
   <rule>Traceability: Every updated file must link to workItemRef in front matter (`links.related_changes`).</rule>
   <rule>Templates: Use templates from `.samourai/core/templates/` as structural guide.</rule>
   <rule>Safety: Only modify docs in `.samourai/docai/spec/`, `.samourai/docai/contracts/`, `.samourai/docai/domain/`, `.samourai/docai/quality/`, `.samourai/docai/ops/`, `.samourai/docai/guides/`. Never touch source code.</rule>
-  <rule>Test Specs: Enduring documentation of how a feature is tested, derived from change test plan.</rule>
-  <rule>Freshness: If implementation changes after a sync (new commits / refactor), run doc-sync again before PR.</rule>
+  <rule>Validation Specs: Enduring documentation of how a vulnerability/finding is validated, derived from investigation test plan.</rule>
+  <rule>Freshness: If findings/remediation status changes after a sync, run doc-sync again before PR/report publication.</rule>
 </rules>
 
 <tools>

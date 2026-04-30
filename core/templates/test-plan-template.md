@@ -21,14 +21,14 @@ links:
 4. Derive all requirements from the change spec — do not invent
 -->
 
-# Test Plan - <Change Title>
+# POC Validation Plan - <Finding Title>
 
 ## 1. Scope and Objectives
 
 <!-- 2-5 sentences describing:
-     - Core behavior to protect
-     - Data or security integrity risks
-     - Regressions that motivated this plan -->
+     - Vulnerability behavior to validate
+     - POC safety and lab isolation constraints
+     - Evidence integrity requirements -->
 
 ### 1.1 In Scope
 
@@ -44,14 +44,14 @@ links:
 
 ## 3. Coverage Overview
 
-### 3.1 Functional Coverage (F-#, AC-#)
+### 3.1 Finding Coverage (V-#, CC-#)
 
-<!-- Map each AC-# to test scenario(s):
-| AC ID | Description | TC ID(s) | Status |
+<!-- Map each confirmation criterion to validation scenario(s):
+| CC ID | Description | TC ID(s) | Status |
 |-------|-------------|----------|--------|
 -->
 
-### 3.2 Interface Coverage (API-#, EVT-#, DM-#)
+### 3.2 Attack Surface Coverage (API-#, EVT-#, DM-#)
 
 <!-- Map interface elements to test scenarios -->
 
@@ -59,16 +59,16 @@ links:
 
 <!-- Map NFRs to test scenarios or explain why not covered -->
 
-## 4. Test Types and Layers
+## 4. Validation Types and Layers
 
-<!-- Describe which layers apply and framework/directory for each:
-- **Unit tests:** Framework, root directory, pattern
-- **Integration tests:** Framework, root directory
-- **E2E tests:** Framework, root directory
-- **Non-functional:** Types, tools
+<!-- Describe which validation layers apply and framework/directory for each:
+- **POC validation:** Tooling, root directory, safety constraints
+- **Integration validation:** Framework, root directory
+- **Manual lab verification:** Steps, required controls
+- **Non-functional:** Evidence integrity, reproducibility, timing
 -->
 
-## 5. Test Scenarios
+## 5. Validation Scenarios
 
 ### 5.1 Scenario Index
 
@@ -86,7 +86,7 @@ links:
 **Scenario Type**: Happy Path | Edge Case | Negative | Corner Case | Regression
 **Impact Level**: Critical | Important | Minor
 **Priority**: High | Medium | Low
-**Related IDs**: F-#, AC-#, API-#, EVT-#, DM-#, NFR-#
+**Related IDs**: V-#, CC-#, API-#, EVT-#, DM-#, NFR-#
 **Test Type(s)**: Unit | Integration | Contract | E2E | Manual | Performance
 **Automation Level**: Automated | Manual | Semi-automated
 **Target Layer / Location**: <module/directory>
@@ -102,43 +102,52 @@ links:
 - ...
 -->
 
-## 6. Environments and Test Data
+## 6. Lab Environment and Validation Data
 
 <!-- Describe:
-- Required environments (local-dev, test, staging)
-- Test data generation and cleanup
-- Isolation strategy -->
+- Required isolated lab environments
+- Validation data generation and cleanup
+- Isolation strategy and safety controls -->
 
-## 7. Automation Plan and Implementation Mapping
+## 7. POC Safety Controls
+
+<!-- Required controls before execution:
+- Lab isolation confirmation
+- No-weaponization guardrails
+- Cleanup and rollback plan
+- Human approval checkpoints if needed -->
+
+## 8. Reproducibility and Evidence Integrity Mapping
 
 <!-- For each TC, specify:
-- Test file to create or update
+- Validation script/file to create or update
 - Execution command
-- Mocking requirements
+- Evidence artifacts (logs/screenshots/pcap/tool output)
+- Integrity method (hash, timestamp, chain of custody)
 - Implementation status: To Implement | Existing – Update | Existing – No Change | Manual Only -->
 
-## 8. Risks, Assumptions, and Open Questions
+## 9. Risks, Assumptions, and Open Questions
 
-### 8.1 Risks
+### 9.1 Risks
 
 <!-- Testing-related risks and mitigations -->
 
-### 8.2 Assumptions
+### 9.2 Assumptions
 
 <!-- Assumptions for test implementation -->
 
-### 8.3 Open Questions
+### 9.3 Open Questions
 
 <!-- Unresolved questions with blocking status and owner -->
 
-## 9. Plan Revision Log
+## 10. Plan Revision Log
 
 <!-- Table format:
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 -->
 
-## 10. Test Execution Log
+## 11. Validation Execution Log
 
 <!-- Populated during execution:
 | TC ID | Run Date | Result | Notes |

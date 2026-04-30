@@ -1,61 +1,61 @@
 ---
 name: writing-plans
-description: Use when you have a spec or requirements for a multi-step task, before touching code
+description: "Produce detailed investigation/attack plans from a vulnerability spec"
 ---
 
-# Writing Plans
+# Writing Attack/Investigation Plans
 
 ## Overview
 
-Write comprehensive implementation plans assuming the engineer has zero context for our codebase and questionable taste. Document everything they need to know: which files to touch for each task, code, testing, docs they might need to check, how to test it. Give them the whole plan as bite-sized tasks. DRY. YAGNI. TDD. Frequent commits.
+Write comprehensive investigation plans assuming the security researcher has zero context for this environment and needs explicit, operational steps. Document exactly what to analyze: attack surfaces, recon/scanning steps, hypothesis tests, POC work, evidence capture, and reporting tasks. Keep steps bite-sized. DRY. YAGNI. Frequent commits.
 
-Assume they are a skilled developer, but know almost nothing about our toolset or problem domain. Assume they don't know good test design very well.
+Assume they are a skilled researcher, but know almost nothing about local tooling or system-specific threat context.
 
-**Announce at start:** "I'm using the writing-plans skill to create the implementation plan."
+**Announce at start:** "I'm using the writing-plans skill to create the investigation plan."
 
 **Context:** This should be run in a dedicated worktree (created by brainstorming skill).
 
-**Save plans to:** `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md`
+**Save plans to:** `docs/investigations/plans/YYYY-MM-DD-<investigation-name>.md`
 - (User preferences for plan location override this default)
 
 ## Scope Check
 
-If the spec covers multiple independent subsystems, it should have been broken into sub-project specs during brainstorming. If it wasn't, suggest breaking this into separate plans — one per subsystem. Each plan should produce working, testable software on its own.
+If the vulnerability spec covers multiple independent threat domains, suggest breaking into separate plans — one per domain. Each plan should produce actionable, verifiable evidence on its own.
 
 ## File Structure
 
-Before defining tasks, map out which files will be created or modified and what each one is responsible for. This is where decomposition decisions get locked in.
+Before defining tasks, map out which files/artifacts will be created or modified and what each one is responsible for.
 
-- Design units with clear boundaries and well-defined interfaces. Each file should have one clear responsibility.
-- You reason best about code you can hold in context at once, and your edits are more reliable when files are focused. Prefer smaller, focused files over large ones that do too much.
-- Files that change together should live together. Split by responsibility, not by technical layer.
-- In existing codebases, follow established patterns. If the codebase uses large files, don't unilaterally restructure - but if a file you're modifying has grown unwieldy, including a split in the plan is reasonable.
+- Design investigation units with clear boundaries and interfaces.
+- Prefer focused artifacts over monolithic reports.
+- Artifacts that evolve together should live together.
+- In existing codebases, follow established patterns unless they block investigation clarity.
 
-This structure informs the task decomposition. Each task should produce self-contained changes that make sense independently.
+This structure informs task decomposition. Each task should produce self-contained evidence.
 
 ## Bite-Sized Task Granularity
 
 **Each step is one action (2-5 minutes):**
-- "Write the failing test" - step
-- "Run it to make sure it fails" - step
-- "Implement the minimal code to make the test pass" - step
-- "Run the tests and make sure they pass" - step
-- "Commit" - step
+- "Define exploitation hypothesis" - step
+- "Run minimal test to validate/disprove" - step
+- "Capture evidence (log/request/trace)" - step
+- "Implement minimal POC code" - step
+- "Document result" - step
 
 ## Plan Document Header
 
 **Every plan MUST start with this header:**
 
 ```markdown
-# [Feature Name] Implementation Plan
+# [Investigation Name] Investigation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to execute this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** [One sentence describing what this builds]
+**Goal:** [One sentence describing what this investigation proves or disproves]
 
-**Architecture:** [2-3 sentences about approach]
+**Approach:** [2-3 sentences about attack/investigation approach]
 
-**Tech Stack:** [Key technologies/libraries]
+**Tool Stack:** [Key tools/libraries/platforms]
 
 ---
 ```
@@ -63,90 +63,95 @@ This structure informs the task decomposition. Each task should produce self-con
 ## Task Structure
 
 ````markdown
-### Task N: [Component Name]
+### Task N: [Surface or Vector Name]
 
-**Files:**
-- Create: `exact/path/to/file.py`
-- Modify: `exact/path/to/existing.py:123-145`
-- Test: `tests/exact/path/to/test.py`
+**Files/Artifacts:**
+- Create: `exact/path/to/poc_or_notes`
+- Modify: `exact/path/to/config_or_script`
+- Evidence: `exact/path/to/evidence-file`
 
-- [ ] **Step 1: Write the failing test**
+- [ ] **Step 1: Define exploitation hypothesis**
 
-```python
-def test_specific_behavior():
-    result = function(input)
-    assert result == expected
+```text
+Hypothesis: [Specific, falsifiable security claim]
+Expected behavior: [What should happen if exploitable]
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [ ] **Step 2: Run minimal test**
 
-Run: `pytest tests/path/test.py::test_name -v`
-Expected: FAIL with "function not defined"
+Run: `exact command`
+Expected: [clear expected output]
 
-- [ ] **Step 3: Write minimal implementation**
+- [ ] **Step 3: Build minimal POC**
 
 ```python
-def function(input):
-    return expected
+# minimal reproducible POC snippet
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [ ] **Step 4: Capture evidence**
 
-Run: `pytest tests/path/test.py::test_name -v`
-Expected: PASS
+Run: `exact evidence capture command`
+Expected: [evidence artifact path + signal]
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 5: Document finding status**
 
-```bash
-git add tests/path/test.py src/path/file.py
-git commit -m "feat: add specific feature"
+```markdown
+Result: [confirmed / disproved / inconclusive]
+Constraints: [...]
+Risk/impact: [...]
 ```
 ````
 
+## POC Cycle (replaces TDD cycle)
+
+For every investigation task, enforce:
+
+1. **Hypothesis** — explicit, falsifiable exploitation claim
+2. **Test** — minimal, controlled execution to validate/disprove
+3. **Proof** — reproducible evidence artifact
+4. **Document** — clear outcome and constraints
+
+Never skip from idea to claim without proof.
+
 ## No Placeholders
 
-Every step must contain the actual content an engineer needs. These are **plan failures** — never write them:
-- "TBD", "TODO", "implement later", "fill in details"
-- "Add appropriate error handling" / "add validation" / "handle edge cases"
-- "Write tests for the above" (without actual test code)
-- "Similar to Task N" (repeat the code — the engineer may be reading tasks out of order)
-- Steps that describe what to do without showing how (code blocks required for code steps)
-- References to types, functions, or methods not defined in any task
+Every step must contain exact content needed by a security researcher. These are **plan failures** — never write them:
+- "TBD", "TODO", "investigate later", "fill in details"
+- "Run scanner" (without exact target/options)
+- "Collect evidence" (without exact command/output path)
+- "Similar to Task N" (repeat exact details)
+- Steps without expected outputs
 
 ## Remember
-- Exact file paths always
-- Complete code in every step — if a step changes code, show the code
+- Exact file/artifact paths always
 - Exact commands with expected output
-- DRY, YAGNI, TDD, frequent commits
+- Investigation tasks include recon, scanning, analysis, POC, evidence, reporting
+- Frequent commits with traceable evidence progression
 
 ## Self-Review
 
-After writing the complete plan, look at the spec with fresh eyes and check the plan against it. This is a checklist you run yourself — not a subagent dispatch.
+After writing the complete plan, validate it against the vulnerability spec:
 
-**1. Spec coverage:** Skim each section/requirement in the spec. Can you point to a task that implements it? List any gaps.
+1. **Spec coverage:** every claim/scope item maps to at least one task.
+2. **Placeholder scan:** remove vague or incomplete instructions.
+3. **Consistency:** hypotheses, commands, artifacts, and expected outputs align.
 
-**2. Placeholder scan:** Search your plan for red flags — any of the patterns from the "No Placeholders" section above. Fix them.
-
-**3. Type consistency:** Do the types, method signatures, and property names you used in later tasks match what you defined in earlier tasks? A function called `clearLayers()` in Task 3 but `clearFullLayers()` in Task 7 is a bug.
-
-If you find issues, fix them inline. No need to re-review — just fix and move on. If you find a spec requirement with no task, add the task.
+Fix issues inline before handoff.
 
 ## Execution Handoff
 
 After saving the plan, offer execution choice:
 
-**"Plan complete and saved to `docs/superpowers/plans/<filename>.md`. Two execution options:**
+**"Plan complete and saved to `docs/investigations/plans/<filename>.md`. Two execution options:**
 
-**1. Subagent-Driven (recommended)** - I dispatch a fresh subagent per task, review between tasks, fast iteration
+**1. Subagent-Driven (recommended)** - dispatch a fresh subagent per task, review between tasks
 
-**2. Inline Execution** - Execute tasks in this session using executing-plans, batch execution with checkpoints
+**2. Inline Execution** - execute tasks in this session using executing-plans with checkpoints
 
 **Which approach?"**
 
 **If Subagent-Driven chosen:**
 - **REQUIRED SUB-SKILL:** Use superpowers:subagent-driven-development
-- Fresh subagent per task + two-stage review
 
 **If Inline Execution chosen:**
 - **REQUIRED SUB-SKILL:** Use superpowers:executing-plans
-- Batch execution with checkpoints for review

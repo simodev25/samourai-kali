@@ -1,17 +1,17 @@
 ---
 #
-description: Interactive change-planning session to prepare context for /write-spec.
+description: Interactive investigation planning session to prepare context for /write-vuln-spec.
 ---
 
 <purpose>
-Guide the user through a structured, interactive planning conversation that transforms an initial idea or problem report into a complete, implementation-agnostic planning context for a single tracked change.
+Guide the user through a structured, interactive planning conversation that transforms an initial target or finding into a complete, investigation-agnostic planning context for a single tracked investigation.
 
 This command:
 
 - Discovers or confirms the workItemRef (e.g., `PDEV-123`, `GH-456`) by scanning existing change specs or querying the tracker.
-- Orients itself in the repository and high-level documentation under `.samourai/docai/spec/` and related docs.
-- Systematically elicits and refines all information needed by `/write-spec` (WHY, outcomes, boundaries, contracts, risks, NFRs, etc.).
-- Concludes with a compact `<change_planning_summary>` plus a clear recommendation to invoke `/write-spec <workItemRef>`.
+- Orients itself in the repository and security-relevant documentation under `.samourai/docai/spec/` and related docs.
+- Systematically elicits and refines all information needed by `/write-vuln-spec` (target, attack surface, authorization, risks, evidence requirements, reporting needs).
+- Concludes with a compact `<investigation_planning_summary>` plus a clear recommendation to invoke `/write-vuln-spec <workItemRef>`.
 
 This command never writes files or modifies Git state; it operates purely via conversational planning and read-only repository inspection.
 </purpose>
@@ -21,11 +21,11 @@ User invocation:
   /plan-change [<workItemRef>] [free-text idea / context]
 Examples:
   /plan-change
-    → Query tracker or discover next workItemRef, then ask what you want to change.
+    → Query tracker or discover next workItemRef, then ask what target/finding to investigate.
   /plan-change PDEV-123
     → Use PDEV-123 as the intended workItemRef, then start refinement questions.
-  /plan-change GH-456 New tenant billing model for enterprise customers
-    → Use GH-456 as workItemRef and seed initial understanding from the idea text.
+  /plan-change GH-456 Suspicious auth bypass in tenant admin APIs
+    → Use GH-456 as workItemRef and seed initial understanding from the target/finding text.
 </command>
 
 <inputs>
@@ -78,53 +78,52 @@ Usage rules:
 1. **Initialization & orientation**
    - Confirm single repository scope and target service/app.
    - Resolve and confirm workItemRef using workItemRef_resolution.
-   - Ask for short, plain-language description of the desired change.
+   - Clarify the investigation target or initial finding in plain language.
    - If ideaSeed provided, restate for confirmation.
 
-2. **Clarify problem and context**
-   - Elicit: current state, pain points, affected users, triggers, constraints.
-   - Probe for singular, measurable problem statement.
-   - Identify change type: feat|fix|refactor|docs|test|chore|perf|build|ci|revert|style.
+2. **Define scope authorization**
+   - Confirm explicit authorization boundaries and legal/ethical scope.
+   - Capture allowed targets, forbidden targets, allowed tooling, and time windows.
+   - Document rules of engagement and escalation contacts.
 
-3. **Define goals and success metrics**
-   - Separate: business goals, user goals, operational goals.
-   - For each goal, elicit measurable success metric (baseline, target, window).
+3. **Identify attack surface priorities**
+   - Enumerate entry points: external services, APIs, auth flows, dependencies, infrastructure edges.
+   - Rank by risk, exploit likelihood, impact, and investigative value.
+   - Mark priority tiers for sequencing.
 
-4. **Outline functional capabilities and flows**
-   - Translate idea into high-level Functional Capabilities (F-# style).
-   - Clarify actors, triggers, observable outcomes.
-   - Elicit key flows: happy path, edge/error paths, cross-service flows.
+4. **Select tools and methodology**
+   - Choose reconnaissance, analysis, validation, and evidence tools.
+   - Confirm safe execution constraints for each tool.
+   - Define data handling and sensitive-data redaction requirements.
 
-5. **Identify interfaces & integration contracts**
-   - For UI changes: clarify main surfaces/components in logical terms.
-   - For APIs: method, path, request/response examples.
-   - For events: names, topics, payloads, consumers.
-   - For data model: new entities, fields, constraints.
+5. **Plan investigation phases**
+   - reconnaissance → analysis → POC → evidence → report
+   - For each phase: goals, outputs, checkpoints, stop conditions.
 
-6. **Non-functional requirements and telemetry**
-   - Performance targets, reliability/availability, security, privacy.
-   - Observability (metrics, logs, traces, alerts).
-   - Accessibility and usability.
+6. **Risk controls and safety guardrails**
+   - Ensure environment isolation and non-production safety.
+   - Define rollback/containment actions for accidental impact.
+   - Define evidence integrity expectations (hashing, timestamps, custody).
 
 7. **Dependencies, risks, assumptions**
-   - Internal dependencies: services/components requiring coordination.
-   - External dependencies: vendors/APIs/third-party systems.
-   - Risks (RSK-# style) with Impact & Probability and mitigations.
-   - Version impact (none|patch|minor|major) and risk level (low|medium|high).
+   - Internal dependencies: platforms, teams, credentials, staging access.
+   - External dependencies: third-party intel, CVE databases, tooling feeds.
+   - Risks (RSK-# style) with impact/probability and mitigations.
+   - Classification and severity assumptions for unresolved unknowns.
 
-8. **Affected components and scope boundaries**
-   - List impacted components with `[CREATE]`, `[MODIFY]`, `[DEPRECATE]`, `[REMOVE]`.
-   - Clarify "In Scope", "Out of Scope" (`[OUT]`), "Deferred / Maybe-Later".
+8. **Affected assets and scope boundaries**
+   - List targeted assets with `[PRIORITY]`, `[DEFERRED]`, `[OUT]`.
+   - Clarify in-scope attack paths vs prohibited pathways.
 
-9. **Acceptance criteria and rollout strategy**
-   - Draft Given/When/Then acceptance criteria.
-   - Discuss rollout: migration, dark launch, rollback triggers, communication.
+9. **Investigation acceptance criteria and reporting strategy**
+   - Draft measurable criteria for a completed investigation.
+   - Define report audience, required sections, and disclosure path.
 
 10. **Consolidation and readiness check**
    - Maintain explicit list of Open Questions (BLOCKING / NON-BLOCKING with owner).
    - Resolve as many as possible; confirm user is comfortable proceeding.
-   - Synthesize final `<change_planning_summary>`.
-    </session_flow>
+   - Synthesize final `<investigation_planning_summary>`.
+     </session_flow>
 
 <questioning_strategy>
 
@@ -145,130 +144,95 @@ Usage rules:
 When planning is complete, synthesize compact structured summary:
 
 ```md
-<change_planning_summary>
-change.workItemRef: PDEV-123
-change.type: feat
-change.slug_hint: new-tenant-billing-model
-change.title: New tenant billing model for enterprise customers
-version_impact: minor
-risk_level: medium
-owners: ["team-billing", "@product-owner"]
-service: "billing-service"
-labels: ["billing", "enterprise", "payments"]
-audience: internal
-security_impact: medium
+<investigation_planning_summary>
+investigation.workItemRef: GH-456
+investigation.type: security-investigation
+investigation.slug_hint: auth-bypass-tenant-admin
+investigation.title: Investigate potential auth bypass in tenant admin APIs
+risk_level: high
+owners: ["security-team", "@incident-owner"]
+target_system: "tenant-admin-service"
+labels: ["security", "vulnerability", "auth"]
+audience: internal-security
 
 summary: |
-Short, 1-3 sentence elevator pitch of the change.
+Short, 1-3 sentence summary of the investigation objective.
 
-context: |
-Current state, pain points, constraints.
+initial_finding: |
+Current signal, symptoms, and why this may indicate a vulnerability.
 
-problem_statement: |
-"Because <limitation>, <user> cannot <outcome>, resulting in <impact>."
+scope_authorization:
+allowed_targets: ["..."]
+forbidden_targets: ["..."]
+rules_of_engagement: ["..."]
+approval_reference: "ticket/comment/link"
 
-goals:
-business: ["...", "..."]
-user: ["...", "..."]
-operational: ["...", "..."]
-
-success_metrics:
-
-- name: "Checkout conversion rate"
-  baseline: "2.1%"
-  target: "≥ 3.0%"
-  window: "first 90 days after rollout"
-
-functional_capabilities:
-
-- id: "F-1"
-  name: "Configurable tenant billing model"
-  description: "..."
+attack_surface_priorities:
+- id: "AS-1"
+  area: "Authentication middleware"
+  priority: "high"
   rationale: "..."
 
-user_and_system_flows:
+tooling_plan:
+recon: ["nmap", "nikto"]
+analysis: ["semgrep", "manual review"]
+poc: ["controlled scripts"]
+evidence: ["hashing", "timestamp capture"]
 
-- id: "Flow-1"
-  name: "Tenant admin configures billing model"
-  summary: "..."
-
-interfaces:
-rest_endpoints: - id: "API-1"
-method: "POST"
-path: "/api/billing/tenants/{tenantId}/billing-model"
-purpose: "Create or update tenant billing model"
-visibility: "internal"
-events: - id: "EVT-1"
-name: "TenantBillingModelChanged"
-topic: "billing.tenant-model.changed"
-data_model_impacts: - id: "DM-1"
-summary: "New BillingModel entity..."
-
-non_functional_requirements:
-
-- id: "NFR-Perf-1"
-  summary: "P95 latency ≤ 300ms under 200 RPS."
-
-telemetry_and_observability:
-
-- summary: "Metrics, logs, alerts required."
+investigation_phases:
+- name: "recon"
+  objective: "..."
+- name: "analysis"
+  objective: "..."
+- name: "poc"
+  objective: "..."
+- name: "evidence"
+  objective: "..."
+- name: "report"
+  objective: "..."
 
 risks:
-
 - id: "RSK-1"
   description: "..."
   impact: "H|M|L"
   probability: "H|M|L"
   mitigation: "..."
 
-assumptions:
-
-- "..."
-
 dependencies:
 internal: ["..."]
-external: ["..."]
-
-affected_components_high_level:
-
-- tag: "[MODIFY]"
-  component: "Billing Service"
-  notes: "Add support for tenant-specific billing rules."
+external: ["NVD", "CVE feeds"]
 
 acceptance_criteria_examples:
-
-- id: "AC-F1-1"
-  text: "Given <precondition> When <action> Then <outcome>."
-
-rollout_and_change_management: |
-High-level rollout concept, migration notes, rollback triggers.
+- id: "AC-1"
+  text: "Given authorized scope, when recon+analysis complete, then findings are evidence-backed and reproducible."
 
 open_questions:
-blocking: - id: "OQ-1"
-question: "..."
-owner: "..."
-non_blocking: - id: "OQ-2"
-question: "..."
-owner: "..."
+blocking:
+- id: "OQ-1"
+  question: "..."
+  owner: "..."
+non_blocking:
+- id: "OQ-2"
+  question: "..."
+  owner: "..."
 
 decisions:
-
 - id: "DEC-1"
-  title: "Chosen billing model representation"
+  title: "Primary target path for initial probing"
   chosen_option_and_rationale: "..."
   status: "Final|Pending|Revisit"
-  </change_planning_summary>
+</investigation_planning_summary>
 ```
 
 </planning_summary_structure>
 
 <handoff_to_spec>
-After emitting `<change_planning_summary>`:
+After emitting `<investigation_planning_summary>`:
 
 1. Output concise human-readable recap.
-2. Recommend exact next command: `/write-spec <workItemRef>`.
+2. Recommend exact next command: `/write-vuln-spec <workItemRef>`.
 3. After spec approval: `/write-plan <workItemRef>`.
-4. Do NOT call `/write-spec` or `/write-plan` automatically.
+4. Do NOT call `/write-vuln-spec` or `/write-plan` automatically.
 5. Do NOT output the full spec template or write any files.
    </handoff_to_spec>
 
@@ -284,22 +248,21 @@ After emitting `<change_planning_summary>`:
 
 <examples>
 Example 1 — New feature (no ref provided):
-- User: `/plan-change` + "I want a new Quick Insights dashboard."
+- User: `/plan-change` + "I suspect SSRF in webhook callbacks."
 - Agent:
-  - Queries tracker or proposes creating ticket via `@pm`.
-  - Confirms change.type as `feat`, owners, service, labels.
-  - Asks about current observability, goals, KPIs.
-  - Identifies interfaces (UI, API, aggregations).
-  - Gathers NFRs and dependencies.
-  - Produces `<change_planning_summary>` and suggests `/write-spec <workItemRef>`.
+   - Queries tracker or proposes creating ticket via `@pm`.
+   - Confirms investigation scope authorization, owners, targets, labels.
+   - Asks about attack surface priorities and evidence constraints.
+   - Identifies interfaces (API, network perimeter, dependencies).
+   - Produces `<investigation_planning_summary>` and suggests `/write-vuln-spec <workItemRef>`.
 
 Example 2 — Bug fix (ref provided):
 
-- User: `/plan-change GH-456` + "Fix 500 errors on invoice download."
+- User: `/plan-change GH-456` + "Investigate auth bypass on invoice download."
 - Agent:
-  - Validates GH-456 format and confirms.
-  - Classifies as `fix`; clarifies if any behavior changes allowed.
-  - Asks for error characteristics, affected customers, constraints.
-  - Clarifies acceptance criteria.
-  - Produces `<change_planning_summary>` for GH-456 and suggests `/write-spec GH-456`.
-    </examples>
+   - Validates GH-456 format and confirms.
+   - Classifies as `security-investigation`; confirms authorized scope.
+   - Asks for exposure indicators, affected assets, constraints.
+   - Clarifies investigation acceptance criteria.
+   - Produces `<investigation_planning_summary>` for GH-456 and suggests `/write-vuln-spec GH-456`.
+     </examples>

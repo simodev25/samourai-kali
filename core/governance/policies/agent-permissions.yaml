@@ -24,6 +24,15 @@ agents:
       - doc-syncer
       - committer
       - pr-manager
+      - attack-surface
+      - bug-hunting
+      - vulnerability-analysis
+      - cve-intelligence
+      - exploitability
+      - safe-poc
+      - evidence
+      - cve-report
+      - remediation
 
   spec-writer:
     may_write:
@@ -91,3 +100,58 @@ agents:
     may_execute_commands: true
     may_commit: false
     may_open_pr: true
+
+  attack-surface:
+    may_write:
+      - ".samourai/docai/changes/**/chg-*-recon.*"
+    may_execute_commands: true
+    may_commit: false
+
+  bug-hunting:
+    may_write:
+      - ".samourai/docai/changes/**/chg-*-findings.*"
+    may_execute_commands: true
+    may_commit: false
+
+  vulnerability-analysis:
+    may_write:
+      - ".samourai/docai/changes/**/chg-*-analysis.*"
+    may_execute_commands: true
+    may_commit: false
+
+  cve-intelligence:
+    may_write:
+      - ".samourai/docai/changes/**/chg-*-cve-intel.*"
+    may_execute_commands: false
+    may_commit: false
+
+  exploitability:
+    may_write:
+      - ".samourai/docai/changes/**/chg-*-exploitability.*"
+    may_execute_commands: false
+    may_commit: false
+
+  safe-poc:
+    may_write:
+      - "**"
+    may_execute_commands: true # lab-only
+    may_commit: false
+
+  evidence:
+    may_write:
+      - "evidence/**"
+      - ".samourai/docai/changes/**/evidence-*"
+    may_execute_commands: true # hashing, timestamping
+    may_commit: false
+
+  cve-report:
+    may_write:
+      - ".samourai/docai/changes/**/chg-*-report.*"
+    may_execute_commands: false
+    may_commit: false
+
+  remediation:
+    may_write:
+      - "**"
+    may_execute_commands: true # lab testing
+    may_commit: false

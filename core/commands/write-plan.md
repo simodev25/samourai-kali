@@ -1,12 +1,12 @@
 ---
 #
-description: Generate or update implementation plan
+description: Generate or update investigation plan
 agent: plan-writer
 subtask: true
 ---
 
 <purpose>
-Produce (or update) a fully structured IMPLEMENTATION PLAN from the canonical CHANGE SPECIFICATION.
+Produce (or update) a fully structured INVESTIGATION PLAN from the canonical VULNERABILITY SPECIFICATION.
 
 User invocation: `/write-plan <workItemRef>`
 
@@ -43,11 +43,20 @@ Files:
 <process>
 1. Parse `workItemRef` from $ARGUMENTS
 2. Locate change folder and spec file per <discovery_rules>
-3. Extract slug, type, owners, etc. from spec front matter
+3. Extract slug, type, owners, target systems, and severity context from spec front matter
 4. Read `.samourai/ai/agent/project-profile.md` when present and pass it to `@plan-writer`.
 5. Checkout/create branch
 6. Delegate to `@plan-writer` agent (it has full template, project profile policy, and rules)
-7. Report: path to created plan, project profile applied, next step: `/write-test-plan <workItemRef>` or `/run-plan <workItemRef>`
+7. Ensure the resulting investigation plan phases are explicitly covered:
+   - reconnaissance
+   - vulnerability analysis
+   - CVE research
+   - exploitability assessment
+   - POC development
+   - evidence collection
+   - reporting
+   - remediation
+8. Report: path to created plan, project profile applied, next step: `/write-test-plan <workItemRef>` or `/run-plan <workItemRef>`
 </process>
 
 <output>
@@ -55,11 +64,11 @@ After successful execution:
 - Created/updated file path
 - Branch name
 - Project profile applied: mode/modifiers used, or `none` if absent
-- Recommendation: "Run `/write-test-plan <workItemRef>` to generate the test plan, or `/run-plan <workItemRef>` to begin execution"
+- Recommendation: "Run `/write-test-plan <workItemRef>` to generate the POC validation plan, or `/run-plan <workItemRef>` to begin investigation execution"
 </output>
 
 <constraints>
 - Spec must exist; fail if not found
 - Only the plan file may be written
-- Derive all context from spec; do not invent
+- Derive all context from vulnerability spec; do not invent
 </constraints>

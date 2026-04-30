@@ -1,12 +1,12 @@
 ---
 #
-description: Review change vs spec, plan, code quality heuristics, and repo rules; append remediation phase if needed.
+description: Review finding vs vuln spec, investigation plan, evidence quality heuristics, and repo rules; append remediation phase if needed.
 agent: reviewer
 subtask: true
 ---
 
 <purpose>
-Invoke the unified reviewer in local mode. Validates the change diff against specification, implementation plan, code quality heuristics (security, performance, correctness, etc.), and repository rules. If gaps found, appends a remediation phase to the plan.
+Invoke the unified reviewer in local mode for security investigations. Validates finding accuracy against vulnerability specification, investigation plan, evidence quality heuristics (safety, reproducibility, completeness, severity consistency), and repository rules. If gaps found, appends a remediation phase to the plan.
 </purpose>
 
 <command>
@@ -16,7 +16,7 @@ Examples:
   /review PDEV-123
   /review GH-456 dry run
   /review PDEV-123 base=staging
-  /review GH-456 head=feat/GH-456/new-endpoint base=production preview only
+  /review GH-456 head=fix/GH-456/auth-bypass base=production preview only
   /review PDEV-123 no commit
 </command>
 
@@ -27,10 +27,10 @@ Examples:
 </inputs>
 
 <project_skills_activation>
-Before analyzing the change:
+Before analyzing the finding:
 
 1. Discover generated project skills in `.opencode/skills/project/**/SKILL.md`.
-2. Select up to 2 skills most relevant to review context (review rules, architecture conventions, sensitive zones, quality expectations).
+2. Select up to 2 skills most relevant to review context (review rules, security conventions, sensitive zones, quality expectations).
 3. Apply selected skills as repository-local review constraints.
 4. If no relevant project skill is found, continue with generic review framework only.
 </project_skills_activation>
@@ -72,23 +72,26 @@ Directives (case-insensitive):
    </pre_flight>
 
 <review_method>
-The reviewer agent applies its full review framework:
+The reviewer agent applies its full review framework in cyber context:
 
-**Spec/plan compliance (local mode):**
-- Scope compliance: changed files align with spec capabilities
-- Plan alignment: all tasks done, acceptance criteria have evidence
+**Finding/spec/plan compliance (local mode):**
+- Finding accuracy: claims are supported by reproducible evidence
+- Plan alignment: investigation tasks complete, acceptance criteria have evidence
 - Plan task audit: OPEN_TASKS, DONE_BUT_UNCHECKED, CHECKED_BUT_MISSING
-- Out-of-scope detection: changes to files not in plan
+- Out-of-scope detection: actions or claims outside authorized scope
 
-**Code quality heuristics (both modes):**
-- Full built-in heuristic framework: correctness, security, performance, reliability, API compat, testing gaps, documentation, dependencies
-- Repository-local rules from `.samourai/ai/agent/code-review-instructions.md` and `.samourai/ai/rules/`
+**Security investigation quality heuristics:**
+- POC safety controls and blast-radius containment
+- Evidence completeness (hashes, timestamps, custody metadata)
+- CVSS scoring consistency and rationale quality
+- CWE mapping quality and affected-version precision
+- Report quality: clear reproduction, impact, remediation guidance
 
 **Ticket context (when available):**
-- Acceptance criteria verification against implementation
+- Acceptance criteria verification against investigative outputs
 - Linked issue traversal for additional constraints and decisions
 
-The reviewer loads all available context — spec, plan, ticket, repo rules, heuristics — and applies them holistically. Do not duplicate heuristic definitions here; they live in the reviewer agent prompt.
+The reviewer loads all available context — vuln spec, plan, ticket, repo rules, heuristics — and applies them holistically. Do not duplicate heuristic definitions here; they live in the reviewer agent prompt.
 When available, pass `.samourai/blueprints/code-review/` as structural guidance
 for checklist and review output shape. The blueprint does not change publish
 permissions or write scope.
@@ -102,16 +105,16 @@ permissions or write scope.
 If findings exist, append new phase to plan:
 
 ```
-### Phase X: Code Review Remediation
+### Phase X: Finding Review Remediation
 
-- Goal: Address code review findings.
+- Goal: Address finding review issues.
 - Tasks:
   - [ ] <precise fix per finding>
 - Acceptance criteria:
-  - Must: All fixes implemented and validated.
-  - Must: Updated tests pass.
+  - Must: All finding issues implemented and validated.
+  - Must: Updated validation checks pass.
 - Files and modules: <paths>
-- Completion signal: docs(plan): remediate review findings for <workItemRef>
+- Completion signal: docs(plan): remediate finding review issues for <workItemRef>
 ```
 
 Rules:

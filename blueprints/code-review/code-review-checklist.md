@@ -1,28 +1,31 @@
 # Code Review Checklist
 
-## Correctness
+## Finding Accuracy
 
-- [ ] The change satisfies acceptance criteria.
-- [ ] Edge cases are handled.
-- [ ] Errors are handled explicitly.
+- [ ] The reported vulnerability is confirmed.
+- [ ] Reproduction is verified step-by-step.
+- [ ] The root cause is identified and documented.
 
-## Tests
+## Evidence Quality
 
-- [ ] Tests cover the happy path.
-- [ ] Tests cover at least one relevant error path.
-- [ ] Verification commands are documented.
+- [ ] Evidence artifacts are hashed.
+- [ ] Evidence is timestamped.
+- [ ] Chain of custody is documented.
+- [ ] Reproduction is independently reproducible.
 
-## Security
+## POC Safety
 
-- [ ] No secret, token, or credential is added.
-- [ ] User input is validated.
-- [ ] Logs do not expose sensitive information.
+- [ ] No weaponization details are included.
+- [ ] Validation is lab-only.
+- [ ] Cleanup steps are documented and feasible.
+- [ ] Report includes a safety header.
 
-## Maintainability
+## Report Quality
 
-- [ ] The change is scoped.
-- [ ] Names are explicit.
-- [ ] Useful documentation is updated.
+- [ ] CVSS scoring is accurate and justified.
+- [ ] CWE mapping is correct.
+- [ ] All required report sections are present.
+- [ ] Timeline of discovery and validation is complete.
 
 ## Decision
 

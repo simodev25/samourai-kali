@@ -24,7 +24,7 @@ change:
 4. See .samourai/docai/documentation-handbook.md for conventions
 -->
 
-# CHANGE SPECIFICATION
+# VULNERABILITY SPECIFICATION
 
 > **PURPOSE**: <!-- One-sentence purpose statement describing what this change achieves and why it matters -->
 
@@ -42,11 +42,11 @@ change:
 
 <!-- List specific problems, gaps, or pain points that motivate this change -->
 
-## 3. PROBLEM STATEMENT
+## 3. VULNERABILITY DESCRIPTION
 
 <!-- Single paragraph: "Because <limitation>, <user> cannot <outcome>, resulting in <impact>." -->
 
-## 4. GOALS
+## 4. INVESTIGATION OBJECTIVES
 
 <!-- List goals using G-# IDs:
 - **G-1**: ...
@@ -67,21 +67,23 @@ change:
 - **NG-1**: ...
 -->
 
-## 5. FUNCTIONAL CAPABILITIES
+## 5. VULNERABILITY DETAILS
 
 <!-- Table format:
-| ID | Capability | Rationale |
-|----|------------|-----------|
-| F-1 | ... | ... |
+| ID | Detail | Value |
+|----|--------|-------|
+| V-1 | CWE | CWE-... |
+| V-2 | CVSS | CVSS:3.1/... |
+| V-3 | Affected versions | ... |
 -->
 
-### 5.1 Capability Details
+### 5.1 Vulnerability Detail Notes
 
-<!-- Expand on each F-# with behavioral description. No implementation details. -->
+<!-- Expand on each V-# with vulnerability-specific description. No implementation details. -->
 
-## 6. USER & SYSTEM FLOWS
+## 6. ATTACKER & SYSTEM FLOWS
 
-<!-- Describe key user/system flows. Use text diagrams or Mermaid if helpful.
+<!-- Describe key attacker/system flows. Use text diagrams or Mermaid if helpful.
 ```
 Flow 1: ...
   Actor does X → System responds with Y → ...
@@ -187,17 +189,17 @@ Flow 1: ...
 | ... | Updated / New / Deprecated |
 -->
 
-## 17. ACCEPTANCE CRITERIA
+## 17. CONFIRMATION CRITERIA
 
 <!-- Group by feature area. Use Given/When/Then format.
 | ID | Criterion | Linked |
 |----|-----------|--------|
-| AC-F1-1 | **Given** ..., **when** ..., **then** ... | F-1 |
+| CC-V1-1 | **Given** ..., **when** ..., **then** ... | V-1 |
 -->
 
-## 18. ROLLOUT & CHANGE MANAGEMENT (HIGH-LEVEL)
+## 18. DISCLOSURE & CHANGE MANAGEMENT (HIGH-LEVEL)
 
-<!-- Delivery order, merge strategy, communication, adoption notes -->
+<!-- Disclosure order, remediation coordination, communication, adoption notes -->
 
 ## 19. DATA MIGRATION / SEEDING (IF APPLICABLE)
 
@@ -211,11 +213,30 @@ Flow 1: ...
 
 <!-- Security considerations. N/A if none. -->
 
-## 22. MAINTENANCE & OPERATIONS IMPACT
+## 22. CVE REFERENCES
+
+<!-- List CVE IDs, advisory links, CNA references, and publication status. -->
+
+## 23. EXPLOITATION PREREQUISITES
+
+<!-- Required attacker position, access level, environment assumptions, and tooling prerequisites. -->
+
+## 24. IMPACT ASSESSMENT
+
+<!-- Table format:
+| Impact Area | Description | Severity |
+|-------------|-------------|----------|
+| Confidentiality | ... | H/M/L |
+| Integrity | ... | H/M/L |
+| Availability | ... | H/M/L |
+| Business/Operational | ... | H/M/L |
+-->
+
+## 25. MAINTENANCE & OPERATIONS IMPACT
 
 <!-- Ongoing maintenance implications -->
 
-## 23. GLOSSARY
+## 26. GLOSSARY
 
 <!-- Table format:
 | Term | Definition |
@@ -223,11 +244,11 @@ Flow 1: ...
 | ... | ... |
 -->
 
-## 24. APPENDICES
+## 27. APPENDICES
 
 <!-- Supporting material, diagrams, data -->
 
-## 25. DOCUMENT HISTORY
+## 28. DOCUMENT HISTORY
 
 <!-- Table format:
 | Version | Date | Author | Changes |
@@ -246,9 +267,9 @@ Flow 1: ...
 - [ ] `change.ref` matches provided `workItemRef`
 - [ ] `owners` has at least one entry
 - [ ] `status` is "Proposed"
-- [ ] All sections present in order (1-25 + guidelines + checklist)
-- [ ] ID prefixes consistent and unique (F-, AC-, NFR-, RSK-, DEC-, DM-, OQ-)
-- [ ] Acceptance criteria reference at least one F-/NFR- ID and use Given/When/Then
+- [ ] All sections present in order (1-28 + guidelines + checklist)
+- [ ] ID prefixes consistent and unique (V-, CC-, NFR-, RSK-, DEC-, DM-, OQ-)
+- [ ] Confirmation criteria reference at least one V-/NFR- ID and use Given/When/Then
 - [ ] NFRs include measurable values
 - [ ] Risks include Impact & Probability
 - [ ] No implementation details (no file-level code paths, no step-by-step tasks)

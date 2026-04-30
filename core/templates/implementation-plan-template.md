@@ -20,9 +20,9 @@ version_impact: <from-spec>
 4. Derive all requirements from the change spec — do not invent
 -->
 
-# IMPLEMENTATION PLAN — <workItemRef>: <Change Title>
+# INVESTIGATION PLAN — <workItemRef>: <Finding Title>
 
-## Context and Goals
+## Context and Objectives
 
 <!-- Summarize what this plan delivers, how it connects to the change spec, and any resolved open questions.
      If there are unresolved questions, list them as "Open questions" bullets. -->
@@ -31,7 +31,7 @@ version_impact: <from-spec>
 
 ### In Scope
 
-<!-- Bullet list of what is included, referencing spec F-# IDs -->
+<!-- Bullet list of what is included, referencing spec V-# IDs -->
 
 ### Out of Scope
 
@@ -64,9 +64,9 @@ version_impact: <from-spec>
 - [ ] **N.1** <Task description>
 - [ ] **N.2** <Task description>
 
-**Acceptance Criteria**:
+**Confirmation Criteria**:
 
-- Must: <Criterion from spec AC-#>
+- Must: <Criterion from spec CC-#>
 - Should: <Nice-to-have criterion>
 
 **Files and modules**:
@@ -82,28 +82,28 @@ version_impact: <from-spec>
 ---
 -->
 
-### Phase 1: <Title>
+### Phase 1: Reconnaissance
 
-**Goal**: <!-- What this phase achieves -->
+**Goal**: <!-- Establish target scope, assets, and initial exposure map -->
 
 **Tasks**:
 
-- [ ] **1.1** <!-- Task description -->
-- [ ] **1.2** <!-- Task description -->
+- [ ] **1.1** Inventory exposed services, versions, and trust boundaries.
+- [ ] **1.2** Capture initial reconnaissance evidence and environment notes.
 
-**Acceptance Criteria**:
+**Confirmation Criteria**:
 
-- Must: <!-- Criterion -->
+- Must: Recon artifacts identify relevant attack surface and constraints.
 
 **Files and modules**:
 
-- <!-- artifact -->
+- <!-- reconnaissance artifact -->
 
 **Tests**:
 
-- <!-- test -->
+- <!-- reconnaissance validation command -->
 
-**Completion signal**: `<type>(workItemRef): <short description>`
+**Completion signal**: `<type>(workItemRef): phase 1 — reconnaissance complete>`
 
 ---
 
@@ -112,10 +112,183 @@ version_impact: <from-spec>
 - Spec reconciliation
 -->
 
-## Test Scenarios
+### Phase 2: Analysis
 
-<!-- Map test scenarios to phases and acceptance criteria:
-| ID | Scenario | Phases | AC |
+**Goal**: <!-- Analyze findings, isolate likely vulnerable paths, and form hypotheses -->
+
+**Tasks**:
+
+- [ ] **2.1** Correlate reconnaissance data with observed anomalous behavior.
+- [ ] **2.2** Build and prioritize exploitation hypotheses.
+
+**Confirmation Criteria**:
+
+- Must: Hypotheses are evidence-backed and ranked by likelihood/impact.
+
+**Files and modules**:
+
+- <!-- analysis artifact -->
+
+**Tests**:
+
+- <!-- focused validation command -->
+
+**Completion signal**: `<type>(workItemRef): phase 2 — analysis complete>`
+
+---
+
+### Phase 3: CVE Research
+
+**Goal**: <!-- Map findings to known CVEs, advisories, and weakness classes -->
+
+**Tasks**:
+
+- [ ] **3.1** Search CVE/advisory sources for matching patterns and versions.
+- [ ] **3.2** Document CVE/CWE relevance and confidence.
+
+**Confirmation Criteria**:
+
+- Must: CVE/CWE mapping is documented with references or justified as none.
+
+**Files and modules**:
+
+- <!-- cve research artifact -->
+
+**Tests**:
+
+- <!-- source verification step -->
+
+**Completion signal**: `<type>(workItemRef): phase 3 — cve research complete>`
+
+---
+
+### Phase 4: Exploitability Assessment
+
+**Goal**: <!-- Determine practical exploitability, prerequisites, and impact -->
+
+**Tasks**:
+
+- [ ] **4.1** Evaluate exploitation prerequisites and attacker model.
+- [ ] **4.2** Score impact/severity (CVSS or equivalent) with rationale.
+
+**Confirmation Criteria**:
+
+- Must: Exploitability and impact are assessed with reproducible reasoning.
+
+**Files and modules**:
+
+- <!-- exploitability assessment artifact -->
+
+**Tests**:
+
+- <!-- exploitability check command -->
+
+**Completion signal**: `<type>(workItemRef): phase 4 — exploitability assessed>`
+
+---
+
+### Phase 5: POC Development
+
+**Goal**: <!-- Build safe, lab-only POC to confirm vulnerability -->
+
+**Tasks**:
+
+- [ ] **5.1** Implement minimal non-weaponized POC in isolated lab.
+- [ ] **5.2** Validate POC reproducibility and cleanup steps.
+
+**Confirmation Criteria**:
+
+- Must: POC confirms finding without enabling weaponization.
+
+**Files and modules**:
+
+- <!-- poc artifact -->
+
+**Tests**:
+
+- <!-- poc execution command -->
+
+**Completion signal**: `<type>(workItemRef): phase 5 — poc developed>`
+
+---
+
+### Phase 6: Evidence Collection
+
+**Goal**: <!-- Collect, hash, and organize reproducible evidence -->
+
+**Tasks**:
+
+- [ ] **6.1** Capture logs/screenshots/pcaps/tool output for each claim.
+- [ ] **6.2** Hash and timestamp evidence with chain-of-custody notes.
+
+**Confirmation Criteria**:
+
+- Must: Evidence package is complete, reproducible, and integrity-checked.
+
+**Files and modules**:
+
+- <!-- evidence artifact -->
+
+**Tests**:
+
+- <!-- evidence integrity command -->
+
+**Completion signal**: `<type>(workItemRef): phase 6 — evidence collected>`
+
+---
+
+### Phase 7: Reporting
+
+**Goal**: <!-- Produce investigation report and disclosure-ready summary -->
+
+**Tasks**:
+
+- [ ] **7.1** Draft investigation report with timeline, CVSS, CWE, and impact.
+- [ ] **7.2** Validate report completeness and safety language.
+
+**Confirmation Criteria**:
+
+- Must: Report is complete, accurate, and ready for internal review/disclosure process.
+
+**Files and modules**:
+
+- <!-- report artifact -->
+
+**Tests**:
+
+- <!-- report checklist step -->
+
+**Completion signal**: `<type>(workItemRef): phase 7 — reporting complete>`
+
+---
+
+### Phase 8: Remediation
+
+**Goal**: <!-- Define and validate remediation recommendation -->
+
+**Tasks**:
+
+- [ ] **8.1** Propose remediation options and risk trade-offs.
+- [ ] **8.2** Define validation steps for post-fix verification.
+
+**Confirmation Criteria**:
+
+- Must: Remediation recommendation is actionable and verification-ready.
+
+**Files and modules**:
+
+- <!-- remediation artifact -->
+
+**Tests**:
+
+- <!-- remediation validation step -->
+
+**Completion signal**: `<type>(workItemRef): phase 8 — remediation planned>`
+
+## Validation Scenarios
+
+<!-- Map validation scenarios to phases and confirmation criteria:
+| ID | Scenario | Phases | CC |
 |----|----------|--------|----|
 -->
 

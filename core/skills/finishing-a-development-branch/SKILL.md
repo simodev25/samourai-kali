@@ -1,200 +1,147 @@
 ---
 name: finishing-a-development-branch
-description: Use when implementation is complete, all tests pass, and you need to decide how to integrate the work - guides completion of development work by presenting structured options for merge, PR, or cleanup
+description: "Guide completion of a security investigation — verify evidence, present reporting options"
 ---
 
-# Finishing a Development Branch
+# Finishing an Investigation
 
 ## Overview
 
-Guide completion of development work by presenting clear options and handling chosen workflow.
+Guide completion of security investigation work by presenting clear reporting options and handling the chosen workflow.
 
-**Core principle:** Verify tests → Present options → Execute choice → Clean up.
+**Core principle:** Verify evidence → Present options → Execute choice → Archive/cleanup.
 
-**Announce at start:** "I'm using the finishing-a-development-branch skill to complete this work."
+**Announce at start:** "I'm using the finishing-a-development-branch skill to complete this investigation."
 
 ## The Process
 
-### Step 1: Verify Tests
+### Step 1: Verify Evidence
 
-**Before presenting options, verify tests pass:**
+**Before presenting options, verify evidence is complete and validated:**
 
-```bash
-# Run project's test suite
-npm test / cargo test / pytest / go test ./...
+- Reproducible proof available
+- Safety constraints validated
+- Severity rationale (if applicable) documented
+- Artifacts linked and readable
+
+**If evidence incomplete:**
 ```
+Evidence incomplete (<N> gaps). Must resolve before reporting:
 
-**If tests fail:**
-```
-Tests failing (<N> failures). Must fix before completing:
+[Show gaps]
 
-[Show failures]
-
-Cannot proceed with merge/PR until tests pass.
+Cannot proceed to reporting options until evidence is validated.
 ```
 
 Stop. Don't proceed to Step 2.
 
-**If tests pass:** Continue to Step 2.
+### Step 2: Determine Reporting Context
 
-### Step 2: Determine Base Branch
+Identify audience and disclosure scope:
+- Internal security team?
+- External vendor?
+- Public disclosure path?
 
-```bash
-# Try common base branches
-git merge-base HEAD main 2>/dev/null || git merge-base HEAD master 2>/dev/null
-```
-
-Or ask: "This branch split from main - is that correct?"
+Or ask: "Is this intended for internal advisory, vendor disclosure, or public CVE workflow?"
 
 ### Step 3: Present Options
 
 Present exactly these 4 options:
 
 ```
-Implementation complete. What would you like to do?
+Investigation complete. What would you like to do?
 
-1. Merge back to <base-branch> locally
-2. Push and create a Pull Request
-3. Keep the branch as-is (I'll handle it later)
-4. Discard this work
+1. Submit for CVE consideration
+2. Create internal advisory
+3. Notify vendor privately
+4. Archive investigation without disclosure
 
 Which option?
 ```
 
-**Don't add explanation** - keep options concise.
+**Don't add explanation** — keep options concise.
 
 ### Step 4: Execute Choice
 
-#### Option 1: Merge Locally
+#### Option 1: Submit CVE Consideration
 
-```bash
-# Switch to base branch
-git checkout <base-branch>
+- Prepare standardized vulnerability summary
+- Include reproducible proof and impact scope
+- Submit via approved CVE CNA workflow
+- Record submission reference
 
-# Pull latest
-git pull
+#### Option 2: Internal Advisory
 
-# Merge feature branch
-git merge <feature-branch>
+- Create internal advisory with severity and remediation guidance
+- Attach evidence and reproduction steps
+- Notify relevant internal stakeholders
 
-# Verify tests on merged result
-<test command>
+#### Option 3: Vendor Notification
 
-# If tests pass
-git branch -d <feature-branch>
-```
+- Prepare private disclosure package
+- Include safe reproduction details and impact boundaries
+- Send through vendor security contact channel
+- Record disclosure timestamp and contact reference
 
-Then: Cleanup worktree (Step 5)
-
-#### Option 2: Push and Create PR
-
-```bash
-# Push branch
-git push -u origin <feature-branch>
-
-# Create PR
-gh pr create --title "<title>" --body "$(cat <<'EOF'
-## Summary
-<2-3 bullets of what changed>
-
-## Test Plan
-- [ ] <verification steps>
-EOF
-)"
-```
-
-Then: Cleanup worktree (Step 5)
-
-#### Option 3: Keep As-Is
-
-Report: "Keeping branch <name>. Worktree preserved at <path>."
-
-**Don't cleanup worktree.**
-
-#### Option 4: Discard
+#### Option 4: Archive
 
 **Confirm first:**
 ```
-This will permanently delete:
-- Branch <name>
-- All commits: <commit-list>
-- Worktree at <path>
+This will archive the investigation as non-disclosed:
+- Investigation branch/context
+- Evidence artifacts
+- Draft findings
 
-Type 'discard' to confirm.
+Type 'archive' to confirm.
 ```
 
 Wait for exact confirmation.
 
 If confirmed:
-```bash
-git checkout <base-branch>
-git branch -D <feature-branch>
-```
+- Mark outcome as archived/non-disclosed
+- Preserve evidence for audit trail
 
-Then: Cleanup worktree (Step 5)
+### Step 5: Cleanup / Retention
 
-### Step 5: Cleanup Worktree
+For Options 1, 2, 3:
+- Keep investigation artifacts in retained location
+- Ensure report links resolve
 
-**For Options 1, 2, 4:**
-
-Check if in worktree:
-```bash
-git worktree list | grep $(git branch --show-current)
-```
-
-If yes:
-```bash
-git worktree remove <worktree-path>
-```
-
-**For Option 3:** Keep worktree.
+For Option 4:
+- Keep minimal audit trail and archive bundle
 
 ## Quick Reference
 
-| Option | Merge | Push | Keep Worktree | Cleanup Branch |
-|--------|-------|------|---------------|----------------|
-| 1. Merge locally | ✓ | - | - | ✓ |
-| 2. Create PR | - | ✓ | ✓ | - |
-| 3. Keep as-is | - | - | ✓ | - |
-| 4. Discard | - | - | - | ✓ (force) |
+| Option | External Disclosure | Internal Stakeholders | Preserve Artifacts | Archive Outcome |
+|--------|---------------------|-----------------------|--------------------|-----------------|
+| 1. CVE submission | ✓ | optional | ✓ | - |
+| 2. Internal advisory | - | ✓ | ✓ | - |
+| 3. Vendor notification | ✓ (private) | optional | ✓ | - |
+| 4. Archive | - | optional | ✓ (minimal) | ✓ |
 
 ## Common Mistakes
 
-**Skipping test verification**
-- **Problem:** Merge broken code, create failing PR
-- **Fix:** Always verify tests before offering options
+**Skipping evidence validation**
+- **Problem:** weak or disputed findings
+- **Fix:** validate reproducibility and safety before options
 
-**Open-ended questions**
-- **Problem:** "What should I do next?" → ambiguous
-- **Fix:** Present exactly 4 structured options
+**Open-ended next-step questions**
+- **Problem:** ambiguous outcomes
+- **Fix:** present exactly 4 structured options
 
-**Automatic worktree cleanup**
-- **Problem:** Remove worktree when might need it (Option 2, 3)
-- **Fix:** Only cleanup for Options 1 and 4
-
-**No confirmation for discard**
-- **Problem:** Accidentally delete work
-- **Fix:** Require typed "discard" confirmation
+**Archiving without confirmation**
+- **Problem:** accidental loss of disclosure opportunity
+- **Fix:** require typed "archive" confirmation
 
 ## Red Flags
 
 **Never:**
-- Proceed with failing tests
-- Merge without verifying tests on result
-- Delete work without confirmation
-- Force-push without explicit request
+- Report without validated evidence
+- Escalate severity without proof
+- Disclose unsafe POC details publicly
+- Archive without explicit confirmation
 
 **Always:**
-- Verify tests before offering options
+- Verify evidence before offering options
 - Present exactly 4 options
-- Get typed confirmation for Option 4
-- Clean up worktree for Options 1 & 4 only
-
-## Integration
-
-**Called by:**
-- **subagent-driven-development** (Step 7) - After all tasks complete
-- **executing-plans** (Step 5) - After all batches complete
-
-**Pairs with:**
-- **using-git-worktrees** - Cleans up worktree created by that skill
+- Require typed confirmation for archive path

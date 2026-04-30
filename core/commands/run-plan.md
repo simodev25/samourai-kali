@@ -1,12 +1,12 @@
 ---
 #
-description: Execute implementation plan phases for a change.
-agent: coder
+description: Execute investigation phases for a tracked finding.
+agent: fixer
 subtask: true
 ---
 
 <purpose>
-Run the IMPLEMENTATION PLAN phase-by-phase for a tracked change. Mark each task as completed and perform a Conventional Commit (via `/commit`) after every finished phase (or per task if directed). Automatically resumes from first incomplete phase on subsequent invocations.
+Run the INVESTIGATION PLAN phase-by-phase for a tracked finding. Mark each task as completed and perform a Conventional Commit (via `/commit`) after every finished phase (or per task if directed). Automatically resumes from first incomplete phase on subsequent invocations.
 </purpose>
 
 <command>
@@ -31,14 +31,14 @@ Examples:
 Before executing phases:
 
 1. Discover generated project skills in `.opencode/skills/project/**/SKILL.md`.
-2. Select up to 2 skills most relevant to implementation context (run/test/build/debug/architecture/migration).
+2. Select up to 2 skills most relevant to investigation context (scan/test/build/debug/forensics/threat-modeling).
 3. Apply selected skills as local execution constraints for this run.
 4. If no relevant project skill is found, continue with generic skills only.
 </project_skills_activation>
 
 <project_profile_activation>
-Before executing phases, read `.samourai/ai/agent/project-profile.md` when present and pass it to `@coder`.
-`@coder` must apply the profile to implementation style, corrections, validation depth, and final presentation.
+Before executing phases, read `.samourai/ai/agent/project-profile.md` when present and pass it to the executing cyber agent.
+The agent must apply the profile to investigation style, corrections, validation depth, and final presentation.
 Report `project_profile_applied` in the final summary.
 </project_profile_activation>
 
@@ -75,7 +75,7 @@ Defaults (no directive): phasesToRun=1; askForReview=true; commitMode=per-phase.
 <rule>Phase header regex: `/^### Phase (\d+):/`</rule>
 <rule>Tasks: checkboxes under "**Tasks**:" until blank line or "**Acceptance Criteria**:"</rule>
 <rule>Unchecked: `- [ ]`; Completed: `- [x]`</rule>
-<rule>Completion: replace token only, append note e.g. `(done: added config & tests)`</rule>
+<rule>Completion: replace token only, append note e.g. `(done: evidence captured & validated)`</rule>
 <rule>Acceptance criteria: lines start with "- Must:" or "- Should:"; append `(PASSED: <summary>)` or `(FAILED: <summary>)`</rule>
 <rule>Execution Log: header "## Execution Log"; append if missing</rule>
 </plan_parsing_rules>
@@ -94,19 +94,41 @@ For each selected phase:
 1. Identify pending tasks (unchecked). If none but acceptance evidence missing, treat as completion-only phase.
 2. For each pending task:
    a. Form internal contract (goal, inputs, outputs, success checks).
-   b. Discover relevant files in: src/, app/, packages/, modules/, lib/, services/, infra/, config/, scripts/, tests/, static/, doc/.
-   c. Implement minimal edits; avoid unrelated refactors.
-   d. Add/adjust tests when functional behavior changes.
-   e. Run quick validations (typecheck/build/test subset).
+   b. Discover relevant files and assets in: src/, app/, packages/, modules/, lib/, services/, infra/, config/, scripts/, tests/, logs/, docs/.
+   c. Execute minimal investigation actions; avoid unrelated refactors.
+   d. Add/adjust validation checks when investigative behavior changes.
+   e. Run quick validations (targeted scans/checks/test subset).
    f. Mark task completed with concise evidence note.
    g. If commitMode=per-task: stage only task changes + plan update, then `/commit`.
 3. After tasks complete:
-   a. Run full quality gates; capture PASS/FAIL summaries.
+   a. Run evidence quality gates; capture PASS/FAIL summaries.
    b. Append evidence to acceptance criteria lines (once only).
    c. Append Execution Log entry.
    d. If commitMode=per-phase: `/commit`.
 4. Stop after phasesToRun. If askForReview=true, pause with summary.
    </phase_execution_rules>
+
+<phase_model>
+Preferred investigation phases:
+- reconnaissance
+- analysis
+- poc
+- evidence
+- reporting
+
+If plan includes additional phases (e.g., remediation validation), execute them with the same checkpoint logic.
+</phase_model>
+
+<delegation_rules>
+Delegate by task type:
+- reconnaissance / scanning-heavy → `@runner`
+- vulnerability validation / exploit checks → `@fixer`
+- finding review alignment → `@reviewer`
+- documentation/report-only updates → `@doc-syncer`
+- commits only → `@committer`
+
+Do not delegate investigation execution to `@coder`.
+</delegation_rules>
 
 <commit_rules>
 <rule>Use `/commit` for Conventional Commit generation.</rule>
@@ -124,9 +146,9 @@ For each selected phase:
 <quality_gates>
 Auto-detect once per invocation (cache for subsequent phases):
 
-- build: scripts/, package.json ("build" script), Makefile, CI configs.
-- test: package.json ("test" script), scripts/test.\*, make test, pytest, go test.
-- typecheck: tsc --noEmit if tsconfig; mypy if pyproject; go vet.
+- evidence quality checks (completeness, hashes, timestamps, redaction)
+- scan/test commands defined by project scripts and CI configs
+- reproducibility checks for POC paths
   If detection fails: record attempts and skip with evidence.
   </quality_gates>
 
@@ -152,7 +174,7 @@ No file edits, no commits. Output structured summary: starting phase, phasesToRu
 7. Identify start phase (earliest with unchecked task or missing acceptance evidence).
 8. If dryRun: output summary; STOP.
 9. Read project profile per <project_profile_activation> if present.
-10. Detect quality gate commands (cache).
+10. Detect evidence/scan gate commands (cache).
 11. Loop phases applying phase_execution_rules & partial_failure_policy.
 12. Perform commits per policy.
 13. Summarize; if askForReview=true and remaining phases exist → pause.

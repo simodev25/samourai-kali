@@ -1,8 +1,8 @@
-# Debugging Report
+# Investigation Report
 
-## Symptom
+## Finding
 
-<symptom>
+<finding>
 
 ## Reproduction
 
@@ -15,17 +15,17 @@
 - <observation_1>
 - <observation_2>
 
-## Hypotheses
+## Exploitation Hypotheses
 
 | Hypothesis | Evidence | Status |
 | --- | --- | --- |
 | <hypothesis> | <evidence> | open |
 
-## Root Cause
+## Vulnerability Root Cause
 
 <root_cause_or_unknown>
 
-## Proposed Fix
+## Remediation Recommendation
 
 <fix>
 

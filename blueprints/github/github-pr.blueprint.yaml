@@ -13,6 +13,7 @@ inputs:
     - linked_issues
     - screenshots
     - rollout_notes
+    - security_advisory
 outputs:
   primary:
     - ".samourai/tmpai/pr/<branch>/description.md"
@@ -27,3 +28,4 @@ tools_allowed:
 validation:
   - "The PR lists executed tests."
   - "Risks and rollback notes are included when relevant."
+  - "If security_advisory=true, the PR is marked as security-sensitive."

@@ -18,98 +18,105 @@ links:
 4. This is the enduring test specification for a feature — derived from per-change test plans
 -->
 
-# Test Specification: <Feature Name>
+# Evidence Specification: <Finding Name>
 
 ## Overview
 
-<!-- High-level test strategy for this feature. What aspects of the feature are tested and why. -->
+<!-- High-level evidence strategy for this finding. What evidence is collected and why it proves the claim. -->
 
-## Test Scope
+## Evidence Scope
 
-<!-- - Components under test
-     - Integration points
-     - Exclusions (what is NOT tested and why) -->
+<!-- - Components and systems where evidence is collected
+     - Integration points and trust boundaries
+     - Exclusions (what evidence is NOT collected and why) -->
 
-## Test Levels
+## Evidence Types
 
-### Unit Tests
+### Logs
 
-<!-- - Purpose: Validate individual components
-     - Tools: framework, libraries
-     - Coverage requirements -->
+<!-- - Purpose: Capture system/runtime evidence
+     - Tools: log collectors, parsers
+     - Integrity requirements -->
 
-### Integration Tests
+### Screenshots
 
-<!-- - Purpose: Validate component interactions
-     - Tools: framework, containers
-     - Key scenarios -->
+<!-- - Purpose: Capture visual proof of vulnerable behavior
+     - Tools: screenshot tooling
+     - Metadata requirements -->
 
-### End-to-End Tests
+### PCAP
 
-<!-- - Purpose: Validate user workflows
-     - Tools: framework (if applicable)
-     - Key scenarios -->
+<!-- - Purpose: Capture network-level evidence
+     - Tools: packet capture tooling
+     - Retention and sanitization rules -->
 
-## Test Data
+### Tool Output
 
-<!-- - Generation strategy
+<!-- - Purpose: Capture deterministic scanner/exploit/validator outputs
+     - Tools: scanner or verification utilities
+     - Reproducibility requirements -->
+
+## Evidence Data Handling
+
+<!-- - Data generation strategy
      - Preconditions
-     - Cleanup procedures -->
+     - Cleanup procedures
+     - Hashing and timestamping requirements -->
 
-## Test Scenarios
+## Evidence Scenarios
 
 ### Scenario 1: <Descriptive Name>
 
 <!-- - **Given**: Preconditions
-     - **When**: Action
-     - **Then**: Expected outcome
-     - **And**: Additional assertions -->
+     - **When**: Reproduction or validation action
+     - **Then**: Expected evidence artifact
+     - **And**: Chain-of-custody assertion -->
 
 ### Scenario 2: <Descriptive Name>
 
 <!-- Add more scenarios as needed -->
 
-## Performance & Load Tests
+## Reproduction Scenarios
 
-<!-- - Performance benchmarks
-     - Load testing scenarios
-     - Stress testing (if applicable) -->
+<!-- - Controlled reproduction steps
+     - Validation against fixed versions
+     - Regression confirmation after remediation -->
 
-## Security Tests
+## Validation Scenarios
 
-<!-- - Authentication/authorization
-     - Input validation
-     - Data protection -->
+<!-- - Findings validation logic
+     - False positive elimination
+     - Boundary-condition checks -->
 
-## Negative Testing
+## Chain of Custody Scenarios
 
-<!-- - Invalid inputs
-     - Error conditions
-     - Edge cases -->
+<!-- - Artifact provenance
+     - Access controls for evidence
+     - Handoff and storage traceability -->
 
 ## Automation Strategy
 
-<!-- - CI/CD integration
-     - Test execution triggers
-     - Reporting -->
+<!-- - Evidence collection automation
+     - Execution triggers
+     - Evidence reporting -->
 
-## Test Environment
+## Evidence Environment
 
-<!-- - Required services
+<!-- - Required lab services
      - Configuration
-     - Mocking strategies -->
+     - Isolation and mocking strategies -->
 
-## Test Coverage Metrics
+## Evidence Coverage Metrics
 
-<!-- - Code coverage targets
-     - Business logic coverage
-     - Risk-based coverage priorities -->
+<!-- - Evidence completeness targets
+     - Reproducibility coverage
+     - Risk-based evidence priorities -->
 
-## Maintenance
+## Evidence Maintenance
 
-<!-- - Test data management
-     - Flaky test handling
-     - Update procedures when feature evolves -->
+<!-- - Evidence data management
+     - Integrity drift handling
+     - Update procedures when finding context evolves -->
 
 ## References
 

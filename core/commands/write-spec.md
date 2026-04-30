@@ -1,16 +1,16 @@
 ---
 #
-description: Generate canonical change specification
+description: Generate canonical vulnerability specification
 agent: spec-writer
 subtask: true
 ---
 
 <purpose>
-Generate a COMPLETE, implementation-agnostic CHANGE SPECIFICATION from planning session context.
+Generate a COMPLETE, investigation-agnostic VULNERABILITY SPECIFICATION from investigation planning context.
 
 User invocation: `/write-spec <workItemRef>`
 
-Inputs other than `workItemRef` MUST be sourced from the active planning context; NOTHING may be invented.
+Inputs other than `workItemRef` MUST be sourced from the active investigation planning context; NOTHING may be invented.
 Resulting spec becomes authoritative input for `/write-plan`.
 </purpose>
 
@@ -41,24 +41,31 @@ Files:
 
 <process>
 1. Parse `workItemRef` from $ARGUMENTS
-2. Gather planning-session context from conversation
+2. Gather investigation planning context from conversation
 3. Compute slug from title (lowercase kebab-case, ≤60 chars)
 4. Locate or create change folder per <discovery_rules>
-5. Determine `change.type` from context (feat/fix/refactor/etc.)
+5. Determine `change.type` from context (typically `fix` or `feat` with security scope)
 6. Checkout/create branch
-7. Delegate to `@spec-writer` agent (it has the full template and rules)
-8. Report: path to created spec, next step: `/write-plan <workItemRef>`
+7. Delegate to `@spec-writer` agent with cybersecurity context:
+   - vulnerability details and reproduction conditions
+   - CWE classification
+   - CVSS vector and score rationale
+   - affected versions and exposure scope
+   - impact analysis and exploit preconditions
+8. Ensure output file `chg-<workItemRef>-spec.md` contains vulnerability-focused sections
+9. Report: path to created spec, next step: `/write-plan <workItemRef>`
 </process>
 
 <output>
 After successful execution:
 - Created file path
 - Branch name
-- Recommendation: "Run `/write-plan <workItemRef>` to generate the implementation plan"
+- Recommendation: "Run `/write-plan <workItemRef>` to generate the investigation plan"
 </output>
 
 <constraints>
-- No implementation details in the spec
+- No remediation implementation details in the spec
 - Only the spec file may be written
 - Await human approval before `/write-plan`
+- Spec must focus on vulnerability facts, severity, impact, and evidence requirements
 </constraints>

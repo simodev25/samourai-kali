@@ -1,105 +1,106 @@
 ---
 name: requesting-code-review
-description: Use when completing tasks, implementing major features, or before merging to verify work meets requirements
+description: "Submit a security finding for peer review — accuracy, POC safety, evidence quality"
 ---
 
-# Requesting Code Review
+# Requesting Finding Review
 
-Dispatch superpowers:code-reviewer subagent to catch issues before they cascade. The reviewer gets precisely crafted context for evaluation — never your session's history. This keeps the reviewer focused on the work product, not your thought process, and preserves your own context for continued work.
+Dispatch a security reviewer to catch inaccuracies before findings are shared broadly. The reviewer gets precise context focused on evidence quality, exploitability validity, and POC safety.
 
 **Core principle:** Review early, review often.
 
 ## When to Request Review
 
 **Mandatory:**
-- After each task in subagent-driven development
-- After completing major feature
-- Before merge to main
+- After completing each major investigation task
+- After confirming a significant finding
+- Before final reporting/disclosure
 
 **Optional but valuable:**
-- When stuck (fresh perspective)
-- Before refactoring (baseline check)
-- After fixing complex bug
+- When stuck on exploitability interpretation
+- Before severity assignment changes
+- After complex multi-step POC work
+
+**Severity triage:**
+- **Critical findings need immediate review** before any external disclosure.
 
 ## How to Request
 
-**1. Get git SHAs:**
+**1. Get git SHAs (or evidence range):**
 ```bash
-BASE_SHA=$(git rev-parse HEAD~1)  # or origin/main
+BASE_SHA=$(git rev-parse HEAD~1)  # or previous checkpoint
 HEAD_SHA=$(git rev-parse HEAD)
 ```
 
-**2. Dispatch code-reviewer subagent:**
+**2. Dispatch security reviewer:**
 
-Use Task tool with superpowers:code-reviewer type, fill template at `code-reviewer.md`
+Use Task tool with security reviewer type, fill template at `code-reviewer.md`.
 
 **Placeholders:**
-- `{WHAT_WAS_IMPLEMENTED}` - What you just built
-- `{PLAN_OR_REQUIREMENTS}` - What it should do
+- `{WHAT_WAS_FOUND_OR_ANALYZED}` - What was investigated/found
+- `{VULNERABILITY_SPEC_OR_INVESTIGATION_PLAN}` - Required behavior/scope
 - `{BASE_SHA}` - Starting commit
 - `{HEAD_SHA}` - Ending commit
 - `{DESCRIPTION}` - Brief summary
 
 **3. Act on feedback:**
-- Fix Critical issues immediately
-- Fix Important issues before proceeding
-- Note Minor issues for later
-- Push back if reviewer is wrong (with reasoning)
+- Fix Critical accuracy/safety issues immediately
+- Fix Important evidence-quality issues before proceeding
+- Note Minor improvements for next pass
+- Push back if reviewer is wrong (with technical evidence)
 
 ## Example
 
 ```
-[Just completed Task 2: Add verification function]
+[Just completed Task 2: Authorization bypass analysis]
 
-You: Let me request code review before proceeding.
+You: Let me request finding review before proceeding.
 
 BASE_SHA=$(git log --oneline | grep "Task 1" | head -1 | awk '{print $1}')
 HEAD_SHA=$(git rev-parse HEAD)
 
-[Dispatch superpowers:code-reviewer subagent]
-  WHAT_WAS_IMPLEMENTED: Verification and repair functions for conversation index
-  PLAN_OR_REQUIREMENTS: Task 2 from docs/superpowers/plans/deployment-plan.md
+[Dispatch security reviewer]
+  WHAT_WAS_FOUND_OR_ANALYZED: Potential horizontal privilege escalation in account API
+  VULNERABILITY_SPEC_OR_INVESTIGATION_PLAN: Task 2 from docs/investigations/plans/api-authz-plan.md
   BASE_SHA: a7981ec
   HEAD_SHA: 3df7661
-  DESCRIPTION: Added verifyIndex() and repairIndex() with 4 issue types
+  DESCRIPTION: Added POC request sequence and authorization boundary traces
 
-[Subagent returns]:
-  Strengths: Clean architecture, real tests
+[Reviewer returns]:
+  Strengths: Reproducible POC, clear boundary mapping
   Issues:
-    Important: Missing progress indicators
-    Minor: Magic number (100) for reporting interval
-  Assessment: Ready to proceed
+    Important: Missing negative control case
+    Minor: Evidence filenames inconsistent
+  Assessment: Ready after control case added
 
-You: [Fix progress indicators]
-[Continue to Task 3]
+You: [Add negative control case]
+[Continue to next task]
 ```
 
 ## Integration with Workflows
 
 **Subagent-Driven Development:**
 - Review after EACH task
-- Catch issues before they compound
-- Fix before moving to next task
+- Catch finding-quality issues before they compound
 
 **Executing Plans:**
-- Review after each batch (3 tasks)
-- Get feedback, apply, continue
+- Review after each batch
+- Apply feedback, then continue
 
-**Ad-Hoc Development:**
-- Review before merge
-- Review when stuck
+**Ad-Hoc Investigations:**
+- Review before disclosure/report submission
 
 ## Red Flags
 
 **Never:**
-- Skip review because "it's simple"
-- Ignore Critical issues
-- Proceed with unfixed Important issues
-- Argue with valid technical feedback
+- Skip review because "finding is obvious"
+- Ignore Critical safety concerns
+- Proceed with unresolved Important evidence gaps
+- Accept weak evidence for high-severity claims
 
 **If reviewer wrong:**
 - Push back with technical reasoning
-- Show code/tests that prove it works
+- Show reproducible proof and controls
 - Request clarification
 
 See template at: requesting-code-review/code-reviewer.md
