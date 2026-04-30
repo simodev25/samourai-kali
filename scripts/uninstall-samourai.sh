@@ -7,7 +7,7 @@ shopt -s inherit_errexit 2>/dev/null || true
 IFS=$'\n\t'
 
 readonly APP_NAME="samourai-uninstall"
-readonly APP_VERSION="1.0.0"
+readonly APP_VERSION="1.1.0"
 readonly LOG_TAG="(${APP_NAME})"
 
 readonly EXIT_SUCCESS=0

@@ -332,13 +332,13 @@ This plan implements the capabilities and acceptance criteria defined in `chg-GH
 
 **Tasks**:
 
-- [ ] **8.1** Run a local review of the branch changes against `chg-GH-13-spec.md` (F-1 through F-13) and ensure every AC is demonstrably satisfied.
-- [ ] **8.2** Confirm no secrets were introduced and that MCP auth relies on env vars only.
-- [ ] **8.3** Confirm install/uninstall tests pass.
+- [x] **8.1** Run a local review of the branch changes against `chg-GH-13-spec.md` (F-1 through F-13) and ensure every AC is demonstrably satisfied. (done: reviewer run identified and tracked remediation items, then re-review PASS)
+- [x] **8.2** Confirm no secrets were introduced and that MCP auth relies on env vars only. (done: reviewer confirmed env-var-based auth and no hardcoded secrets)
+- [x] **8.3** Confirm install/uninstall tests pass. (done: bash scripts/.tests/test-install-samourai.sh PASS)
 
 **Acceptance Criteria**:
 
-- Must: All AC-F*-* items are satisfied with evidence (tests, file presence, validations).
+- Must: All AC-F*-* items are satisfied with evidence (tests, file presence, validations). — PASSED (review pass after remediation + full installer suite pass)
 
 **Files and modules**:
 
@@ -358,12 +358,12 @@ This plan implements the capabilities and acceptance criteria defined in `chg-GH
 
 **Tasks**:
 
-- [ ] **9.1** Implement any requested fixes from review and update docs/tests accordingly.
-- [ ] **9.2** Re-run installer tests and validate any previously-passing acceptance criteria remain passing.
+- [x] **9.1** Implement any requested fixes from review and update docs/tests accordingly. (done: updated stage-gates contract and restored pr-instructions template set)
+- [x] **9.2** Re-run installer tests and validate any previously-passing acceptance criteria remain passing. (done: bash scripts/.tests/test-install-samourai.sh PASS)
 
 **Acceptance Criteria**:
 
-- Must: Review feedback addressed; regression checks pass.
+- Must: Review feedback addressed; regression checks pass. — PASSED (reviewer PASS and regression suite PASS)
 
 **Files and modules**:
 
@@ -383,14 +383,14 @@ This plan implements the capabilities and acceptance criteria defined in `chg-GH
 
 **Tasks**:
 
-- [ ] **10.1** Version bump per repo conventions for a `minor` version impact (identify canonical version sources such as installer `APP_VERSION` and any published docs/version files; update consistently).
-- [ ] **10.2** Spec reconciliation: re-read `chg-GH-13-spec.md` and ensure the implementation matches F-1..F-13 and all acceptance criteria; update plan execution evidence where needed.
-- [ ] **10.3** Ensure branch is clean and commits are atomic and conventional; ready for PR creation.
+- [x] **10.1** Version bump per repo conventions for a `minor` version impact (identify canonical version sources such as installer `APP_VERSION` and any published docs/version files; update consistently). (done: APP_VERSION bumped to 1.1.0 in install/uninstall/install-remote scripts)
+- [x] **10.2** Spec reconciliation: re-read `chg-GH-13-spec.md` and ensure the implementation matches F-1..F-13 and all acceptance criteria; update plan execution evidence where needed. (done: review pass confirmed AC coverage after remediation)
+- [x] **10.3** Ensure branch is clean and commits are atomic and conventional; ready for PR creation. (done: remaining changes scoped to phases 8-10 and ready for final checkpoint commit)
 
 **Acceptance Criteria**:
 
-- Must: Version bump is consistent and justified.
-- Must: Spec and delivered artifacts align; no unmet AC.
+- Must: Version bump is consistent and justified. — PASSED (1.1.0 applied consistently across installer scripts)
+- Must: Spec and delivered artifacts align; no unmet AC. — PASSED (review PASS and installer regression suite PASS)
 
 **Files and modules**:
 
@@ -450,6 +450,6 @@ This plan implements the capabilities and acceptance criteria defined in `chg-GH
 | 5 | Completed | 2026-04-30 | 2026-04-30 | pending | Added Claude/Cursor adapters, extended installer editor handling, and validated default compatibility |
 | 6 | Completed | 2026-04-30 | 2026-04-30 | pending | Validated stage gates, added validator tooling, wired NVD+EPSS MCP config, updated command docs |
 | 7 | Completed | 2026-04-30 | 2026-04-30 | pending | Extended installer tests for cyber commands, migrated agents, new editors, and validator tool; full suite PASS |
-| 8 | Not started |  |  |  |  |
-| 9 | Not started |  |  |  |  |
-| 10 | Not started |  |  |  |  |
+| 8 | Completed | 2026-04-30 | 2026-04-30 | pending | Local reviewer run FAIL then PASS after remediation; secrets hygiene and test evidence validated |
+| 9 | Completed | 2026-04-30 | 2026-04-30 | pending | Applied review remediation (stage-gates contract + template set) and revalidated regressions |
+| 10 | Completed | 2026-04-30 | 2026-04-30 | pending | Bumped version to 1.1.0, reconciled spec/AC coverage, and prepared final release-ready state |
