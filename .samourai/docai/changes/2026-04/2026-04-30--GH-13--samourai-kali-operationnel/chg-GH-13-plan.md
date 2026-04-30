@@ -202,15 +202,15 @@ This plan implements the capabilities and acceptance criteria defined in `chg-GH
 
 **Tasks**:
 
-- [ ] **4.1** Create `CONTRIBUTING.md` covering: repo structure; agent contribution; skill contribution; command contribution; PR workflow (per spec).
-- [ ] **4.2** Add an architecture document describing the layered model: `core/` → install → editor adapters → commands → agents → skills (and where change artifacts live).
-- [ ] **4.3** Add an investigation workflow template (Markdown scaffold) including sensitive data handling reminder (per spec privacy notes).
+- [x] **4.1** Create `CONTRIBUTING.md` covering: repo structure; agent contribution; skill contribution; command contribution; PR workflow (per spec). (done: CONTRIBUTING.md added with all required contribution paths)
+- [x] **4.2** Add an architecture document describing the layered model: `core/` → install → editor adapters → commands → agents → skills (and where change artifacts live). (done: docs/architecture.md added)
+- [x] **4.3** Add an investigation workflow template (Markdown scaffold) including sensitive data handling reminder (per spec privacy notes). (done: core/templates/investigation-template.md added with sensitive data reminder)
 
 **Acceptance Criteria**:
 
-- Must: AC-F4-1
-- Must: AC-F5-1
-- Must: AC-F6-1
+- Must: AC-F4-1 — PASSED (CONTRIBUTING.md covers repo structure, agents, skills, commands, PR workflow)
+- Must: AC-F5-1 — PASSED (docs/architecture.md defines core→install→adapters→commands→agents→skills)
+- Must: AC-F6-1 — PASSED (investigation template includes target/scope/findings/evidence/recommendations)
 
 **Files and modules**:
 
@@ -232,18 +232,18 @@ This plan implements the capabilities and acceptance criteria defined in `chg-GH
 
 **Tasks**:
 
-- [ ] **5.1** Resolve OQ-1 (Claude Code): confirm the required config file path/format and minimal content needed.
-- [ ] **5.2** Resolve OQ-2 (Cursor): confirm the required config file path/format and minimal content needed.
-- [ ] **5.3** Implement Claude adapter config under `adapters/claude/` (exact paths per decision), ensuring it contains no secrets and is parseable.
-- [ ] **5.4** Implement Cursor adapter config under `adapters/cursor/` (exact paths per decision), ensuring it contains no secrets and is parseable.
-- [ ] **5.5** Update `scripts/install-samourai.sh` to accept `--editor claude|cursor|all` and route adapter file copy accordingly, while keeping default behavior identical when no `--editor` is passed (AC-F9-1).
-- [ ] **5.6** Update `--list-editors` output to include new editors.
+- [x] **5.1** Resolve OQ-1 (Claude Code): confirm the required config file path/format and minimal content needed. (done: architect decision -> adapters/claude/CLAUDE.md copied to project root CLAUDE.md)
+- [x] **5.2** Resolve OQ-2 (Cursor): confirm the required config file path/format and minimal content needed. (done: architect decision -> adapters/cursor/.cursor/rules/samourai.mdc)
+- [x] **5.3** Implement Claude adapter config under `adapters/claude/` (exact paths per decision), ensuring it contains no secrets and is parseable. (done: adapters/claude/CLAUDE.md added, static markdown no secrets)
+- [x] **5.4** Implement Cursor adapter config under `adapters/cursor/` (exact paths per decision), ensuring it contains no secrets and is parseable. (done: adapters/cursor/.cursor/rules/samourai.mdc added)
+- [x] **5.5** Update `scripts/install-samourai.sh` to accept `--editor claude|cursor|all` and route adapter file copy accordingly, while keeping default behavior identical when no `--editor` is passed (AC-F9-1). (done: installer supports claude/cursor and keeps default opencode behavior)
+- [x] **5.6** Update `--list-editors` output to include new editors. (done: list-editors now returns opencode,vscode,claude,cursor)
 
 **Acceptance Criteria**:
 
-- Must: AC-F7-1
-- Must: AC-F8-1
-- Must: AC-F9-1
+- Must: AC-F7-1 — PASSED (scratch install with --editor claude creates CLAUDE.md and exits 0)
+- Must: AC-F8-1 — PASSED (scratch install with --editor cursor creates .cursor/rules/samourai.mdc and exits 0)
+- Must: AC-F9-1 — PASSED (default install still produces OpenCode artifacts only)
 
 **Files and modules**:
 
@@ -266,21 +266,21 @@ This plan implements the capabilities and acceptance criteria defined in `chg-GH
 
 **Tasks**:
 
-- [ ] **6.1** Ensure `lifecycle/stage-gates.md` exists and defines ≥ 5 named gates with entry criteria, responsible agent, and exit criteria (update if needed).
-- [ ] **6.2** Create `tools/` directory and implement the chosen CLI tool (resolve OQ-4). Recommended: a front-matter validator for `core/commands/*.md` and/or agent inventory checks (NFR-6).
-- [ ] **6.3** Decide MCP config location/schema (resolve OQ-5) and implement NVD + EPSS integration configuration:
+- [x] **6.1** Ensure `lifecycle/stage-gates.md` exists and defines ≥ 5 named gates with entry criteria, responsible agent, and exit criteria (update if needed). (done: existing stage-gates.md validated with 8 named gates and criteria)
+- [x] **6.2** Create `tools/` directory and implement the chosen CLI tool (resolve OQ-4). Recommended: a front-matter validator for `core/commands/*.md` and/or agent inventory checks (NFR-6). (done: tools/validate-command-frontmatter implemented and validated 0/non-0 exit behavior)
+- [x] **6.3** Decide MCP config location/schema (resolve OQ-5) and implement NVD + EPSS integration configuration:
   - NVD: base URL + env var `NVD_API_KEY` + consuming skills.
   - EPSS: base URL + no auth.
-- [ ] **6.4** Ensure `/cve-lookup` and `/score` docs reference the MCP configuration and the expected env var behavior (NVD key optional, graceful error).
+- [x] **6.4** Ensure `/cve-lookup` and `/score` docs reference the MCP configuration and the expected env var behavior (NVD key optional, graceful error). (done: cve-lookup and score command process sections reference MCP/tooling and NVD_API_KEY behavior)
 
 **Acceptance Criteria**:
 
-- Must: AC-F10-1
-- Must: AC-F11-1
-- Must: AC-F11-2
-- Must: AC-F12-1
-- Must: AC-F13-1
-- Must: AC-F12-2
+- Must: AC-F10-1 — PASSED (stage-gates.md has 8 named gates with entry/exit criteria)
+- Must: AC-F11-1 — PASSED (validator exits 0 on clean command set)
+- Must: AC-F11-2 — PASSED (validator exits non-zero and identifies offending malformed file)
+- Must: AC-F12-1 — PASSED (OpenCode and VSCode MCP configs include NVD endpoint/env wiring)
+- Must: AC-F13-1 — PASSED (OpenCode and VSCode MCP configs include EPSS endpoint wiring)
+- Must: AC-F12-2 — PASSED (cve-lookup command documents graceful behavior when NVD_API_KEY missing/invalid)
 
 **Files and modules**:
 
@@ -446,9 +446,9 @@ This plan implements the capabilities and acceptance criteria defined in `chg-GH
 | 1 | Completed | 2026-04-30 | 2026-04-30 | pending | Migrated 4 agents into core/agents and validated scratch install output |
 | 2 | Completed | 2026-04-30 | 2026-04-30 | pending | Added 11 cyber commands, added front-matter validator, validated install + schema checks |
 | 3 | Completed | 2026-04-30 | 2026-04-30 | pending | Removed deprecated template, updated references, fixed uninstall compatibility, full installer tests PASS |
-| 4 | Not started |  |  |  |  |
-| 5 | Not started |  |  |  |  |
-| 6 | Not started |  |  |  |  |
+| 4 | Completed | 2026-04-30 | 2026-04-30 | pending | Added CONTRIBUTING.md, architecture doc, and investigation template with privacy reminder |
+| 5 | Completed | 2026-04-30 | 2026-04-30 | pending | Added Claude/Cursor adapters, extended installer editor handling, and validated default compatibility |
+| 6 | Completed | 2026-04-30 | 2026-04-30 | pending | Validated stage gates, added validator tooling, wired NVD+EPSS MCP config, updated command docs |
 | 7 | Not started |  |  |  |  |
 | 8 | Not started |  |  |  |  |
 | 9 | Not started |  |  |  |  |
