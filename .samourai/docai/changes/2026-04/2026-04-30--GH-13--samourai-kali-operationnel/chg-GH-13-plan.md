@@ -173,14 +173,14 @@ This plan implements the capabilities and acceptance criteria defined in `chg-GH
 
 **Tasks**:
 
-- [ ] **3.1** Remove deprecated `pr-instructions-template.md` (per spec) and verify no remaining references.
-- [ ] **3.2** Audit lifecycle documentation for duplication; consolidate into a single authoritative source per lifecycle concept.
-- [ ] **3.3** Ensure any removals do not break install expectations or docs references.
+- [x] **3.1** Remove deprecated `pr-instructions-template.md` (per spec) and verify no remaining references. (done: deleted core/templates/pr-instructions-template.md and updated references)
+- [x] **3.2** Audit lifecycle documentation for duplication; consolidate into a single authoritative source per lifecycle concept. (done: confirmed distinct lifecycle docs; no duplicate canonical lifecycle definition found)
+- [x] **3.3** Ensure any removals do not break install expectations or docs references. (done: fixed uninstall regressions and reran installer test suite PASS)
 
 **Acceptance Criteria**:
 
-- Must: AC-F3-1
-- Must: AC-F3-2
+- Must: AC-F3-1 — PASSED (deprecated template removed; references updated to new pattern)
+- Must: AC-F3-2 — PASSED (lifecycle/stage-gates and lifecycle/change-lifecycle remain complementary, non-duplicative)
 
 **Files and modules**:
 
@@ -445,7 +445,7 @@ This plan implements the capabilities and acceptance criteria defined in `chg-GH
 |-------|--------|---------|-----------|--------|-------|
 | 1 | Completed | 2026-04-30 | 2026-04-30 | pending | Migrated 4 agents into core/agents and validated scratch install output |
 | 2 | Completed | 2026-04-30 | 2026-04-30 | pending | Added 11 cyber commands, added front-matter validator, validated install + schema checks |
-| 3 | Not started |  |  |  |  |
+| 3 | Completed | 2026-04-30 | 2026-04-30 | pending | Removed deprecated template, updated references, fixed uninstall compatibility, full installer tests PASS |
 | 4 | Not started |  |  |  |  |
 | 5 | Not started |  |  |  |  |
 | 6 | Not started |  |  |  |  |

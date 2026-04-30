@@ -65,11 +65,15 @@ new_git_repo() {
 }
 
 run_install() {
-  "${INSTALL_SCRIPT}" --source "${REPO_ROOT}" --target "$1" --skip-opencode "${@:2}" >/dev/null
+  local -r repo="$1"
+  shift
+  "${INSTALL_SCRIPT}" --source "${REPO_ROOT}" --target "${repo}" --skip-opencode "$@" >/dev/null
 }
 
 run_uninstall() {
-  "${UNINSTALL_SCRIPT}" --target "$1" --force "${@:2}" >/dev/null
+  local -r repo="$1"
+  shift
+  "${UNINSTALL_SCRIPT}" --target "${repo}" --force "$@" >/dev/null
 }
 
 run_uninstall_interactive() {

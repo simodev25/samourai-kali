@@ -459,6 +459,11 @@ cleanup_project_generated_artifacts() {
 
   [[ "${has_artifacts}" == "true" ]] || return 0
 
+  if [[ "${FORCE}" == "true" && "${DRY_RUN}" != "true" ]]; then
+    log_warn "keep   project-generated Samourai artifacts (force mode without manifest is conservative)"
+    return 0
+  fi
+
   if [[ "${FORCE}" != "true" && "${DRY_RUN}" != "true" ]]; then
     if ! confirm_delete_project_artifacts; then
       log_info "keep   project-generated Samourai artifacts"
@@ -522,14 +527,17 @@ cleanup_hidden_ai_dirs() {
   done
 
   # Then catch nested accidental installs, without entering common dependency/cache dirs.
-  mapfile -t nested_dirs < <(
+  while IFS= read -r abs_dir; do
+    nested_dirs+=("${abs_dir}")
+  done < <(
     find "${TARGET_DIR}" -maxdepth 4 \
       \( -path "${TARGET_DIR}/.git" -o -path "${TARGET_DIR}/node_modules" -o -path "${TARGET_DIR}/vendor" -o -path "${TARGET_DIR}/.venv" -o -path "${TARGET_DIR}/venv" \) -prune \
       -o -type d \( -name .samurai -o -name .opencode -o -name .docai -o -name .tmpai -o -path "${TARGET_DIR}/.samourai/tmpai" \) -print \
       | sort
   )
 
-  for abs_dir in "${nested_dirs[@]}"; do
+  for abs_dir in "${nested_dirs[@]-}"; do
+    [[ -n "${abs_dir}" ]] || continue
     rel_dir="${abs_dir#${TARGET_DIR}/}"
     [[ "${rel_dir}" != "${abs_dir}" ]] || continue
     [[ "${rel_dir}" == */* ]] || continue
