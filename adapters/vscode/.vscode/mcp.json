@@ -5,6 +5,12 @@
       "id": "github_token",
       "description": "GitHub token for workspace MCP access",
       "password": true
+    },
+    {
+      "type": "promptString",
+      "id": "nvd_api_key",
+      "description": "Optional NVD API key (NVD_API_KEY)",
+      "password": true
     }
   ],
   "servers": {
@@ -22,7 +28,19 @@
       "env": {
         "GITHUB_PERSONAL_ACCESS_TOKEN": "${input:github_token}"
       }
+    },
+    "nvd-epss": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-fetch"
+      ],
+      "env": {
+        "NVD_API_KEY": "${input:nvd_api_key}",
+        "NVD_BASE_URL": "https://services.nvd.nist.gov/rest/json",
+        "EPSS_BASE_URL": "https://api.first.org/data/v1/epss"
+      }
     }
   }
 }
-

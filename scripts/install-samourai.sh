@@ -7,7 +7,7 @@ shopt -s inherit_errexit 2>/dev/null || true
 IFS=$'\n\t'
 
 readonly APP_NAME="samourai-install"
-readonly APP_VERSION="1.0.0"
+readonly APP_VERSION="1.1.0"
 readonly LOG_TAG="(${APP_NAME})"
 
 readonly EXIT_SUCCESS=0
@@ -41,6 +41,8 @@ readonly CORE_SOURCE_REL="core"
 readonly BLUEPRINTS_SOURCE_REL="blueprints"
 readonly OPENCODE_SOURCE_REL="adapters/opencode/.opencode"
 readonly VSCODE_SOURCE_REL="adapters/vscode"
+readonly CLAUDE_SOURCE_REL="adapters/claude"
+readonly CURSOR_SOURCE_REL="adapters/cursor"
 
 readonly OPENCODE_ADAPTER_FILES=(
   "README.md"
@@ -240,7 +242,7 @@ resolve_symlink_stack_dir() {
 }
 
 list_editors() {
-  printf '%s\n' "opencode" "vscode"
+  printf '%s\n' "opencode" "vscode" "claude" "cursor"
 }
 
 interactive_editor_default() {
@@ -252,7 +254,7 @@ interactive_editor_default() {
   case "${EDITORS}" in
     opencode) printf '1\n' ;;
     vscode) printf '2\n' ;;
-    all|opencode,vscode|vscode,opencode) printf '3\n' ;;
+    all|opencode,vscode|vscode,opencode|opencode,vscode,claude,cursor|vscode,opencode,claude,cursor|claude,cursor,opencode,vscode|cursor,claude,opencode,vscode) printf '3\n' ;;
     *) printf '1\n' ;;
   esac
 }
@@ -405,9 +407,9 @@ validate_editors() {
   IFS=',' read -r -a _editors <<< "${EDITORS}"
   for editor in "${_editors[@]}"; do
     case "${editor}" in
-      all|opencode|vscode) ;;
+      all|opencode|vscode|claude|cursor) ;;
       "") die "--editor contains an empty entry" ;;
-      *) die "Unsupported editor: ${editor}. Supported editors: opencode, vscode" ;;
+      *) die "Unsupported editor: ${editor}. Supported editors: opencode, vscode, claude, cursor" ;;
     esac
   done
 }
@@ -427,6 +429,8 @@ editor_enabled() {
       all|"${wanted}") return 0 ;;
       opencode) [[ "${wanted}" == "opencode" ]] && return 0 ;;
       vscode) [[ "${wanted}" == "vscode" ]] && return 0 ;;
+      claude) [[ "${wanted}" == "claude" ]] && return 0 ;;
+      cursor) [[ "${wanted}" == "cursor" ]] && return 0 ;;
       "") ;;
       *) return 1 ;;
     esac
@@ -482,6 +486,14 @@ collect_vscode_adapter_files() {
   (cd "${SOURCE_DIR}/${VSCODE_SOURCE_REL}" && find .github .vscode -type f | sed 's#^\./##' | sort)
 }
 
+collect_claude_adapter_files() {
+  (cd "${SOURCE_DIR}/${CLAUDE_SOURCE_REL}" && find . -type f | sed 's#^\./##' | sort)
+}
+
+collect_cursor_adapter_files() {
+  (cd "${SOURCE_DIR}/${CURSOR_SOURCE_REL}" && find . -type f | sed 's#^\./##' | sort)
+}
+
 source_base_for_scope() {
   local -r scope="$1"
 
@@ -493,6 +505,8 @@ source_base_for_scope() {
     opencode-command|vscode-prompt) printf '%s/%s/commands\n' "${SOURCE_DIR}" "${CORE_SOURCE_REL}" ;;
     opencode-skill|vscode-skill) printf '%s/%s/skills\n' "${SOURCE_DIR}" "${CORE_SOURCE_REL}" ;;
     vscode) printf '%s/%s\n' "${SOURCE_DIR}" "${VSCODE_SOURCE_REL}" ;;
+    claude) printf '%s/%s\n' "${SOURCE_DIR}" "${CLAUDE_SOURCE_REL}" ;;
+    cursor) printf '%s/%s\n' "${SOURCE_DIR}" "${CURSOR_SOURCE_REL}" ;;
     *) die "Internal error: unknown source scope ${scope}" ;;
   esac
 }
@@ -531,6 +545,12 @@ target_relative_path() {
       ;;
     vscode-skill)
       printf '.github/skills/%s\n' "${rel}"
+      ;;
+    claude)
+      printf '%s\n' "${rel}"
+      ;;
+    cursor)
+      printf '%s\n' "${rel}"
       ;;
     *)
       die "Internal error: unknown target scope ${scope}"
@@ -1096,7 +1116,7 @@ Options:
   -v, --verbose           Debug output
       --skip-opencode     Do not run OpenCode installer
       --editor <list>      Comma-separated editor adapters to install (default: opencode)
-                           Supported: opencode, vscode, all
+                           Supported: opencode, vscode, claude, cursor, all
       --core-only          Install only .samourai/core resources, no editor adapter
       --list-editors       List supported editor adapters and exit
       --allow-non-root    Allow install into a git subdirectory
@@ -1110,7 +1130,9 @@ Examples:
   ./scripts/install-samourai.sh --target /path/to/project --doctor
   ./scripts/install-samourai.sh --target /path/to/project --editor opencode
   ./scripts/install-samourai.sh --target /path/to/project --editor vscode
-  ./scripts/install-samourai.sh --target /path/to/project --editor opencode,vscode
+  ./scripts/install-samourai.sh --target /path/to/project --editor claude
+  ./scripts/install-samourai.sh --target /path/to/project --editor cursor
+  ./scripts/install-samourai.sh --target /path/to/project --editor opencode,vscode,claude,cursor
   ./scripts/install-samourai.sh --target /path/to/project --core-only
   ./scripts/install-samourai.sh --target /path/to/project --force
   ./scripts/install-samourai.sh --target /path/to/project --dry-run
@@ -1238,6 +1260,18 @@ main() {
     while IFS= read -r rel_path; do
       copy_relative_file vscode-skill "${rel_path}"
     done < <(collect_core_skill_files)
+  fi
+
+  if editor_enabled "claude"; then
+    while IFS= read -r rel_path; do
+      copy_relative_file claude "${rel_path}"
+    done < <(collect_claude_adapter_files)
+  fi
+
+  if editor_enabled "cursor"; then
+    while IFS= read -r rel_path; do
+      copy_relative_file cursor "${rel_path}"
+    done < <(collect_cursor_adapter_files)
   fi
 
   if [[ "${SYMLINK_STACK}" == "true" ]]; then

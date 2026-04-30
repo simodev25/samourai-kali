@@ -22,7 +22,9 @@ Agent prompts define quality rules and domain-specific logic; templates define o
 | `test-plan-template.md` | Per-change POC validation plans (`chg-<workItemRef>-test-plan.md`) |
 | `implementation-plan-template.md` | Per-change investigation plans (`chg-<workItemRef>-plan.md`) |
 | `north-star-template.md` | Product north star document (`.samourai/docai/overview/01-north-star.md`) |
-| `pr-instructions-template.md` | PR/MR platform instructions (`.samourai/ai/agent/pr-instructions.md`) |
+| `pr-instructions--github-cli.md` | PR platform instructions for GitHub CLI (`.samourai/ai/agent/pr-instructions.md`) |
+| `pr-instructions--gitlab-cli.md` | PR platform instructions for GitLab CLI (`.samourai/ai/agent/pr-instructions.md`) |
+| `pr-instructions--github-mcp.md` | PR platform instructions for GitHub MCP (`.samourai/ai/agent/pr-instructions.md`) |
 
 ## Conventions
 

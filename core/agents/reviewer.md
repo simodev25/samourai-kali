@@ -123,7 +123,7 @@ table mapping each abstract operation (list PRs, fetch diff, publish comment, et
 concrete CLI or MCP command. Use it as the single source of truth for all platform interactions.
 
 If `.samourai/ai/agent/pr-instructions.md` does not exist: STOP with message:
-"Missing `.samourai/ai/agent/pr-instructions.md`. This file is required for platform access. Use `.samourai/core/templates/pr-instructions-template.md` as the structural template and customize it for your project."
+"Missing `.samourai/ai/agent/pr-instructions.md`. This file is required for platform access. Use one of `.samourai/core/templates/pr-instructions--*.md` as a structural template and customize it for your project."
 </platform_access>
 
 <pre_flight>

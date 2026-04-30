@@ -388,7 +388,7 @@ Generate draft artifacts based on accumulated context:
 1. `.samourai/AGENTS.md` — Project-specific version with correct repo structure, tech stack, and references
 2. `AGENTS.md` — Root compatibility entrypoint for tools that auto-discover this filename. Keep it short and make it point readers to `.samourai/AGENTS.md`.
 3. `.samourai/ai/agent/pm-instructions.md` — Tracker configuration based on interview answers and workflow discovery (see `<tracker_workflow_discovery>`). This file is NOT installed by the kit — it must always be generated here or created manually.
-4. `.samourai/ai/agent/pr-instructions.md` — PR/MR platform configuration based on repo scan and interview (see `<pr_platform_discovery>`). Tells agents HOW to interact with the PR/MR platform. Use `.samourai/core/templates/pr-instructions-template.md` as the structural template.
+4. `.samourai/ai/agent/pr-instructions.md` — PR/MR platform configuration based on repo scan and interview (see `<pr_platform_discovery>`). Tells agents HOW to interact with the PR/MR platform. Use one of `.samourai/core/templates/pr-instructions--*.md` as the structural template.
 5. `.samourai/ai/agent/project-profile.md` — Project mode profile that affects planning, development, fixes, review, and reporting.
 6. `.samourai/docai/documentation-handbook.md` — Generate or update the project documentation handbook when the repository needs one
 
@@ -767,7 +767,7 @@ When generating `.samourai/ai/agent/pr-instructions.md`, determine the PR/MR pla
    - Default to CLI if both available (simpler, more reliable)
 
 4. **Generate `pr-instructions.md`:**
-   - Use `.samourai/core/templates/pr-instructions-template.md` as the structural template
+   - Use one of `.samourai/core/templates/pr-instructions--*.md` as the structural template
    - Fill in platform type, access method, host, and Operations Reference table
    - Reference `.samourai/core/governance/conventions/opencode-agents-and-commands-guide.md` for general PR workflow details
 
