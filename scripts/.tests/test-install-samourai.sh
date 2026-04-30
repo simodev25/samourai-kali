@@ -82,6 +82,43 @@ run_uninstall_interactive() {
   printf '%b' "${answers}" | "${UNINSTALL_SCRIPT}" --target "${repo}" >/dev/null
 }
 
+assert_new_cyber_commands_installed() {
+  local -r repo="$1"
+  local command
+  local -a commands=(
+    investigate
+    recon
+    hunt
+    analyze-vuln
+    cve-lookup
+    score
+    poc
+    collect-evidence
+    cve-report
+    remediate
+    status
+  )
+
+  for command in "${commands[@]}"; do
+    assert_file "${repo}/.opencode/command/${command}.md"
+  done
+}
+
+assert_migrated_agents_installed() {
+  local -r repo="$1"
+  local agent
+  local -a agents=(
+    designer
+    image-generator
+    review-feedback-applier
+    tdd-orchestrator
+  )
+
+  for agent in "${agents[@]}"; do
+    assert_file "${repo}/.opencode/agent/${agent}.md"
+  done
+}
+
 test_shell_syntax() {
   bash -n "${INSTALL_SCRIPT}"
   bash -n "${REMOTE_INSTALL_SCRIPT}"
@@ -166,6 +203,8 @@ test_install_and_uninstall() {
   assert_file "${repo}/.opencode/opencode.jsonc"
   assert_file "${repo}/.opencode/agent/pm.md"
   assert_file "${repo}/.opencode/command/bootstrap.md"
+  assert_new_cyber_commands_installed "${repo}"
+  assert_migrated_agents_installed "${repo}"
   assert_file "${repo}/.samourai/core/governance/conventions/change-lifecycle.md"
   assert_file "${repo}/.samourai/core/templates/change-spec-template.md"
   assert_file "${repo}/.samourai/core/decisions/README.md"
@@ -260,7 +299,39 @@ test_list_editors() {
   output="$("${INSTALL_SCRIPT}" --list-editors)"
   [[ "${output}" == *"opencode"* ]] || fail "expected list-editors to output opencode"
   [[ "${output}" == *"vscode"* ]] || fail "expected list-editors to output vscode"
+  [[ "${output}" == *"claude"* ]] || fail "expected list-editors to output claude"
+  [[ "${output}" == *"cursor"* ]] || fail "expected list-editors to output cursor"
   ok "list editors"
+}
+
+test_editor_claude() {
+  local repo manifest
+  repo="$(new_git_repo)"
+  manifest="${repo}/.samourai/install/installed-files.txt"
+
+  run_install "${repo}" --editor claude
+
+  assert_file "${repo}/.samourai/core/templates/change-spec-template.md"
+  assert_file "${repo}/CLAUDE.md"
+  assert_no_file "${repo}/.opencode/opencode.jsonc"
+  assert_contains "${manifest}" "CLAUDE.md"
+
+  ok "editor claude"
+}
+
+test_editor_cursor() {
+  local repo manifest
+  repo="$(new_git_repo)"
+  manifest="${repo}/.samourai/install/installed-files.txt"
+
+  run_install "${repo}" --editor cursor
+
+  assert_file "${repo}/.samourai/core/templates/change-spec-template.md"
+  assert_file "${repo}/.cursor/rules/samourai.mdc"
+  assert_no_file "${repo}/.opencode/opencode.jsonc"
+  assert_contains "${manifest}" ".cursor/rules/samourai.mdc"
+
+  ok "editor cursor"
 }
 
 test_default_target_current_directory() {
@@ -353,6 +424,8 @@ test_editor_all_alias() {
   assert_file "${repo}/.vscode/extensions.json"
   assert_file "${repo}/.vscode/mcp.json"
   assert_file "${repo}/.vscode/settings.json"
+  assert_file "${repo}/CLAUDE.md"
+  assert_file "${repo}/.cursor/rules/samourai.mdc"
   assert_contains "${manifest}" ".opencode/opencode.jsonc"
   assert_contains "${manifest}" ".github/copilot-instructions.md"
   assert_contains "${manifest}" ".github/agents/pm.agent.md"
@@ -360,8 +433,34 @@ test_editor_all_alias() {
   assert_contains "${manifest}" ".vscode/extensions.json"
   assert_contains "${manifest}" ".vscode/mcp.json"
   assert_contains "${manifest}" ".vscode/settings.json"
+  assert_contains "${manifest}" "CLAUDE.md"
+  assert_contains "${manifest}" ".cursor/rules/samourai.mdc"
 
   ok "editor all alias"
+}
+
+test_command_frontmatter_tool() {
+  local repo malformed_dir
+  repo="$(new_git_repo)"
+  malformed_dir="${repo}/commands"
+
+  "${REPO_ROOT}/tools/validate-command-frontmatter" >/dev/null || fail "expected validator to pass on repo command set"
+
+  mkdir -p "${malformed_dir}"
+  cp "${REPO_ROOT}/core/commands/investigate.md" "${malformed_dir}/investigate.md"
+  python3 - <<PY
+from pathlib import Path
+p = Path('${malformed_dir}/investigate.md')
+t = p.read_text()
+t = t.replace('agent: pm\n', '')
+p.write_text(t)
+PY
+
+  if "${REPO_ROOT}/tools/validate-command-frontmatter" --commands-dir "${malformed_dir}" >/dev/null 2>&1; then
+    fail "expected validator to fail on malformed command front matter"
+  fi
+
+  ok "command frontmatter tool"
 }
 
 test_editor_vscode() {
@@ -716,6 +815,8 @@ test_install_symlink_stack
 test_install_symlink_stack_migrates_existing_local_stack
   test_core_only
   test_editor_vscode
+  test_editor_claude
+  test_editor_cursor
   test_editor_all_alias
   test_unknown_editor_fails_before_copy
   test_force_overwrite_audit
@@ -732,6 +833,7 @@ test_uninstall_cleans_only_legacy_ai_files
   test_uninstall_nested_hidden_dir_confirmations
   test_uninstall_never_removes_shared_github_dir
   test_uninstall_skips_nested_git_repo_metadata
+  test_command_frontmatter_tool
 }
 
 main "$@"

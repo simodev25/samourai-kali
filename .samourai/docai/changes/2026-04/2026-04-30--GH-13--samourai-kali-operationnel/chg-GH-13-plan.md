@@ -304,15 +304,15 @@ This plan implements the capabilities and acceptance criteria defined in `chg-GH
 
 **Tasks**:
 
-- [ ] **7.1** Extend `scripts/.tests/test-install-samourai.sh` to validate that the 11 new cyber commands are installed into `.opencode/command/` when `--editor opencode` is used (AC-F1-2).
-- [ ] **7.2** Add install tests ensuring the four migrated agents are installed into `.opencode/agent/` (AC-F2-1, AC-F2-2).
-- [ ] **7.3** Add install tests for `--editor claude` and `--editor cursor` (and `--editor all` if confirmed by OQ-3), validating that adapter config files are generated and install exits 0 (AC-F7-1, AC-F8-1).
-- [ ] **7.4** Add tests validating `--list-editors` includes the new editor values.
-- [ ] **7.5** Add tests for the `tools/` CLI tool (exit codes 0/non-zero per AC-F11-1/2) without requiring network access.
+- [x] **7.1** Extend `scripts/.tests/test-install-samourai.sh` to validate that the 11 new cyber commands are installed into `.opencode/command/` when `--editor opencode` is used (AC-F1-2). (done: assert_new_cyber_commands_installed helper + install test coverage)
+- [x] **7.2** Add install tests ensuring the four migrated agents are installed into `.opencode/agent/` (AC-F2-1, AC-F2-2). (done: assert_migrated_agents_installed helper + install test coverage)
+- [x] **7.3** Add install tests for `--editor claude` and `--editor cursor` (and `--editor all` if confirmed by OQ-3), validating that adapter config files are generated and install exits 0 (AC-F7-1, AC-F8-1). (done: test_editor_claude and test_editor_cursor added; editor all extended)
+- [x] **7.4** Add tests validating `--list-editors` includes the new editor values. (done: list_editors test now checks claude and cursor)
+- [x] **7.5** Add tests for the `tools/` CLI tool (exit codes 0/non-zero per AC-F11-1/2) without requiring network access. (done: test_command_frontmatter_tool added)
 
 **Acceptance Criteria**:
 
-- Must: All affected acceptance criteria have automated regression coverage where feasible without live APIs.
+- Must: All affected acceptance criteria have automated regression coverage where feasible without live APIs. — PASSED (expanded installer suite covers commands/agents/adapters/editor list/tool checks)
 
 **Files and modules**:
 
@@ -449,7 +449,7 @@ This plan implements the capabilities and acceptance criteria defined in `chg-GH
 | 4 | Completed | 2026-04-30 | 2026-04-30 | pending | Added CONTRIBUTING.md, architecture doc, and investigation template with privacy reminder |
 | 5 | Completed | 2026-04-30 | 2026-04-30 | pending | Added Claude/Cursor adapters, extended installer editor handling, and validated default compatibility |
 | 6 | Completed | 2026-04-30 | 2026-04-30 | pending | Validated stage gates, added validator tooling, wired NVD+EPSS MCP config, updated command docs |
-| 7 | Not started |  |  |  |  |
+| 7 | Completed | 2026-04-30 | 2026-04-30 | pending | Extended installer tests for cyber commands, migrated agents, new editors, and validator tool; full suite PASS |
 | 8 | Not started |  |  |  |  |
 | 9 | Not started |  |  |  |  |
 | 10 | Not started |  |  |  |  |
