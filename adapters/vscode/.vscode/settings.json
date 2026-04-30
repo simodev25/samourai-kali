@@ -1,0 +1,6 @@
+{
+  "chat.subagents.allowInvocationsFromSubagents": true,
+  "chat.promptFilesLocations": {
+    ".github/prompts": true
+  }
+}
