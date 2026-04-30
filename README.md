@@ -52,18 +52,17 @@ Samourai Kali delivers:
 ## Investigation Workflow
 
 ```
-1. Scoping       → /plan-change
-2. Recon         → @attack-surface-agent (nmap, amass, whatweb)
-3. Bug Hunting   → @bug-hunting-agent (nikto, sqlmap, nuclei, ffuf)
-4. Analysis      → @vulnerability-analysis-agent (burpsuite, semgrep)
-5. CVE Research  → @cve-intelligence-agent (searchsploit, NVD)
-6. Exploitability → @exploitability-agent (CVSS, EPSS)
-7. Safe POC      → @safe-poc-agent (curl, msfconsole, python3)
-8. Evidence      → @evidence-agent (sha256sum, tcpdump, tshark)
-9. CVE Report    → @cve-report-agent (CVE JSON 5.0)
-10. Remediation  → @remediation-agent (nmap, nuclei — fix verification)
-11. Review       → /review
-12. Publication  → /commit → /pr
+1. Scoping       → /investigate <target>
+2. Recon         → /recon <target> (@attack-surface-agent: nmap, amass, whatweb)
+3. Bug Hunting   → /hunt <target> (@bug-hunting-agent: nikto, sqlmap, nuclei, ffuf)
+4. Analysis      → /analyze-vuln <vuln-id> (@vulnerability-analysis-agent: burpsuite, semgrep)
+5. CVE Research  → /cve-lookup <cve-id> (@cve-intelligence-agent: searchsploit, NVD API)
+6. Exploitability → /score <vuln-id> (@exploitability-agent: CVSS, EPSS)
+7. Safe POC      → /poc <vuln-id> (@safe-poc-agent: curl, msfconsole, python3)
+8. Evidence      → /collect-evidence (@evidence-agent: sha256sum, tcpdump, tshark)
+9. CVE Report    → /cve-report <vuln-id> (@cve-report-agent: CVE JSON 5.0)
+10. Remediation  → /remediate <vuln-id> (@remediation-agent: nmap, nuclei)
+11. Status       → /status (@pm: investigation progress tracking)
 ```
 
 ---
@@ -136,6 +135,29 @@ Samourai Kali delivers:
 
 ---
 
+## External API Integration
+
+Samourai Kali integrates with security data sources via MCP (Model Context Protocol):
+
+| API | Purpose | Authentication |
+|-----|---------|----------------|
+| **NVD API** | CVE data retrieval | `NVD_API_KEY` env var (optional) |
+| **EPSS API** | Exploit probability scoring | No auth required |
+
+### Configure NVD API (optional)
+
+```bash
+# Get your free API key: https://nvd.nist.gov/developers/request-an-api-key
+export NVD_API_KEY="your-api-key"
+
+# Add to ~/.bashrc or ~/.zshrc for persistence
+echo 'export NVD_API_KEY="your-api-key"' >> ~/.bashrc
+```
+
+Commands degrade gracefully when `NVD_API_KEY` is not set.
+
+---
+
 ## Blueprints
 
 Blueprints standardize:
@@ -198,17 +220,28 @@ cd samourai-kali
 ### Options
 
 ```bash
-./scripts/install-samourai.sh --target /chemin/lab --dry-run  # dry run
-./scripts/install-samourai.sh --target /chemin/lab --force    # force overwrite
-./scripts/install-samourai.sh --target /chemin/lab --editor opencode
+./scripts/install-samourai.sh --target /chemin/lab --dry-run          # dry run
+./scripts/install-samourai.sh --target /chemin/lab --force            # force overwrite
+./scripts/install-samourai.sh --target /chemin/lab --editor opencode  # default
+./scripts/install-samourai.sh --target /chemin/lab --editor claude    # Claude Code
+./scripts/install-samourai.sh --target /chemin/lab --editor cursor    # Cursor
+./scripts/install-samourai.sh --target /chemin/lab --editor vscode    # VS Code
+./scripts/install-samourai.sh --list-editors                          # list available editors
 ```
+
+### Supported Editors
+
+- **OpenCode** (default)
+- **VS Code**
+- **Claude Code**
+- **Cursor**
 
 ---
 
 ## Quick Start (2 min)
 
 1. Install the kit on a Kali Linux environment
-2. Open the project in OpenCode
+2. Open the project in your preferred editor (OpenCode, VS Code, Claude Code, or Cursor)
 3. Configure the lab:
 
 ```bash
@@ -218,13 +251,23 @@ cd samourai-kali
 4. Launch an investigation:
 
 ```bash
-/plan-change GH-123
+/investigate <target>
+```
+
+Or use sub-commands directly:
+
+```bash
+/recon <target>      # reconnaissance
+/hunt <target>       # vulnerability hunting
+/cve-lookup <cve-id> # CVE intelligence
+/score <vuln-id>     # exploitability scoring
+/poc <vuln-id>       # safe PoC generation
 ```
 
 5. Or delegate to Mission Control:
 
 ```bash
-@pm investigate GH-123
+@pm investigate <target>
 ```
 
 ---
