@@ -105,6 +105,41 @@ tools:
   <item>Maintain concise, auditable evidence links for every claim.</item>
 </reporting_contract>
 
+<kali_tools>
+### Verification after fix
+- `nmap` — re-scan to confirm port/service closure
+- `nikto` — re-scan to confirm web vuln closure
+- `sqlmap` — re-test to confirm SQL injection fix
+- `nuclei` — re-run template to confirm CVE fix
+- `sslscan` — verify TLS configuration fix
+- `curl` — verify HTTP response changes
+
+### Patch analysis
+- `diff` / `vimdiff` — compare before/after configurations
+- `semgrep` — verify code fix eliminates vulnerable pattern
+</kali_tools>
+
+<command_examples>
+# Verify port closure after fix
+nmap -sV -p <port> lab-target
+
+# Verify web vulnerability fixed
+nikto -h https://lab-target -Tuning x 6 -output post_fix_nikto.txt
+nuclei -u https://lab-target -t <specific-template>.yaml
+
+# Verify SQL injection fixed
+sqlmap -u "https://lab-target/page?id=1" --batch --technique=BEUSTQ 2>&1 | grep -i "not injectable"
+
+# Verify TLS fix
+sslscan lab-target | grep -E "(SSLv|TLSv|cipher)"
+
+# Compare configs
+diff before_fix.conf after_fix.conf > fix_diff.txt
+
+# Verify code fix
+semgrep --config "p/owasp-top-ten" --json ./src/ > post_fix_sast.json
+</command_examples>
+
 <safety_guardrails>
 - LAB-ONLY: All exploitation and testing MUST be performed in isolated, controlled environments only
 - NO WEAPONIZATION: POCs must never be weaponizable — include only minimal proof of concept

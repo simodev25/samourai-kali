@@ -39,6 +39,33 @@ Use this skill to build a complete, evidence-based view of reachable assets befo
 15. Produce a structured attack surface map (assets, services, endpoints, dependencies, risk tags, notes).
 16. Review completeness and reconcile against original scope to ensure nothing unauthorized is included.
 
+## Kali Tools
+
+| Phase | Tool | Command |
+|-------|------|---------|
+| WHOIS/DNS | `whois`, `dig` | `whois example.com`, `dig example.com ANY` |
+| Subdomain enum | `amass`, `subfinder` | `amass enum -passive -d example.com`, `subfinder -d example.com` |
+| OSINT | `theHarvester` | `theHarvester -d example.com -b all` |
+| Port scan | `nmap`, `masscan` | `nmap -sV -sC -O -Pn -oA results <target>` |
+| Web fingerprint | `whatweb`, `wafw00f` | `whatweb -a 3 https://target`, `wafw00f https://target` |
+| Dir enum | `gobuster`, `ffuf` | `gobuster dir -u https://target -w /usr/share/wordlists/dirb/common.txt` |
+| Web scan | `nikto` | `nikto -h https://target -output nikto.txt` |
+
+## Command Examples
+
+```bash
+whois example.com
+dig example.com ANY
+amass enum -passive -d example.com
+subfinder -d example.com
+theHarvester -d example.com -b all
+nmap -sV -sC -O -Pn -oA results target.example.com
+whatweb -a 3 https://target.example.com
+wafw00f https://target.example.com
+gobuster dir -u https://target.example.com -w /usr/share/wordlists/dirb/common.txt
+nikto -h https://target.example.com -output nikto.txt
+```
+
 ## Verification
 - [ ] Scope authorization is present, current, and explicitly covers all tested assets
 - [ ] Passive recon artifacts are captured and referenced

@@ -30,7 +30,7 @@ mode: all
 <item>Execute the current phase's tasks in order.</item>
 <item>Load `.samourai/ai/agent/project-profile.md` when present and apply it to implementation scope, correction style, validation depth, and final reporting.</item>
 <item>Consult `@architect` for technical/architectural decisions before implementing.</item>
-<item>Consult `@designer` for UI/UX/visual tasks.</item>
+<item>Consult `@image-reviewer` for visual analysis tasks.</item>
 <item>Reconcile plan status when work exists but checkboxes/evidence are missing.</item>
 <item>Update plan after every task: mark [x], add evidence/notes.</item>
 <item>If remediation tasks were added after review, execute them first and re-validate affected acceptance criteria.</item>
@@ -96,7 +96,7 @@ The profile does not override the plan, spec, safety rules, or explicit user ins
     <step>For each task:
       - Plan execution: map task to concrete actions and evidence.
       - If technical decision needed: call `@architect` first; pause for ADR if warranted.
-      - If UI/UX work: call `@designer` ensuring alignment to design system.
+      - If UI/UX work: call `@image-reviewer` for visual artifact analysis and feedback.
       - If user-facing text: call `@editor` for copywriting review.
       - For command execution: follow command_execution_policy (delegate heavy commands to `@runner`; run small focused commands directly).
       - Edit plan: mark [x], add concise note, link evidence.
@@ -138,7 +138,7 @@ The profile does not override the plan, spec, safety rules, or explicit user ins
   </agent>
   <agent name="@committer">For creating Conventional Commits.</agent>
   <agent name="@architect">For technical/architectural decisions.</agent>
-  <agent name="@designer">For UI/UX/visual tasks.</agent>
+  <agent name="@image-reviewer">For UI/UX/visual analysis tasks.</agent>
   <agent name="@editor">For user-facing text and translations.</agent>
 </delegation>
 

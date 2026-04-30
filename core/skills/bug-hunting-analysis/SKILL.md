@@ -38,6 +38,38 @@ Apply this skill to run disciplined, repeatable vulnerability hunting after atta
 14. Prioritize by risk and remediation urgency, noting likely exploit paths and blast radius.
 15. Produce a structured findings register ready for deeper vulnerability analysis and reporting.
 
+## Kali Tools
+
+| Vuln Class | Tool | Command |
+|------------|------|---------|
+| SQL Injection | `sqlmap` | `sqlmap -u "https://target/page?id=1" --batch --dbs` |
+| XSS | `dalfox`, XSStrike | `dalfox url "https://target/search?q=test"` |
+| Command Injection | `commix` | `commix -u "https://target/ping?ip=127.0.0.1"` |
+| Directory traversal | `ffuf` | `ffuf -u https://target/FUZZ -w /usr/share/wordlists/dirb/common.txt` |
+| Vuln scanning | `nuclei` | `nuclei -u https://target -severity critical,high` |
+| Web scanning | `nikto` | `nikto -h https://target -Format json` |
+| Auth brute force | `hydra` | `hydra -l admin -P /usr/share/wordlists/rockyou.txt target http-post-form` |
+| TLS/SSL | `sslscan`, `testssl.sh` | `sslscan target`, `testssl.sh target` |
+| SAST | `semgrep`, `bandit` | `semgrep --config=auto ./src/`, `bandit -r ./src/` |
+| Secrets | `trufflehog` | `trufflehog filesystem --directory=./src/` |
+
+## Command Examples
+
+```bash
+sqlmap -u "https://target/page?id=1" --batch --dbs
+dalfox url "https://target/search?q=test"
+commix -u "https://target/ping?ip=127.0.0.1"
+ffuf -u https://target/FUZZ -w /usr/share/wordlists/dirb/common.txt
+nuclei -u https://target -severity critical,high
+nikto -h https://target -Format json
+hydra -l admin -P /usr/share/wordlists/rockyou.txt target http-post-form
+sslscan target
+testssl.sh target
+semgrep --config=auto ./src/
+bandit -r ./src/
+trufflehog filesystem --directory=./src/
+```
+
 ## Verification
 - [ ] OWASP Top 10 coverage matrix exists and is complete for in-scope components
 - [ ] High-value targets were explicitly selected and justified

@@ -155,3 +155,10 @@ After saving the plan, offer execution choice:
 
 **If Inline Execution chosen:**
 - **REQUIRED SUB-SKILL:** Use superpowers:executing-plans
+
+## Safety Guardrails
+- **LAB-ONLY**: All testing and exploitation MUST occur in isolated lab environments
+- **NO WEAPONIZATION**: POCs must be minimal and non-weaponizable
+- **AUTHORIZATION**: Verify written scope authorization before any active testing
+- **LOGGING**: All actions must be logged and timestamped
+- **RESPONSIBLE DISCLOSURE**: Follow responsible disclosure for any findings

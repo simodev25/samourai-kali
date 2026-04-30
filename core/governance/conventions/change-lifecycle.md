@@ -46,16 +46,16 @@ Phases are ordered and gated. A phase is not complete unless its artifacts exist
 
 ```mermaid
 flowchart TD
-    A[1. intake_triage<br/>@pm] --> B[2. reconnaissance<br/>@attack-surface]
-    B --> C[3. vulnerability_discovery<br/>@bug-hunting]
-    C --> D[4. vulnerability_analysis<br/>@vulnerability-analysis]
-    D --> E[5. cve_intelligence<br/>@cve-intelligence]
-    E --> F[6. exploitability_assessment<br/>@exploitability]
-    F --> G[7. poc_development<br/>@safe-poc]
+    A[1. intake_triage<br/>@pm] --> B[2. reconnaissance<br/>@attack-surface-agent]
+    B --> C[3. vulnerability_discovery<br/>@bug-hunting-agent]
+    C --> D[4. vulnerability_analysis<br/>@vulnerability-analysis-agent]
+    D --> E[5. cve_intelligence<br/>@cve-intelligence-agent]
+    E --> F[6. exploitability_assessment<br/>@exploitability-agent]
+    F --> G[7. poc_development<br/>@safe-poc-agent]
     G --> H[8. poc_validation<br/>@reviewer + @runner]
-    H --> I[9. evidence_collection<br/>@evidence]
-    I --> J[10. reporting<br/>@cve-report]
-    J --> K[11. remediation<br/>@remediation]
+    H --> I[9. evidence_collection<br/>@evidence-agent]
+    I --> J[10. reporting<br/>@cve-report-agent]
+    J --> K[11. remediation<br/>@remediation-agent]
     K --> L[12. peer_review<br/>@reviewer]
     L --> M[13. publication<br/>@pr-manager]
     M --> N((STOP<br/>Human Approval / Disclosure))
@@ -98,14 +98,14 @@ flowchart TD
 
 ### 2) reconnaissance
 
-**Owner**: `@pm` delegates to `@attack-surface`
+**Owner**: `@pm` delegates to `@attack-surface-agent`
 
 **Goal**: Map the attack surface within authorized scope.
 
 **Actions**:
 
-- `@pm` delegates to `@attack-surface` with `workItemRef`, scope, and constraints.
-- `@attack-surface` performs scoped reconnaissance and writes `chg-<workItemRef>-recon.*` outputs.
+- `@pm` delegates to `@attack-surface-agent` with `workItemRef`, scope, and constraints.
+- `@attack-surface-agent` performs scoped reconnaissance and writes `chg-<workItemRef>-recon.*` outputs.
 
 **Outcome**: A validated asset/entry-point map exists for follow-up investigation.
 
@@ -117,14 +117,14 @@ flowchart TD
 
 ### 3) vulnerability_discovery
 
-**Owner**: `@pm` delegates to `@bug-hunting`
+**Owner**: `@pm` delegates to `@bug-hunting-agent`
 
 **Goal**: Identify potential vulnerabilities and document reproducible findings.
 
 **Actions**:
 
-- `@pm` delegates to `@bug-hunting` using recon outputs.
-- `@bug-hunting` performs discovery and writes `chg-<workItemRef>-findings.*`.
+- `@pm` delegates to `@bug-hunting-agent` using recon outputs.
+- `@bug-hunting-agent` performs discovery and writes `chg-<workItemRef>-findings.*`.
 
 **Outcome**: Candidate findings are captured with reproduction hypotheses.
 
@@ -135,14 +135,14 @@ flowchart TD
 
 ### 4) vulnerability_analysis
 
-**Owner**: `@pm` delegates to `@vulnerability-analysis`
+**Owner**: `@pm` delegates to `@vulnerability-analysis-agent`
 
 **Goal**: Perform deep technical analysis of discovered vulnerabilities.
 
 **Actions**:
 
-- `@pm` delegates to `@vulnerability-analysis` with findings package.
-- `@vulnerability-analysis` validates root cause, exploit path, and impact boundaries in `chg-<workItemRef>-analysis.*`.
+- `@pm` delegates to `@vulnerability-analysis-agent` with findings package.
+- `@vulnerability-analysis-agent` validates root cause, exploit path, and impact boundaries in `chg-<workItemRef>-analysis.*`.
 
 **Outcome**: Findings are confirmed/rejected with technical rationale.
 
@@ -153,14 +153,14 @@ flowchart TD
 
 ### 5) cve_intelligence
 
-**Owner**: `@pm` delegates to `@cve-intelligence`
+**Owner**: `@pm` delegates to `@cve-intelligence-agent`
 
 **Goal**: Correlate findings with known CVEs/CWEs and relevant threat intelligence.
 
 **Actions**:
 
-- `@pm` delegates to `@cve-intelligence` with analysis results.
-- `@cve-intelligence` produces `chg-<workItemRef>-cve-intel.*` with correlation notes.
+- `@pm` delegates to `@cve-intelligence-agent` with analysis results.
+- `@cve-intelligence-agent` produces `chg-<workItemRef>-cve-intel.*` with correlation notes.
 
 **Outcome**: External vulnerability context is linked and traceable.
 
@@ -171,14 +171,14 @@ flowchart TD
 
 ### 6) exploitability_assessment
 
-**Owner**: `@pm` delegates to `@exploitability`
+**Owner**: `@pm` delegates to `@exploitability-agent`
 
 **Goal**: Assess exploitability and risk using CVSS/EPSS and contextual factors.
 
 **Actions**:
 
-- `@pm` delegates to `@exploitability` with analysis + intel.
-- `@exploitability` writes `chg-<workItemRef>-exploitability.*` including scoring rationale.
+- `@pm` delegates to `@exploitability-agent` with analysis + intel.
+- `@exploitability-agent` writes `chg-<workItemRef>-exploitability.*` including scoring rationale.
 
 **Outcome**: Risk scoring is complete and defensible.
 
@@ -189,14 +189,14 @@ flowchart TD
 
 ### 7) poc_development
 
-**Owner**: `@pm` delegates to `@safe-poc`
+**Owner**: `@pm` delegates to `@safe-poc-agent`
 
 **Goal**: Build a safe proof-of-concept in isolated lab conditions.
 
 **Actions**:
 
-- `@pm` delegates to `@safe-poc` with strict safety constraints.
-- `@safe-poc` creates PoC artifacts and execution notes.
+- `@pm` delegates to `@safe-poc-agent` with strict safety constraints.
+- `@safe-poc-agent` creates PoC artifacts and execution notes.
 
 **Outcome**: A reproducible and controlled PoC exists.
 
@@ -226,14 +226,14 @@ flowchart TD
 
 ### 9) evidence_collection
 
-**Owner**: `@pm` delegates to `@evidence`
+**Owner**: `@pm` delegates to `@evidence-agent`
 
 **Goal**: Build a structured evidence package with integrity metadata.
 
 **Actions**:
 
-- `@pm` delegates to `@evidence` for artifact collection and normalization.
-- `@evidence` stores evidence under approved paths and records hashes/timestamps.
+- `@pm` delegates to `@evidence-agent` for artifact collection and normalization.
+- `@evidence-agent` stores evidence under approved paths and records hashes/timestamps.
 
 **Outcome**: Evidence package is complete, redacted where needed, and integrity-protected.
 
@@ -245,14 +245,14 @@ flowchart TD
 
 ### 10) reporting
 
-**Owner**: `@pm` delegates to `@cve-report`
+**Owner**: `@pm` delegates to `@cve-report-agent`
 
 **Goal**: Produce a factual, disclosure-ready vulnerability report.
 
 **Actions**:
 
-- `@pm` delegates to `@cve-report` with evidence + analysis package.
-- `@cve-report` writes `chg-<workItemRef>-report.*`.
+- `@pm` delegates to `@cve-report-agent` with evidence + analysis package.
+- `@cve-report-agent` writes `chg-<workItemRef>-report.*`.
 
 **Outcome**: Report is complete, structured, and suitable for responsible disclosure flow.
 
@@ -263,14 +263,14 @@ flowchart TD
 
 ### 11) remediation
 
-**Owner**: `@pm` delegates to `@remediation`
+**Owner**: `@pm` delegates to `@remediation-agent`
 
 **Goal**: Define and validate remediation recommendations.
 
 **Actions**:
 
-- `@pm` delegates to `@remediation` to produce fix recommendations and validation notes.
-- `@remediation` validates that proposed fixes mitigate the confirmed exploit path.
+- `@pm` delegates to `@remediation-agent` to produce fix recommendations and validation notes.
+- `@remediation-agent` validates that proposed fixes mitigate the confirmed exploit path.
 
 **Outcome**: Actionable remediation plan exists and is technically validated.
 
@@ -325,11 +325,11 @@ Phases are not strictly linear. If PM discovers incomplete work in a later phase
 
 | Discovery in... | Gap found | Action |
 |-----------------|-----------|--------|
-| `peer_review` | Evidence metadata incomplete | Reopen `evidence_collection`, delegate to `@evidence` |
-| `peer_review` | Scoring inconsistency | Reopen `exploitability_assessment`, delegate to `@exploitability` |
-| `poc_validation` | PoC unsafe or non-reproducible | Reopen `poc_development`, delegate to `@safe-poc` |
-| `remediation` | Fix does not mitigate root cause | Reopen `vulnerability_analysis`, delegate to `@vulnerability-analysis` |
-| `publication` | Sensitive detail leakage risk | Reopen `reporting`, delegate to `@cve-report` |
+| `peer_review` | Evidence metadata incomplete | Reopen `evidence_collection`, delegate to `@evidence-agent` |
+| `peer_review` | Scoring inconsistency | Reopen `exploitability_assessment`, delegate to `@exploitability-agent` |
+| `poc_validation` | PoC unsafe or non-reproducible | Reopen `poc_development`, delegate to `@safe-poc-agent` |
+| `remediation` | Fix does not mitigate root cause | Reopen `vulnerability_analysis`, delegate to `@vulnerability-analysis-agent` |
+| `publication` | Sensitive detail leakage risk | Reopen `reporting`, delegate to `@cve-report-agent` |
 
 After addressing the gap, PM continues from the reopened phase through the remaining phases.
 
@@ -377,16 +377,16 @@ notes: [] # { text, type, date }
 | Phase | Primary Agent | Supporting Agents |
 |-------|---------------|-------------------|
 | 1. intake_triage | `@pm` | — |
-| 2. reconnaissance | `@attack-surface` | `@runner` |
-| 3. vulnerability_discovery | `@bug-hunting` | `@runner` |
-| 4. vulnerability_analysis | `@vulnerability-analysis` | — |
-| 5. cve_intelligence | `@cve-intelligence` | — |
-| 6. exploitability_assessment | `@exploitability` | — |
-| 7. poc_development | `@safe-poc` | `@runner` |
+| 2. reconnaissance | `@attack-surface-agent` | `@runner` |
+| 3. vulnerability_discovery | `@bug-hunting-agent` | `@runner` |
+| 4. vulnerability_analysis | `@vulnerability-analysis-agent` | — |
+| 5. cve_intelligence | `@cve-intelligence-agent` | — |
+| 6. exploitability_assessment | `@exploitability-agent` | — |
+| 7. poc_development | `@safe-poc-agent` | `@runner` |
 | 8. poc_validation | `@reviewer` | `@runner` |
-| 9. evidence_collection | `@evidence` | `@runner` |
-| 10. reporting | `@cve-report` | `@editor` |
-| 11. remediation | `@remediation` | `@fixer`, `@runner` |
+| 9. evidence_collection | `@evidence-agent` | `@runner` |
+| 10. reporting | `@cve-report-agent` | `@editor` |
+| 11. remediation | `@remediation-agent` | `@fixer`, `@runner` |
 | 12. peer_review | `@reviewer` | — |
 | 13. publication | `@pr-manager` | `@pm` |
 

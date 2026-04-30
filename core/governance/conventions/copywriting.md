@@ -66,7 +66,7 @@ This guide defines writing conventions for security investigations, vulnerabilit
 
 ## Editorial Workflow
 
-- Draft by domain specialist agent (e.g., `@cve-report`).
+- Draft by domain specialist agent (e.g., `@cve-report-agent`).
 - Optional editorial pass by `@editor` for readability and consistency.
 - Mandatory technical validation by `@reviewer` before publication.
 

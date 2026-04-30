@@ -47,6 +47,28 @@ Design an actionable, risk-based remediation plan that addresses confirmed vulne
 12. Document residual risk and compensating controls if full remediation is delayed.
 13. Publish remediation plan and align stakeholders on responsibilities.
 
+## Kali Tools (Verification)
+
+| Check | Tool | Command |
+|-------|------|---------|
+| Port closure | `nmap` | `nmap -sV -p <port> lab-target` |
+| Web vuln fix | `nikto`, `nuclei` | `nuclei -u https://target -t <template>.yaml` |
+| SQL fix | `sqlmap` | `sqlmap -u "https://target/page?id=1" --batch \| grep "not injectable"` |
+| TLS fix | `sslscan` | `sslscan target \| grep -E "(SSLv\|TLSv)"` |
+| Code fix | `semgrep` | `semgrep --config "p/owasp-top-ten" ./src/` |
+| Config diff | `diff` | `diff before.conf after.conf` |
+
+## Command Examples
+
+```bash
+nmap -sV -p 443 lab-target
+nuclei -u https://target -t cves/
+sqlmap -u "https://target/page?id=1" --batch | grep "not injectable"
+sslscan target | grep -E "(SSLv|TLSv)"
+semgrep --config "p/owasp-top-ten" ./src/
+diff before.conf after.conf
+```
+
 ## Recommended Plan Template
 - Vulnerability Reference:
 - Root Cause Summary:
@@ -73,8 +95,8 @@ Design an actionable, risk-based remediation plan that addresses confirmed vulne
 
 ## Anti-Patterns
 - Choosing a single fix path without alternatives.
-- Omitting rollback because change appears “low risk”.
-- Defining success as “deployed” instead of “verified fixed”.
+- Omitting rollback because change appears "low risk".
+- Defining success as "deployed" instead of "verified fixed".
 - Ignoring regressions introduced by hardening changes.
 - Delaying remediation without compensating controls.
 
@@ -86,3 +108,10 @@ Design an actionable, risk-based remediation plan that addresses confirmed vulne
 
 ## Exit Criteria
 Plan is complete when it is prioritized, actionable, owner-assigned, time-bounded, verifiable, and operationally safe.
+
+## Safety Guardrails
+- **LAB-ONLY**: All fix testing and validation MUST occur in isolated lab environments
+- **NO WEAPONIZATION**: Remediation documentation must not enable attack reproduction
+- **AUTHORIZATION**: Verify authorization before implementing any fixes in target environments
+- **LOGGING**: All remediation actions must be logged and timestamped
+- **REVERSIBILITY**: All fixes must include rollback procedures

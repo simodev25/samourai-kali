@@ -1,6 +1,6 @@
 ---
 #
-description: Interactive investigation planning session to prepare context for /write-vuln-spec.
+description: Interactive investigation planning session to prepare context for /write-spec.
 ---
 
 <purpose>
@@ -10,8 +10,8 @@ This command:
 
 - Discovers or confirms the workItemRef (e.g., `PDEV-123`, `GH-456`) by scanning existing change specs or querying the tracker.
 - Orients itself in the repository and security-relevant documentation under `.samourai/docai/spec/` and related docs.
-- Systematically elicits and refines all information needed by `/write-vuln-spec` (target, attack surface, authorization, risks, evidence requirements, reporting needs).
-- Concludes with a compact `<investigation_planning_summary>` plus a clear recommendation to invoke `/write-vuln-spec <workItemRef>`.
+- Systematically elicits and refines all information needed by `/write-spec` (target, attack surface, authorization, risks, evidence requirements, reporting needs).
+- Concludes with a compact `<investigation_planning_summary>` plus a clear recommendation to invoke `/write-spec <workItemRef>`.
 
 This command never writes files or modifies Git state; it operates purely via conversational planning and read-only repository inspection.
 </purpose>
@@ -230,9 +230,9 @@ decisions:
 After emitting `<investigation_planning_summary>`:
 
 1. Output concise human-readable recap.
-2. Recommend exact next command: `/write-vuln-spec <workItemRef>`.
+2. Recommend exact next command: `/write-spec <workItemRef>`.
 3. After spec approval: `/write-plan <workItemRef>`.
-4. Do NOT call `/write-vuln-spec` or `/write-plan` automatically.
+4. Do NOT call `/write-spec` or `/write-plan` automatically.
 5. Do NOT output the full spec template or write any files.
    </handoff_to_spec>
 
@@ -254,7 +254,7 @@ Example 1 — New feature (no ref provided):
    - Confirms investigation scope authorization, owners, targets, labels.
    - Asks about attack surface priorities and evidence constraints.
    - Identifies interfaces (API, network perimeter, dependencies).
-   - Produces `<investigation_planning_summary>` and suggests `/write-vuln-spec <workItemRef>`.
+   - Produces `<investigation_planning_summary>` and suggests `/write-spec <workItemRef>`.
 
 Example 2 — Bug fix (ref provided):
 
@@ -264,5 +264,5 @@ Example 2 — Bug fix (ref provided):
    - Classifies as `security-investigation`; confirms authorized scope.
    - Asks for exposure indicators, affected assets, constraints.
    - Clarifies investigation acceptance criteria.
-   - Produces `<investigation_planning_summary>` for GH-456 and suggests `/write-vuln-spec GH-456`.
+   - Produces `<investigation_planning_summary>` for GH-456 and suggests `/write-spec GH-456`.
      </examples>

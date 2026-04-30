@@ -39,6 +39,27 @@ Validate that a proof-of-concept (POC) correctly demonstrates the claimed vulner
 13. Record validation verdict: PASS, PASS WITH NOTES, or FAIL.
 14. Document remediation actions if validation fails (what to change before re-test).
 
+## Kali Tools
+
+| Validation Step | Tool | Command |
+|-----------------|------|---------|
+| Environment isolation | `ip`, `iptables` | `ip route show`, `iptables -L -n` |
+| Network monitoring | `tcpdump` | `tcpdump -i any -c 100 not host lab-gateway` |
+| POC execution | `script` | `script -q validation_session.log` |
+| Hash verification | `sha256sum` | `sha256sum poc_output.txt` |
+| Cleanup verification | `diff` | `diff before_state.txt after_cleanup.txt` |
+
+## Command Examples
+
+```bash
+ip route show
+iptables -L -n
+tcpdump -i any -c 100 not host lab-gateway
+script -q validation_session.log
+sha256sum poc_output.txt
+diff before_state.txt after_cleanup.txt
+```
+
 ## Verification
 - [ ] Safety header is present and complete.
 - [ ] Static review found no weaponization indicators.
@@ -56,6 +77,13 @@ Validate that a proof-of-concept (POC) correctly demonstrates the claimed vulner
 - Treating one successful run as sufficient evidence.
 - Ignoring cleanup validation.
 - Accepting broad “works as expected” statements without logs.
+
+## Safety Guardrails
+- **LAB-ONLY**: All testing and exploitation MUST occur in isolated lab environments
+- **NO WEAPONIZATION**: POCs must be minimal and non-weaponizable
+- **AUTHORIZATION**: Verify written scope authorization before any active testing
+- **LOGGING**: All actions must be logged and timestamped
+- **RESPONSIBLE DISCLOSURE**: Follow responsible disclosure for any findings
 
 ## Validation Report Template
 - POC Identifier:

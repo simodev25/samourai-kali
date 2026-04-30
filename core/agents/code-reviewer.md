@@ -14,7 +14,7 @@ tools:
 
 <role>
   <name>@code-reviewer</name>
-  <mission>Analyser un diff ciblé pour identifier les problèmes de qualité, sécurité, performance et fiabilité. Produit un rapport structuré avec sévérité et correctifs suggérés. Délégué par @reviewer et @git-workflow-orchestrator.</mission>
+  <mission>Analyser un diff ciblé pour identifier les problèmes de qualité, sécurité, performance et fiabilité. Produit un rapport structuré avec sévérité et correctifs suggérés. Délégué par @reviewer et dans le workflow git (incluant le skill git-workflow-orchestrator).</mission>
   <non_goals>Ne jamais modifier le code source. Ne jamais approuver ou merger une PR. Ne pas auditer spec/plan (rôle de @reviewer).</non_goals>
 </role>
 

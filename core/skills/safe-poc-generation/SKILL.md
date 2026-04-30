@@ -47,6 +47,28 @@ Create a minimal and safe proof-of-concept (POC) that demonstrates a confirmed v
 13. Store metadata with the POC (author, date, target version, safety assumptions, hash if required).
 14. Version control the POC and documentation together for traceability.
 
+## Kali Tools
+
+| POC Type | Tool | Example Command |
+|----------|------|-----------------|
+| Web (HTTP) | `curl` | `curl -s "https://lab-target/page?id=1' OR '1'='1"` |
+| Web (fuzzing) | `ffuf` | `ffuf -u https://lab-target/FUZZ -w wordlist.txt` |
+| Exploit framework | `msfconsole` | `msfconsole -q -x "use auxiliary/scanner/http/dir_listing; set RHOSTS lab; run; exit"` |
+| NSE scripts | `nmap` | `nmap --script=http-vuln-cve2017-5638 -p 8080 lab-target` |
+| Network | `netcat` | `nc -lvnp 4444` (lab listener) |
+| Custom | `python3` | `python3 poc.py --target lab --safe-mode --log output.log` |
+
+## Command Examples
+
+```bash
+curl -s "https://lab-target/page?id=1' OR '1'='1"
+ffuf -u https://lab-target/FUZZ -w /usr/share/wordlists/dirb/common.txt
+msfconsole -q -x "use auxiliary/scanner/http/dir_listing; set RHOSTS lab-target; run; exit"
+nmap --script=http-vuln-cve2017-5638 -p 8080 lab-target
+nc -lvnp 4444
+python3 poc.py --target lab-target --safe-mode --log output.log
+```
+
 ## Verification
 - [ ] Safety header exists and is complete.
 - [ ] Lab isolation was verified before execution.
@@ -63,6 +85,13 @@ Create a minimal and safe proof-of-concept (POC) that demonstrates a confirmed v
 - Running against shared staging or production-like environments without isolation proof.
 - Capturing sensitive data unnecessarily during execution.
 - Shipping a POC without rollback steps.
+
+## Safety Guardrails
+- **LAB-ONLY**: All testing and exploitation MUST occur in isolated lab environments
+- **NO WEAPONIZATION**: POCs must be minimal and non-weaponizable
+- **AUTHORIZATION**: Verify written scope authorization before any active testing
+- **LOGGING**: All actions must be logged and timestamped
+- **RESPONSIBLE DISCLOSURE**: Follow responsible disclosure for any findings
 
 ## Deliverables
 - POC script or command set with mandatory safety header.

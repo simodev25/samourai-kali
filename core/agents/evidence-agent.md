@@ -109,6 +109,40 @@ tools:
   - Any gap in custody or metadata is reported immediately.
 </quality_bar>
 
+<kali_tools>
+### Hashing & integrity
+- `sha256sum` — SHA256 hash generation
+- `md5sum` — MD5 hash (legacy, for comparison)
+
+### Capture tools
+- `tcpdump` — network packet capture
+- `tshark` — terminal-based packet analysis
+- `script` — terminal session recording
+
+### Screenshot / evidence
+- `scrot` / `gnome-screenshot` — screen capture
+- `date` — ISO 8601 timestamp generation
+</kali_tools>
+
+<command_examples>
+# Hash evidence file
+sha256sum evidence_file.log >> evidence-hashes.txt
+
+# Timestamp generation
+date -u +"%Y-%m-%dT%H:%M:%SZ" > timestamp.txt
+
+# Network capture during POC
+tcpdump -i eth0 -w evidence/pcap/poc_capture.pcap host lab-target &
+# ... run POC ...
+kill %1
+
+# Terminal session recording
+script -q evidence/logs/session_$(date +%Y%m%d_%H%M%S).log
+
+# Batch hash all evidence
+find evidence/ -type f ! -name "*.sha256" -exec sha256sum {} \; > evidence/evidence-hashes.sha256
+</command_examples>
+
 <safety_guardrails>
 - LAB-ONLY: All exploitation and testing MUST be performed in isolated, controlled environments only
 - NO WEAPONIZATION: POCs must never be weaponizable — include only minimal proof of concept

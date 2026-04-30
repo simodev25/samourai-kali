@@ -25,32 +25,32 @@ Cycle V1 orienté investigation cybersécurité, dérivé du framework Samourai:
 - Entrée: signalement, cible, backlog sécurité
 - Sortie: périmètre autorisé + classification + `workItemRef`
 
-### 2) Reconnaissance (`@attack-surface`)
+### 2) Reconnaissance (`@attack-surface-agent`)
 
 - Entrée: scope validé
 - Sortie: cartographie de surface d’attaque (`chg-<workItemRef>-recon.*`)
 
-### 3) Vulnerability discovery (`@bug-hunting`)
+### 3) Vulnerability discovery (`@bug-hunting-agent`)
 
 - Entrée: reconnaissance
 - Sortie: findings initiaux (`chg-<workItemRef>-findings.*`)
 
-### 4) Vulnerability analysis (`@vulnerability-analysis`)
+### 4) Vulnerability analysis (`@vulnerability-analysis-agent`)
 
 - Entrée: findings
 - Sortie: causes racines et impacts validés (`chg-<workItemRef>-analysis.*`)
 
-### 5) CVE intelligence (`@cve-intelligence`)
+### 5) CVE intelligence (`@cve-intelligence-agent`)
 
 - Entrée: analyse technique
 - Sortie: corrélation CVE/CWE + veille (`chg-<workItemRef>-cve-intel.*`)
 
-### 6) Exploitability assessment (`@exploitability`)
+### 6) Exploitability assessment (`@exploitability-agent`)
 
 - Entrée: analyse + intelligence
 - Sortie: scoring CVSS/EPSS et justification (`chg-<workItemRef>-exploitability.*`)
 
-### 7) PoC development (`@safe-poc`)
+### 7) PoC development (`@safe-poc-agent`)
 
 - Entrée: scénario validé
 - Sortie: PoC en environnement isolé + protocole d’exécution
@@ -60,17 +60,17 @@ Cycle V1 orienté investigation cybersécurité, dérivé du framework Samourai:
 - Entrée: PoC
 - Sortie: reproductibilité et sécurité validées (logs + traces)
 
-### 9) Evidence collection (`@evidence`)
+### 9) Evidence collection (`@evidence-agent`)
 
 - Entrée: logs, captures, résultats PoC
 - Sortie: package de preuves structuré, hashé, horodaté
 
-### 10) Reporting (`@cve-report`)
+### 10) Reporting (`@cve-report-agent`)
 
 - Entrée: package d’évidence + scoring
 - Sortie: rapport de vulnérabilité prêt à divulgation (`chg-<workItemRef>-report.*`)
 
-### 11) Remediation (`@remediation`)
+### 11) Remediation (`@remediation-agent`)
 
 - Entrée: finding validé + rapport
 - Sortie: recommandations de correction + validation d’efficacité

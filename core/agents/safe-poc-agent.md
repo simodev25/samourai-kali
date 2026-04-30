@@ -108,6 +108,42 @@ tools:
   - Stop and escalate if safe demonstration is not technically feasible.
 </quality_bar>
 
+<kali_tools>
+### HTTP/Web POC
+- `curl` — HTTP request crafting
+- `wget` — file retrieval
+- `python3` — custom POC scripts
+- `netcat` (`nc`) — network connections
+
+### Exploitation frameworks (lab-only, controlled use)
+- `msfconsole` — Metasploit (module execution only, no payloads beyond proof)
+- `msfvenom` — payload generation (benign proof payloads only)
+
+### Network POC
+- `nmap` — NSE scripts for specific vulnerability validation
+- `hping3` — packet crafting
+</kali_tools>
+
+<command_examples>
+# HTTP-based POC (SQL injection proof)
+curl -s "https://lab-target/page?id=1' OR '1'='1" -o response.html
+
+# Command injection proof
+curl -s "https://lab-target/api?cmd=$(echo%20vulnerable)" -o ci_proof.txt
+
+# Metasploit module (lab-only)
+msfconsole -q -x "use auxiliary/scanner/http/dir_listing; set RHOSTS lab-target; run; exit"
+
+# NSE script validation
+nmap --script=http-vuln-cve2017-5638 -p 8080 lab-target
+
+# Netcat listener (proof of reverse connection)
+nc -lvnp 4444  # In lab environment only
+
+# Python POC script pattern
+python3 poc_script.py --target lab-target --safe-mode --log poc_output.log
+</command_examples>
+
 <safety_guardrails>
 - LAB-ONLY: All exploitation and testing MUST be performed in isolated, controlled environments only
 - NO WEAPONIZATION: POCs must never be weaponizable — include only minimal proof of concept

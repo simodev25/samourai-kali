@@ -325,7 +325,7 @@ Les données restent locales (aucun envoi externe).
 
 ```
 Votre projet a une interface web. Voulez-vous activer le browser automation ?
-Il permet à @designer et @runner de prendre des screenshots et lancer des tests browser.
+Il permet à @image-reviewer et @runner d'analyser des screenshots et lancer des tests browser.
   a) Oui → active puppeteer
   b) Non
 ```
@@ -786,7 +786,7 @@ Present each draft artifact to the human:
 3. Ask for approval, corrections, or requests for changes
 4. If corrections are provided, update the draft and re-present
 5. Track approval status per artifact in state
-</phase_5_review>
+</phase_6_review>
 
 <phase_7_write>
 Write approved artifacts to the filesystem:
@@ -800,7 +800,7 @@ Write approved artifacts to the filesystem:
 - Run `/plan-change` to start the first change
 - Review the generated `.samourai/AGENTS.md` and customize further
 - Set up CI/CD integration if needed
-</phase_6_write>
+</phase_7_write>
 
 <resume_behavior>
 On invocation:

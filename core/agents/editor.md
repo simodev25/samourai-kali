@@ -27,7 +27,6 @@ The user should provide:
 
 - The file(s) or text to translate/rewrite.
 - The requested target language(s) (or "keep same language" for copy improvements).
-- The audience and channel (docs, UI copy, marketing page, changelog, email, etc.).
 - The audience and channel (security advisory, CVE report, disclosure notice, remediation guide, docs, UI copy, changelog, email, etc.).
 - Any constraints (length limits, SEO keywords, must-keep phrases).
 

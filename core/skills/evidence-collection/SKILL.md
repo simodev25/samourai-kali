@@ -48,6 +48,30 @@ evidence/<workItemRef>/
 8. Validate evidence completeness against findings list and acceptance/report requirements.
 9. Package artifacts for report consumption while preserving index references.
 
+## Kali Tools
+
+| Evidence Type | Tool | Command |
+|---------------|------|---------|
+| File hashing | `sha256sum` | `sha256sum artifact.log >> evidence-hashes.txt` |
+| Timestamps | `date` | `date -u +"%Y-%m-%dT%H:%M:%SZ"` |
+| Packet capture | `tcpdump` | `tcpdump -i eth0 -w evidence/pcap/capture.pcap host target` |
+| Packet analysis | `tshark` | `tshark -r capture.pcap -Y "http" -T fields -e http.request.uri` |
+| Session recording | `script` | `script -q evidence/logs/session_$(date +%Y%m%d_%H%M%S).log` |
+| Screenshot | `scrot` | `scrot evidence/screenshots/finding_%Y%m%d_%H%M%S.png` |
+| Batch hashing | `find` + `sha256sum` | `find evidence/ -type f -exec sha256sum {} \; > hashes.sha256` |
+
+## Command Examples
+
+```bash
+sha256sum artifact.log >> evidence-hashes.txt
+date -u +"%Y-%m-%dT%H:%M:%SZ"
+tcpdump -i eth0 -w evidence/pcap/capture.pcap host target
+tshark -r capture.pcap -Y "http" -T fields -e http.request.uri
+script -q evidence/logs/session_$(date +%Y%m%d_%H%M%S).log
+scrot evidence/screenshots/finding_$(date +%Y%m%d_%H%M%S).png
+find evidence/ -type f -exec sha256sum {} \; > hashes.sha256
+```
+
 ## evidence-index.yaml Recommended Shape
 ```yaml
 work_item_ref: GH-123
@@ -79,6 +103,13 @@ artifacts:
 - Storing credentials or full secrets in evidence bundles.
 - Editing files without documenting transformation/redaction steps.
 - Referencing evidence in reports that is absent from index.
+
+## Safety Guardrails
+- **LAB-ONLY**: All testing and exploitation MUST occur in isolated lab environments
+- **NO WEAPONIZATION**: POCs must be minimal and non-weaponizable
+- **AUTHORIZATION**: Verify written scope authorization before any active testing
+- **LOGGING**: All actions must be logged and timestamped
+- **RESPONSIBLE DISCLOSURE**: Follow responsible disclosure for any findings
 
 ## Deliverables
 - Structured `evidence/<workItemRef>/` directory.

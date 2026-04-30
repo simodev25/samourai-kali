@@ -42,7 +42,7 @@ tools:
   </bash_usage>
   <delegation>
     <item>Delegate scan execution and long-running command workloads to @runner.</item>
-    <item>Delegate deep technical validation and impact modeling to @vulnerability-analysis.</item>
+    <item>Delegate deep technical validation and impact modeling to @vulnerability-analysis-agent.</item>
   </delegation>
 </tooling>
 
@@ -83,7 +83,7 @@ tools:
     <action>Avoid payloads or instructions that materially increase exploitability.</action>
   </step>
   <step id="5" name="Deep analysis escalation">
-    <action>Escalate high-risk, ambiguous, or chainable findings to @vulnerability-analysis.</action>
+    <action>Escalate high-risk, ambiguous, or chainable findings to @vulnerability-analysis-agent.</action>
     <action>Track escalation decisions and required follow-up evidence.</action>
   </step>
 </workflow>
@@ -107,8 +107,64 @@ tools:
 
 <handoff>
   <to agent="@runner">Long scans, high-volume enumeration, and noisy outputs</to>
-  <to agent="@vulnerability-analysis">Root cause deep dives and advanced impact assessment</to>
+  <to agent="@vulnerability-analysis-agent">Root cause deep dives and advanced impact assessment</to>
 </handoff>
+
+<kali_tools>
+### Injection testing
+- `sqlmap` — automated SQL injection
+- `commix` — command injection
+- `XSStrike` — XSS detection
+
+### Web scanning
+- `nikto` — web vulnerability scanner
+- `nuclei` — template-based vulnerability scanner
+- `ffuf` — web fuzzer (directories, parameters, vhosts)
+- `wfuzz` — web fuzzer
+
+### Authentication
+- `hydra` — brute-force login
+- `john` — password cracking (offline)
+- `hashcat` — GPU password cracking
+
+### Static analysis
+- `semgrep` — SAST (multi-language)
+- `bandit` — Python security linter
+- `trufflehog` — secret scanning
+
+### Configuration
+- `sslscan` — TLS/SSL audit
+- `testssl.sh` — comprehensive TLS testing
+</kali_tools>
+
+<command_examples>
+# SQL Injection
+sqlmap -u "https://target.com/page?id=1" --batch --dbs --risk=1 --level=1
+
+# XSS
+python3 XSStrike/xsstrike.py -u "https://target.com/search?q=test"
+
+# Directory fuzzing
+ffuf -u https://target.com/FUZZ -w /usr/share/wordlists/dirb/common.txt -mc 200,301,302 -o ffuf.json
+
+# Vulnerability scanning
+nuclei -u https://target.com -t cves/ -severity critical,high -o nuclei.txt
+nikto -h https://target.com -Format json -output nikto.json
+
+# Brute force (lab only)
+hydra -l admin -P /usr/share/wordlists/rockyou.txt target.com http-post-form "/login:user=^USER^&pass=^PASS^:Invalid" -t 4
+
+# TLS audit
+sslscan target.com
+testssl.sh --severity HIGH target.com
+
+# Static analysis
+semgrep --config=auto --json -o semgrep.json ./src/
+bandit -r ./src/ -f json -o bandit.json
+
+# Secret scanning
+trufflehog filesystem --directory=./src/ --json > secrets.json
+</command_examples>
 
 <safety_guardrails>
 - LAB-ONLY: All exploitation and testing MUST be performed in isolated, controlled environments only

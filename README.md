@@ -1,256 +1,264 @@
-# Samourai Devkit — AI Development Operating System
+# Samourai Kali — AI Cybersecurity Operating System
 
 <p align="center">
-  <img src="assets/logo.png" alt="Samourai Devkit Logo" width="420" />
+  <img src="assets/logo.png" alt="Samourai Kali Logo" width="420" />
 </p>
 
 ---
 
-# 🧭 Navigation rapide
+# Quick Navigation
 
-- 📘 Guide utilisateur : [docs/guide-utilisateur-fr.md](docs/guide-utilisateur-fr.md)
-- 🧱 Templates : [core/templates/README.md](core/templates/README.md)
-- 🏗️ Onboarding projet : [core/governance/conventions/onboarding-existing-project.md](core/governance/conventions/onboarding-existing-project.md)
-- 🔁 Lifecycle : [core/governance/conventions/change-lifecycle.md](core/governance/conventions/change-lifecycle.md)
-- 🤖 Agents & commandes : [core/governance/conventions/opencode-agents-and-commands-guide.md](core/governance/conventions/opencode-agents-and-commands-guide.md)
-
----
-
-# 🧭 Positionnement
-
-Samourai Devkit est un **AI Development Operating System** permettant de transformer un dépôt Git en environnement de développement structuré, piloté par agents IA spécialisés.
+- User guide (FR): [docs/guide-utilisateur-fr.md](docs/guide-utilisateur-fr.md)
+- User guide (EN): [docs/guide-utilisateur.md](docs/guide-utilisateur.md)
+- Templates: [core/templates/README.md](core/templates/README.md)
+- Lab setup: [core/governance/conventions/onboarding-existing-project.md](core/governance/conventions/onboarding-existing-project.md)
+- Investigation lifecycle: [core/governance/conventions/change-lifecycle.md](core/governance/conventions/change-lifecycle.md)
+- Agents & commands: [core/governance/conventions/opencode-agents-and-commands-guide.md](core/governance/conventions/opencode-agents-and-commands-guide.md)
 
 ---
 
-# 🎯 Problématique adressée
+# Positioning
 
-Le développement assisté par IA souffre de :
+Samourai Kali is an **AI Cybersecurity Operating System** that transforms a Kali Linux environment into a structured investigation platform, driven by specialized AI agents.
 
-- variabilité des outputs  
-- absence de structuration des workflows  
-- duplication des prompts  
-- absence de gouvernance  
-
-Samourai Devkit apporte :
-
-- ✅ Un workflow déterministe
-- ✅ Des agents spécialisés et orchestrés
-- ✅ Une gouvernance intégrée
-- ✅ Une standardisation via blueprints
-
----
----
-
-## 🔁 Workflow standard
-
-1. Cadrage → `/plan-change`
-2. Spécification → `/write-spec`
-3. Test design → `/write-test-plan`
-4. Implémentation → `/run-plan`
-5. Revue → `/review`
-6. Vérification → `/check`
-7. Documentation → `/sync-docs`
-8. Livraison → `/commit` → `/pr`
+It provides a comprehensive methodological framework for:
+- Bug hunting and vulnerability research
+- Vulnerability analysis and CVE research
+- Secure lab-only POC creation
+- Forensic-grade evidence collection
+- CVE-ready report generation
+- Remediation planning
 
 ---
 
-# 🧩 Blueprints (élément structurant)
+# Problem Statement
 
-Les blueprints permettent de standardiser :
+AI-assisted vulnerability research suffers from:
 
-- workflows
-- documents
-- comportements des agents
-- stratégies de test et review
+- lack of structured methodology
+- non-reproducible results
+- missing evidence traceability
+- unmanaged ethical and legal risks
 
-### Utilisation
+Samourai Kali delivers:
 
-Les blueprints sont automatiquement exploités par :
+- A deterministic investigation workflow
+- Specialized, orchestrated cyber agents
+- Built-in ethical and legal guardrails (LAB-ONLY, NO WEAPONIZATION)
+- Standardization via blueprints and reporting templates
 
-- `/bootstrap`
-- `/write-spec`
-- `/review`
-- `/pr`
+---
+
+## Investigation Workflow
+
+```
+1. Scoping       → /plan-change
+2. Recon         → @attack-surface-agent (nmap, amass, whatweb)
+3. Bug Hunting   → @bug-hunting-agent (nikto, sqlmap, nuclei, ffuf)
+4. Analysis      → @vulnerability-analysis-agent (burpsuite, semgrep)
+5. CVE Research  → @cve-intelligence-agent (searchsploit, NVD)
+6. Exploitability → @exploitability-agent (CVSS, EPSS)
+7. Safe POC      → @safe-poc-agent (curl, msfconsole, python3)
+8. Evidence      → @evidence-agent (sha256sum, tcpdump, tshark)
+9. CVE Report    → @cve-report-agent (CVE JSON 5.0)
+10. Remediation  → @remediation-agent (nmap, nuclei — fix verification)
+11. Review       → /review
+12. Publication  → /commit → /pr
+```
+
+---
+
+## Cyber Agents
+
+| Agent | Role | Kali Tools |
+|-------|------|------------|
+| `@attack-surface-agent` | Attack surface mapping | nmap, masscan, amass, subfinder, whatweb, gobuster, nikto |
+| `@bug-hunting-agent` | Active vulnerability discovery | sqlmap, nuclei, ffuf, nikto, hydra, semgrep, sslscan |
+| `@vulnerability-analysis-agent` | In-depth technical analysis | burpsuite, zaproxy, tcpdump, strace, semgrep |
+| `@cve-intelligence-agent` | CVE research and intelligence | searchsploit, NVD API, EPSS API, exploit-db |
+| `@exploitability-agent` | CVSS/EPSS scoring | CVSS calculators, EPSS API, ATT&CK |
+| `@safe-poc-agent` | Minimal, secure POC | curl, netcat, msfconsole, python3, nmap NSE |
+| `@evidence-agent` | Evidence collection | sha256sum, tcpdump, tshark, script, scrot |
+| `@cve-report-agent` | CVE-ready report | Writing only (no execution) |
+| `@remediation-agent` | Fixes and verification | nmap, nikto, nuclei, sqlmap, semgrep |
+
+### Infrastructure Agents
+
+| Agent | Role |
+|-------|------|
+| `@pm` | Mission Control — orchestrates the investigation |
+| `@architect` | Threat Modeling — STRIDE/DREAD, attack trees |
+| `@reviewer` | Peer review of findings and reports |
+| `@runner` | Command execution and log capture |
+| `@committer` | Conventional Commit commits |
+| `@pr-manager` | Report publication |
+| `@external-researcher` | Security intelligence via MCP |
+| `@editor` | Technical security writing |
+| `@fixer` | Debugging and resolution |
+| `@toolsmith` | Agent/skill/command creation |
+
+---
+
+## Cyber Skills
+
+| Skill | Capability | Primary Tool |
+|-------|------------|--------------|
+| `attack-surface-analysis` | Methodical mapping | nmap, amass, whatweb |
+| `bug-hunting-analysis` | Structured OWASP hunting | sqlmap, nuclei, ffuf |
+| `vulnerability-analysis` | Root cause analysis | burpsuite, semgrep, tcpdump |
+| `cve-research` | CVE correlation | searchsploit, NVD API |
+| `exploitability-assessment` | CVSS/EPSS scoring | CVSS calculator, EPSS API |
+| `safe-poc-generation` | Minimal secure POC | curl, msfconsole, python3 |
+| `poc-validation` | Reproducibility validation | tcpdump, sha256sum |
+| `evidence-collection` | Forensic-grade evidence | sha256sum, tshark, script |
+| `cve-reporting` | CVE JSON 5.0 report | Writing only |
+| `remediation-plan` | Remediation plan | nmap, nuclei, semgrep |
+
+---
+
+## Integrated Kali Tools (~50+)
+
+| Category | Tools |
+|----------|-------|
+| Passive recon | whois, dig, amass, subfinder, theHarvester, wafw00f |
+| Active recon | nmap, masscan, whatweb, nikto, gobuster, dirsearch |
+| Injection | sqlmap, commix, XSStrike, dalfox |
+| Web scanning | nuclei, ffuf, wfuzz |
+| Auth/brute | hydra, john, hashcat |
+| SAST | semgrep, bandit, trufflehog |
+| TLS | sslscan, testssl.sh |
+| Dynamic | burpsuite, zaproxy, curl |
+| Network | tcpdump, tshark, hping3, netcat |
+| Binary | gdb, strace, ltrace, binwalk |
+| Exploitation (lab) | msfconsole, msfvenom |
+| Forensic | sha256sum, script, scrot |
+| Research | searchsploit |
+
+---
+
+## Blueprints
+
+Blueprints standardize:
+
+- investigation workflows
+- vulnerability reports
+- POC validation
+- security review
+
+Automatically used by:
+
+- `/bootstrap` (lab setup)
+- `/write-spec` (vuln specification)
+- `/review` (findings review)
+- `/pr` (publication)
 - `@toolsmith`
 
-👉 Ils permettent d’industrialiser l’usage des agents et de réduire la variabilité.
+---
+
+## Architecture
+
+1. Interaction (human + agents)
+2. Orchestration (PM / Mission Control)
+3. Specialized cyber agents
+4. Skills / Kali Tools
+5. Context / Memory / Evidence
+6. Governance & Safety Guardrails
 
 ---
 
-# 🏗️ Architecture
+## Safety Guardrails
 
-1. Interaction  
-2. Orchestration  
-3. Agents  
-4. Skills / Tools  
-5. Context / Memory  
-6. Gouvernance  
+Every agent and skill enforces mandatory guardrails:
+
+- **LAB-ONLY**: all exploitation in isolated environments only
+- **NO WEAPONIZATION**: minimal POCs, non-weaponizable
+- **RESPONSIBLE DISCLOSURE**: responsible disclosure process
+- **AUTHORIZATION**: written authorization required before any active testing
+- **SCOPE**: never exceed the authorized perimeter
+- **DATA PROTECTION**: no exfiltration of sensitive data
+- **LOGGING**: all actions logged and timestamped
+- **LEGAL COMPLIANCE**: compliance with applicable laws
 
 ---
 
-## ⚙️ Installation rapide
+## Quick Install
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/FR-PAR-SAMOUR-AI/samourai-devkit/main/scripts/install-remote.sh | bash -s -- --target /path/to/project
+curl -fsSL https://raw.githubusercontent.com/FR-PAR-SAMOUR-AI/samourai-kali/main/scripts/install-remote.sh | bash -s -- --target /path/to/project
 ```
 
-### Installation locale après git clone
-
-Pour garder une copie locale du kit, cloner le dépôt puis lancer le script
-d'installation depuis cette copie:
+### Local installation
 
 ```bash
-git clone https://github.com/FR-PAR-SAMOUR-AI/samourai-devkit.git
-cd samourai-devkit
-./scripts/install-samourai.sh --target /chemin/vers/mon-projet
+git clone https://github.com/FR-PAR-SAMOUR-AI/samourai-kali.git
+cd samourai-kali
+./scripts/install-samourai.sh --target /chemin/vers/mon-lab  # path to your lab
 ```
 
-Le chemin passé à `--target` doit pointer vers le projet Git dans lequel
-installer Samourai Devkit, pas vers le dépôt `samourai-devkit` lui-même.
-
-### Installation guidée
+### Options
 
 ```bash
-./scripts/install-samourai.sh --interactive
+./scripts/install-samourai.sh --target /chemin/lab --dry-run  # dry run
+./scripts/install-samourai.sh --target /chemin/lab --force    # force overwrite
+./scripts/install-samourai.sh --target /chemin/lab --editor opencode
 ```
 
-
-### Installation dans un projet local
-
-Depuis ce repo:
-
-```bash
-./scripts/install-samourai.sh --target /chemin/vers/mon-projet
-```
 ---
-Options utiles:
 
-```bash
-./scripts/install-samourai.sh --target /chemin/projet --dry-run
-./scripts/install-samourai.sh --target /chemin/projet --force
-./scripts/install-samourai.sh --target /chemin/projet --skip-opencode
-./scripts/install-samourai.sh --target /chemin/projet --editor opencode
-./scripts/install-samourai.sh --target /chemin/projet --editor vscode
-./scripts/install-samourai.sh --target /chemin/projet --editor opencode,vscode
-./scripts/install-samourai.sh --target /chemin/projet --editor all
-./scripts/install-samourai.sh --target /chemin/projet --symlink-stack
+## Quick Start (2 min)
 
-```
-
-### Installation avec stack séparée par symlinks
-
-Pour garder `.opencode`, `.samourai` et `AGENTS.md` hors du dépôt client tout
-en les rendant visibles par OpenCode, utiliser:
-
-```bash
-./scripts/install-samourai.sh --target /chemin/vers/projet-client --symlink-stack
-```
-
-Le script installe la stack dans un dossier frère nommé:
-
-```text
-/chemin/vers/projet-client-samurai
-```
-
-Puis il crée des liens symboliques dans le projet client. `AGENTS.md` est lié
-uniquement s'il existe déjà ou s'il a été migré vers la stack:
-
-```text
-.opencode -> ../projet-client-samurai/.opencode
-.samourai -> ../projet-client-samurai/.samourai
-AGENTS.md -> ../projet-client-samurai/AGENTS.md
-```
-
-Les liens sont ajoutés à `.git/info/exclude`, donc ils restent locaux au clone
-et ne sont pas proposés au commit dans le dépôt client. La stack peut être
-versionnée et poussée depuis le dépôt `projet-client-samurai`.
-
-## Désinstaller le kit
-
-```bash
-./scripts/uninstall-samourai.sh --target /chemin/vers/mon-projet
-```
-
-Adapter OpenCode:
-
-- `.opencode/README.md`
-- `.opencode/.gitignore`
-- `.opencode/opencode.jsonc`
-- `.opencode/agent/*.md`
-- `.opencode/command/*.md`
-- `.opencode/skills/*/SKILL.md`
-- `.opencode/skills/project/README.md`
-
-Adapter VS Code/GitHub Copilot:
-
-- `.github/copilot-instructions.md`
-- `.github/agents/*.agent.md`
-- `.github/prompts/*.prompt.md`
-- `.github/skills/*/SKILL.md`
-- `.vscode/extensions.json`
-- `.vscode/mcp.json`
-- `.vscode/settings.json`
-
-## ⚡ Quick start (2 min)
-
-1. Installer le kit
-2. Ouvrir le projet dans OpenCode ou VS Code
-3. Lancer :
+1. Install the kit on a Kali Linux environment
+2. Open the project in OpenCode
+3. Configure the lab:
 
 ```bash
 /bootstrap
 ```
 
-4. Puis :
+4. Launch an investigation:
 
 ```bash
-/plan-change JIRA-123
+/plan-change GH-123
+```
+
+5. Or delegate to Mission Control:
+
+```bash
+@pm investigate GH-123
 ```
 
 ---
 
-## 🧠 Ce que ça change concrètement
+## What Changes
 
-Avant :
-- Développement manuel
-- Prompts ad hoc
-- Résultats incohérents
+Before:
+- Ad hoc pentesting
+- Unstructured results
+- Untraceable evidence
+- Manual reports
 
-Après :
-- Workflow structuré
-- Agents spécialisés
-- Outputs standardisés
-- Gouvernance intégrée
-
----
-
-# 🔐 Gouvernance
-
-- permissions agents  
-- contrôle des effets de bord  
-- validation avant commit / PR  
-- auditabilité  
+After:
+- Methodical investigation
+- Specialized agents per phase
+- Forensic-grade evidence chain
+- Automated CVE-ready reports
+- Built-in ethical guardrails
 
 ---
 
+## Governance
 
-## 🏢 Scalabilité
-
-Samourai Devkit permet :
-
-- Standardisation multi-équipes
-- Réutilisation des patterns
-- Accélération du delivery
-- Réduction des erreurs humaines
+- Agent permissions (least-privilege)
+- Side-effect control (lab-only)
+- Validation before publication
+- Full auditability
+- Integrated responsible disclosure
 
 ---
 
+## Documentation
 
-
-# 📘 Démarrage rapide (documentation officielle)
-
-1. Lire : [docs/guide-utilisateur-fr.md](docs/guide-utilisateur-fr.md)  
-2. Lire : [core/governance/conventions/onboarding-existing-project.md](core/governance/conventions/onboarding-existing-project.md)  
-3. Lire : [core/governance/conventions/change-lifecycle.md](core/governance/conventions/change-lifecycle.md)  
-4. Consulter : [core/templates/README.md](core/templates/README.md)  
-5. Installer puis lancer /bootstrap  
+1. [User guide](docs/guide-utilisateur-fr.md)
+2. [Investigation lifecycle](core/governance/conventions/change-lifecycle.md)
+3. [Templates](core/templates/README.md)
+4. Install then run `/bootstrap`
