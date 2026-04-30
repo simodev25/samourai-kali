@@ -443,13 +443,13 @@ This plan implements the capabilities and acceptance criteria defined in `chg-GH
 
 | Phase | Status | Started | Completed | Commit | Notes |
 |-------|--------|---------|-----------|--------|-------|
-| 1 | Completed | 2026-04-30 | 2026-04-30 | pending | Migrated 4 agents into core/agents and validated scratch install output |
-| 2 | Completed | 2026-04-30 | 2026-04-30 | pending | Added 11 cyber commands, added front-matter validator, validated install + schema checks |
-| 3 | Completed | 2026-04-30 | 2026-04-30 | pending | Removed deprecated template, updated references, fixed uninstall compatibility, full installer tests PASS |
-| 4 | Completed | 2026-04-30 | 2026-04-30 | pending | Added CONTRIBUTING.md, architecture doc, and investigation template with privacy reminder |
-| 5 | Completed | 2026-04-30 | 2026-04-30 | pending | Added Claude/Cursor adapters, extended installer editor handling, and validated default compatibility |
-| 6 | Completed | 2026-04-30 | 2026-04-30 | pending | Validated stage gates, added validator tooling, wired NVD+EPSS MCP config, updated command docs |
-| 7 | Completed | 2026-04-30 | 2026-04-30 | pending | Extended installer tests for cyber commands, migrated agents, new editors, and validator tool; full suite PASS |
-| 8 | Completed | 2026-04-30 | 2026-04-30 | pending | Local reviewer run FAIL then PASS after remediation; secrets hygiene and test evidence validated |
-| 9 | Completed | 2026-04-30 | 2026-04-30 | pending | Applied review remediation (stage-gates contract + template set) and revalidated regressions |
-| 10 | Completed | 2026-04-30 | 2026-04-30 | pending | Bumped version to 1.1.0, reconciled spec/AC coverage, and prepared final release-ready state |
+| 1 | Completed | 2026-04-30 | 2026-04-30 | 776dd2e | Migrated 4 agents into core/agents and validated scratch install output |
+| 2 | Completed | 2026-04-30 | 2026-04-30 | 0256863 | Added 11 cyber commands, added front-matter validator, validated install + schema checks |
+| 3 | Completed | 2026-04-30 | 2026-04-30 | 40322f8 | Removed deprecated template, updated references, fixed uninstall compatibility, full installer tests PASS |
+| 4 | Completed | 2026-04-30 | 2026-04-30 | 588cbfe | Added CONTRIBUTING.md, architecture doc, and investigation template with privacy reminder |
+| 5 | Completed | 2026-04-30 | 2026-04-30 | 588cbfe | Added Claude/Cursor adapters, extended installer editor handling, and validated default compatibility |
+| 6 | Completed | 2026-04-30 | 2026-04-30 | 588cbfe | Validated stage gates, added validator tooling, wired NVD+EPSS MCP config, updated command docs |
+| 7 | Completed | 2026-04-30 | 2026-04-30 | 891686a | Extended installer tests for cyber commands, migrated agents, new editors, and validator tool; full suite PASS |
+| 8 | Completed | 2026-04-30 | 2026-04-30 | 4a0040d | Local reviewer run FAIL then PASS after remediation; secrets hygiene and test evidence validated |
+| 9 | Completed | 2026-04-30 | 2026-04-30 | 4a0040d | Applied review remediation (stage-gates contract + template set) and revalidated regressions |
+| 10 | Completed | 2026-04-30 | 2026-04-30 | 4a0040d | Bumped version to 1.1.0, reconciled spec/AC coverage, and prepared final release-ready state |
