@@ -34,5 +34,7 @@ tmp/
 
 !.samourai/ai/context/**
 .opencode/
+!adapters/opencode/.opencode/
+!adapters/opencode/.opencode/**
 
 .samourai/

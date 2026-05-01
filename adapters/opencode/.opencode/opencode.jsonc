@@ -1,0 +1,632 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+
+  // Agent par défaut quand aucun agent n'est spécifié par l'utilisateur.
+  // "pm" orchestre tout le pipeline Samourai de bout en bout.
+  "default_agent": "pm",
+
+  // ─── Modèles globaux ────────────────────────────────────────────────────────
+
+  // Modèle fallback utilisé par tout agent sans "model" explicite dans la section "agent".
+  // Format : "provider/model-id"
+  "model": "github-copilot/gpt-5.2",
+
+  // Modèle léger pour les tâches utilitaires non critiques :
+  // génération de titres de session, résumés courts, métadonnées.
+  "small_model": "github-copilot/gpt-5-mini",
+
+  // ─── Instructions globales ───────────────────────────────────────────────────
+
+  // Fichiers chargés et injectés automatiquement dans le contexte de TOUS les agents.
+  // Permet de diffuser les conventions du repo sans les répéter dans chaque prompt d'agent.
+  // Chemins relatifs à la racine du projet.
+  "instructions": [
+    ".samourai/core/governance/conventions/unified-change-convention-tracker-agnostic-specification.md",
+    ".samourai/core/governance/conventions/change-lifecycle.md",
+    ".samourai/core/governance/policies/agent-permissions.yaml",
+    // Généré par /bootstrap — profil de complexité du projet (TMA/Build/Guide/Mix).
+    // Ce fichier n'existe pas avant le premier /bootstrap. Les agents l'ignorent s'il est absent.
+    ".samourai/ai/agent/project-profile.md"
+  ],
+
+  // ─── MCP Servers ────────────────────────────────────────────────────────────
+
+  // MCP = Model Context Protocol : protocole d'extension pour connecter des outils
+  // externes (GitHub, bases de données, APIs...) aux agents via un serveur local ou distant.
+  //
+  // Tous les serveurs sont désactivés par défaut (enabled: false).
+  // Activer uniquement si les prérequis sont remplis (token, npx, réseau...).
+  //
+  // ⚠️  Le npx dans "command" ne sert qu'à lancer le serveur MCP —
+  //     ce n'est PAS une méthode d'installation d'OpenCode.
+  //     Installation OpenCode : curl -fsSL https://opencode.ai/install | bash
+  "mcp": {
+
+    // Serveur MCP GitHub officiel.
+    // Donne accès aux outils github* : issues, PRs, reviews, labels, commentaires.
+    // Requis par @pm (clarify_scope), @pr-manager (création PR), @reviewer (remote mode).
+    //
+    // Pour activer :
+    //   1. Définir la variable d'env : export GITHUB_API_TOKEN=ghp_xxx
+    //   2. Passer "enabled": true
+    //   3. Décommenter les "tools": { "github*": true } dans la section "agent"
+    "github-mcp": {
+      "type": "local",                        // type "local" = process lancé en sous-shell
+      "command": ["npx", "-y", "@modelcontextprotocol/server-github"],
+      "environment": {
+        // {env:VAR} = référence à une variable d'environnement du shell hôte.
+        // Ne jamais mettre le token en clair ici.
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "{env:GITHUB_API_TOKEN}"
+      },
+      "enabled": false                         // activé pour @pm (GitHub MCP tools)
+    },
+
+    // Serveur MCP Context7 (Upstash).
+    // Fournit de la documentation technique récente et des exemples de code à jour.
+    // Utilisé par @external-researcher pour enrichir les recherches sans halluciner.
+    "context7": {
+      "type": "local",
+      "command": ["npx", "-y", "@upstash/context7-mcp"],
+      "enabled": false                        // activer si @external-researcher est utilisé intensivement
+    },
+
+    // ── Atlassian (Jira + Confluence) ────────────────────────────────────────
+    // MCP server pour Jira et Confluence.
+    // Donne accès aux issues, sprints, pages de doc Confluence.
+    // Alternative à github-mcp pour les équipes sur stack Atlassian.
+    // Utilisé par @pm (clarify_scope, transitions tickets), @spec-writer (pages Confluence).
+    //
+    // Prérequis :
+    //   export JIRA_URL=https://yourcompany.atlassian.net
+    //   export JIRA_EMAIL=you@company.com
+    //   export JIRA_TOKEN=your_api_token   # https://id.atlassian.com/manage-profile/security/api-tokens
+    "atlassian-mcp": {
+      "type": "local",
+      "command": ["npx", "-y", "mcp-atlassian"],
+      "environment": {
+        "JIRA_URL":   "{env:JIRA_URL}",
+        "JIRA_EMAIL": "{env:JIRA_EMAIL}",
+        "JIRA_TOKEN": "{env:JIRA_TOKEN}"
+      },
+      "enabled": false
+    },
+
+    // ── Mémoire persistante ──────────────────────────────────────────────────
+    // Knowledge graph local qui persiste entre les sessions OpenCode.
+    // Permet à @pm de mémoriser des décisions, contextes de projet, et patterns
+    // découverts au fil des livraisons — sans les répéter à chaque session.
+    //
+    // Données stockées localement dans ~/.local/share/opencode/memory/ (ou équivalent).
+    // Aucune donnée envoyée à l'extérieur.
+    //
+    // Usage typique : @pm stocke les décisions architecturales, préférences du projet,
+    // et contexte cross-change pour reprendre une session sans perte d'information.
+    "memory": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-memory"],
+      "enabled": false                         // activer pour les projets longue durée
+    },
+
+    // ── Filesystem étendu ────────────────────────────────────────────────────
+    // Accès lecture/écriture à des chemins hors du repo courant.
+    // Utile pour @bootstrapper (installer le kit dans un autre projet)
+    // et pour accéder à des ressources partagées entre plusieurs repos.
+    //
+    // ⚠️  Limiter les chemins exposés au strict nécessaire (principe de moindre privilège).
+    // Remplacer /tmp par le(s) chemin(s) réellement nécessaires.
+    "filesystem": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-filesystem", "/tmp"],
+      "enabled": false                        // activer et ajuster le chemin selon le besoin
+    },
+
+    // ── Sequential Thinking ──────────────────────────────────────────────────
+    // Serveur MCP qui force un raisonnement structuré étape par étape.
+    // Améliore la qualité des décisions complexes en empêchant les raccourcis cognitifs.
+    //
+    // Particulièrement utile pour :
+    //   @architect   — décomposition d'un problème architectural
+    //   @pm          — analyse de risques et dépendances d'un changement
+    //   @plan-writer — construction d'un plan d'implémentation rigoureux
+    //
+    // Aucun prérequis — fonctionne hors ligne.
+    "sequential-thinking": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "enabled": false                        // activer pour les agents de raisonnement complexe
+    },
+
+    // ── Puppeteer (browser automation) ──────────────────────────────────────
+    // Contrôle un navigateur headless Chromium depuis les agents.
+    // Permet de : naviguer, cliquer, remplir des formulaires, prendre des screenshots,
+    // exécuter du JavaScript dans le browser.
+    //
+    // Cas d'usage Samourai :
+    //   @designer    — capturer des screenshots de l'UI pour les reviews visuelles
+    //   @runner      — exécuter des tests E2E browser si le projet n'a pas de CLI test
+    //   @image-reviewer — analyser le rendu visuel réel d'une page
+    //
+    // Prérequis : Chromium installé (installé automatiquement par puppeteer-mcp-server).
+    "puppeteer": {
+      "type": "local",
+      "command": ["npx", "-y", "puppeteer-mcp-server"],
+      "enabled": false                         // activé pour tests browser et screenshots UI
+    },
+
+    // ── Cyber threat intelligence (NVD + EPSS) ──────────────────────────────
+    // NVD requires API key via env var. EPSS is public.
+    "nvd-epss": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-fetch"],
+      "environment": {
+        "NVD_API_KEY": "{env:NVD_API_KEY}",
+        "NVD_BASE_URL": "https://services.nvd.nist.gov/rest/json",
+        "EPSS_BASE_URL": "https://api.first.org/data/v1/epss"
+      },
+      "enabled": false
+    }
+  },
+
+  // ─── Permissions globales ────────────────────────────────────────────────────
+
+  // Règle appliquée à TOUS les agents sauf surcharge explicite dans la section "agent".
+  // "github*" : désactive par défaut tous les outils MCP GitHub (wildcard).
+  // Chaque agent qui en a besoin doit l'activer explicitement.
+  "tools": {
+    "github*": false
+  },
+
+  // ─── Compaction contexte ─────────────────────────────────────────────────────
+
+  // Contrôle la gestion automatique du contexte quand la fenêtre est pleine.
+  // Essentiel pour les livraisons longues (ex: /run-plan avec 7+ phases).
+  "compaction": {
+    // auto: true = OpenCode compacte automatiquement quand le contexte est presque plein.
+    // false = la session plante ou tronque sans avertissement.
+    "auto": true,
+
+    // prune: true = supprime les anciens outputs d'outils (bash, read...) devenus obsolètes.
+    // Libère de la place sans perdre la logique de la conversation.
+    "prune": true,
+
+    // Nombre de tours utilisateur récents (+ leurs réponses) conservés verbatim lors
+    // de la compaction. Les tours plus anciens sont résumés.
+    // 3 = garder les 3 derniers échanges complets intacts (défaut OpenCode : 2).
+    "tail_turns": 3
+  },
+
+  // ─── Watcher ─────────────────────────────────────────────────────────────────
+
+  // Le watcher surveille les changements de fichiers pour déclencher des rechargements.
+  // "ignore" : patterns de chemins à exclure pour éviter le bruit et les faux déclenchements.
+  "watcher": {
+    "ignore": [
+      ".git-workflow",  // artefacts temporaires du pipeline /git-workflow
+      "tmp",            // fichiers temporaires des agents (@committer, @runner)
+      ".samourai"       // manifests d'installation du kit (non-code)
+    ]
+  },
+
+  // ─── Expérimental ────────────────────────────────────────────────────────────
+
+  // Fonctionnalités en preview — stables en pratique mais pas encore en GA.
+  "experimental": {
+    // batch_tool: active l'outil "batch" qui permet à un agent d'exécuter
+    // plusieurs actions en parallèle en un seul appel.
+    // Utile pour @runner (lancer build + tests simultanément)
+    // et @pm (déclencher spec-writer + test-plan-writer en parallèle).
+    "batch_tool": true
+  },
+
+  // ─── Agents ──────────────────────────────────────────────────────────────────
+
+  // Configuration individuelle de chaque agent.
+  // Clés disponibles par agent :
+  //   model       : modèle LLM à utiliser (surcharge le "model" global)
+  //   steps       : nombre max d'itérations agentiques avant réponse forcée
+  //                 (1 step = 1 cycle : LLM pense → appelle outil → reçoit résultat)
+  //   temperature : créativité du modèle (0.0 = déterministe, 1.0 = créatif)
+  //   permission  : droits d'accès aux outils ("allow" | "deny" | "ask")
+  //                 Peut être une string globale ou un objet outil par outil.
+  //   color       : couleur d'identification dans l'UI OpenCode
+  //                 Valeurs : "primary" | "secondary" | "accent" | "success" |
+  //                           "warning" | "error" | "info" | "#RRGGBB"
+  "agent": {
+
+    // ── Orchestrateur principal ──────────────────────────────────────────────
+
+    // @pm : chef d'orchestre du pipeline Samourai.
+    // Accès total nécessaire pour lire/écrire les artefacts, appeler les sous-agents,
+    // et interagir avec les trackers (GitHub MCP quand activé).
+    "pm": {
+      "model": "github-copilot/claude-opus-4.6",
+      "steps": 200,           // orchestration longue : beaucoup d'étapes possibles
+      "permission": {
+        "bash": "allow",
+        "edit": "allow",
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "task": "allow",
+        "webfetch": "allow"
+      },
+      "color": "primary",
+      "tools": { "github*": true }  // active explicitement les outils GitHub MCP pour @pm
+    },
+
+    // ── Implémentation ───────────────────────────────────────────────────────
+
+    // @coder : implémente les phases du plan. Lit, écrit, lance des commandes.
+    // Pas d'accès web — travaille uniquement dans le repo.
+    "coder": {
+      "model": "github-copilot/gpt-5.3-codex",
+      "steps": 220,            // implémentation multi-phases : nombreuses opérations fichiers
+      "permission": {
+        "bash": "allow",      // lancer des commandes (tests, build, typecheck)
+        "edit": "allow",      // modifier des fichiers
+        "read": "allow",      // lire des fichiers
+        "glob": "allow",      // chercher des fichiers par pattern
+        "grep": "allow",      // chercher dans le contenu
+        "task": "allow",      // déléguer à des sous-agents
+        "webfetch": "deny"    // pas d'accès internet — travaille dans le repo
+      }
+    },
+
+    // @fixer : corrige les bugs et échecs de tests en mode root-cause.
+    // Accès similaire à @coder mais moins d'étapes (investigation ciblée).
+    "fixer": {
+      "model": "github-copilot/gpt-5.3-codex",
+      "steps": 120,            // debug ciblé — ne doit pas errer trop longtemps
+      "permission": {
+        "bash": "allow",
+        "edit": "allow",
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow"
+      }
+    },
+
+    // ── TDD ──────────────────────────────────────────────────────────────────
+
+    // @tdd-orchestrator : enforce le cycle red-green-refactor pour une tâche.
+    // Délégué par @coder dans /run-plan quand le skill tdd-orchestrator est actif.
+    "tdd-orchestrator": {
+      "model": "github-copilot/gpt-5.3-codex",
+      "steps": 60,            // cycle RED→GREEN→REFACTOR × N comportements
+      "permission": {
+        "bash": "allow",      // exécuter les tests à chaque étape du cycle
+        "edit": "allow",
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow"
+      },
+      "color": "accent"
+    },
+
+    // ── Review ───────────────────────────────────────────────────────────────
+
+    // @reviewer : valide le code contre spec + plan + heuristiques qualité.
+    // Peut modifier le plan (ajout phase remediation) mais pas le code source.
+    "reviewer": {
+      "model": "github-copilot/gpt-5.3-codex",
+      "temperature": 0.2,     // review déterministe : réduire la variabilité des findings
+      "steps": 30,            // lecture diff + rapport = tâche bornée
+      "permission": {
+        "bash": "allow",      // git diff, git log pour analyser le diff
+        "edit": "allow",      // modifier uniquement le plan (phase remediation)
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "webfetch": "deny"    // review locale uniquement
+      }
+      // Pour activer GitHub MCP sur @reviewer (remote mode) :
+      // "tools": { "github*": true }
+    },
+
+    // @code-reviewer : analyse ciblée d'un diff — sécurité, correctness, perf.
+    // Délégué par @reviewer et /git-workflow. Read-only strict : ne modifie RIEN.
+    "code-reviewer": {
+      "model": "github-copilot/gpt-5.3-codex",
+      "temperature": 0.2,     // findings cohérents et reproductibles
+      "steps": 20,            // analyse bornée — pas d'action, juste du rapport
+      "permission": {
+        "bash": "deny",       // read-only strict : aucune commande
+        "edit": "deny",       // ne modifie jamais le code source
+        "read": "allow",      // lire les fichiers pour comprendre le contexte
+        "glob": "allow",
+        "grep": "allow",
+        "webfetch": "deny"
+      },
+      "color": "warning"      // orange = vigilance, findings à traiter
+    },
+
+    // @review-feedback-applier : applique le feedback de review après validation humaine.
+    "review-feedback-applier": {
+      "model": "github-copilot/gpt-5.3-codex",
+      "steps": 30
+      // Pour activer GitHub MCP (lire les commentaires de PR) :
+      // "tools": { "github*": true }
+    },
+
+    // ── Git / PR ─────────────────────────────────────────────────────────────
+
+    // @committer : crée exactement un Conventional Commit. Tâche simple et rapide.
+    "committer": {
+      "model": "github-copilot/gpt-5-mini", // modèle léger suffisant pour du git
+      "steps": 15,            // git add + analyse diff + commit = peu d'étapes
+      "permission": {
+        "bash": "allow",      // git status, git add, git commit
+        "edit": "allow",      // écrire le fichier message temporaire
+        "read": "allow",
+        "webfetch": "deny"
+      }
+    },
+
+    // @pr-manager : crée/met à jour la PR et s'arrête avant merge.
+    "pr-manager": {
+      "model": "github-copilot/claude-sonnet-4.6",
+      "steps": 20
+      // Pour activer GitHub MCP (créer PR via API) :
+      // "tools": { "github*": true }
+    },
+
+    // ── Documentation & Specs ────────────────────────────────────────────────
+
+    // @spec-writer : rédige la spécification du changement (chg-xxx-spec.md).
+    "spec-writer": {
+      "model": "github-copilot/claude-sonnet-4.6", // Claude : meilleur pour la rédaction structurée
+      "steps": 30
+    },
+
+    // @test-plan-writer : rédige le plan de test (chg-xxx-test-plan.md).
+    "test-plan-writer": {
+      "model": "github-copilot/gpt-5.2",
+      "steps": 25
+    },
+
+    // @plan-writer : rédige le plan d'implémentation (chg-xxx-plan.md).
+    "plan-writer": {
+      "model": "github-copilot/gpt-5.2",
+      "steps": 50
+    },
+
+    // @doc-syncer : synchronise la documentation système avec le code livré.
+    // Lit le diff, met à jour doc/spec/. Pas d'accès web.
+    "doc-syncer": {
+      "model": "github-copilot/claude-sonnet-4.5",
+      "steps": 20,
+      "permission": {
+        "bash": "allow",      // git diff pour voir ce qui a changé
+        "edit": "allow",      // mettre à jour les docs
+        "read": "allow",
+        "webfetch": "deny"
+      }
+    },
+
+    // ── Qualité ──────────────────────────────────────────────────────────────
+
+    // @runner : exécute les commandes (build, tests, lint) et journalise les résultats.
+    // Ne modifie pas de fichiers source — uniquement lire + exécuter.
+    "runner": {
+      "model": "github-copilot/gpt-5-mini", // tâche d'exécution, pas de raisonnement complexe
+      "steps": 25,
+      "permission": {
+        "bash": "allow",      // lancer build, tests, lint, quality gates
+        "read": "allow",      // lire les configs (package.json, Makefile...)
+        "edit": "deny"        // ne modifie pas de fichiers — c'est le rôle de @fixer
+      },
+      "tools": { "puppeteer*": true }  // active Puppeteer MCP pour tests E2E browser
+    },
+
+    // ── Architecture & Outillage ─────────────────────────────────────────────
+
+    // @architect : décisions techniques et architecturales. Produit des ADRs.
+    // Modèle le plus puissant pour le raisonnement complexe.
+    "architect": {
+      "model": "github-copilot/gpt-5.4",  // meilleur modèle pour la réflexion architecturale
+      "steps": 40,
+      "color": "secondary"
+    },
+
+    // @bootstrapper : onboarding d'un nouveau projet dans l'écosystème Samourai.
+    "bootstrapper": {
+      "model": "github-copilot/claude-sonnet-4.6",
+      "steps": 30
+    },
+
+    // @toolsmith : crée et améliore les outils, agents et commandes du kit.
+    "toolsmith": {
+      "model": "github-copilot/gpt-5.3-codex",
+      "steps": 40
+    },
+
+    // ── Contenu & Médias ─────────────────────────────────────────────────────
+
+    // @editor : rédaction et traduction du contenu user-facing selon copywriting.md.
+    "editor": {
+      "model": "github-copilot/claude-sonnet-4.6", // Claude : meilleur pour la langue naturelle
+      "steps": 20
+    },
+
+    // @designer : conception UI/UX, alignement sur le design system.
+    "designer": {
+      "model": "github-copilot/gpt-4o",    // GPT-4o : vision + design
+      "steps": 20,
+      "tools": { "puppeteer*": true }  // active Puppeteer MCP pour screenshots UI
+    },
+
+    // @image-generator : génération d'images via text-to-image.
+    "image-generator": {
+      "model": "github-copilot/gpt-4o",
+      "steps": 10               // une seule génération = peu d'étapes
+    },
+
+    // @image-reviewer : analyse screenshots et artifacts visuels. Read-only.
+    "image-reviewer": {
+      "model": "github-copilot/gpt-4o",   // GPT-4o : multimodal (vision)
+      "steps": 10,
+      "permission": {
+        "edit": "deny",         // analyse uniquement, ne modifie rien
+        "bash": "deny"
+      }
+    },
+
+    // ── Recherche ────────────────────────────────────────────────────────────
+
+    // @external-researcher : recherche via web et MCP (context7, deepwiki...).
+    // Seul agent autorisé à sortir du repo — webfetch et websearch activés.
+    "external-researcher": {
+      "model": "github-copilot/gemini-3.1-pro-preview", // Gemini : fenêtre contexte large pour la recherche
+      "steps": 30,
+      "permission": {
+        "webfetch": "allow",    // fetch de pages web et documentation
+        "websearch": "allow",   // recherche web
+        "edit": "deny",         // ne modifie rien — produit uniquement un rapport
+        "bash": "deny"
+      }
+    },
+
+    // ── Cybersécurité ────────────────────────────────────────────────────────
+
+    // @attack-surface-agent : cartographie de surface d'attaque (recon & mapping).
+    "attack-surface-agent": {
+      "model": "github-copilot/gpt-5.3-codex",
+      "temperature": 0.2,
+      "steps": 80,
+      "permission": {
+        "bash": "allow",
+        "edit": "allow",
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "webfetch": "deny"
+      },
+      "color": "error"
+    },
+
+    // @bug-hunting-agent : chasse de vulnérabilités OWASP.
+    "bug-hunting-agent": {
+      "model": "github-copilot/gpt-5.3-codex",
+      "temperature": 0.2,
+      "steps": 100,
+      "permission": {
+        "bash": "allow",
+        "edit": "allow",
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "webfetch": "deny"
+      },
+      "color": "error"
+    },
+
+    // @vulnerability-analysis-agent : analyse approfondie des vulnérabilités.
+    "vulnerability-analysis-agent": {
+      "model": "github-copilot/gpt-5.3-codex",
+      "temperature": 0.2,
+      "steps": 60,
+      "permission": {
+        "bash": "allow",
+        "edit": "allow",
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "webfetch": "deny"
+      },
+      "color": "error"
+    },
+
+    // @cve-intelligence-agent : recherche CVE et threat intel (sans bash).
+    "cve-intelligence-agent": {
+      "model": "github-copilot/gpt-5.2",
+      "temperature": 0.2,
+      "steps": 30,
+      "permission": {
+        "bash": "deny",
+        "edit": "allow",
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "webfetch": "allow"
+      },
+      "tools": { "nvd-epss*": true }
+    },
+
+    // @exploitability-agent : scoring CVSS/EPSS et priorisation du risque.
+    "exploitability-agent": {
+      "model": "github-copilot/gpt-5.2",
+      "temperature": 0.1,
+      "steps": 25,
+      "permission": {
+        "bash": "deny",
+        "edit": "allow",
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "webfetch": "allow"
+      },
+      "tools": { "nvd-epss*": true }
+    },
+
+    // @safe-poc-agent : exécution de POC sécurisés en environnement de labo.
+    "safe-poc-agent": {
+      "model": "github-copilot/gpt-5.3-codex",
+      "temperature": 0.1,
+      "steps": 60,
+      "permission": {
+        "bash": "allow",
+        "edit": "allow",
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "webfetch": "deny"
+      },
+      "color": "error"
+    },
+
+    // @remediation-agent : conception et validation des correctifs en labo.
+    "remediation-agent": {
+      "model": "github-copilot/gpt-5.3-codex",
+      "temperature": 0.1,
+      "steps": 60,
+      "permission": {
+        "bash": "allow",
+        "edit": "allow",
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "webfetch": "deny"
+      }
+    },
+
+    // @evidence-agent : collecte de preuves forensiques (hash/timestamp).
+    "evidence-agent": {
+      "model": "github-copilot/gpt-5-mini",
+      "temperature": 0.1,
+      "steps": 30,
+      "permission": {
+        "bash": "allow",
+        "edit": "allow",
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "webfetch": "deny"
+      }
+    },
+
+    // @cve-report-agent : rédaction de rapport CVE uniquement (sans bash/web).
+    "cve-report-agent": {
+      "model": "github-copilot/claude-sonnet-4.6",
+      "temperature": 0.1,
+      "steps": 25,
+      "permission": {
+        "bash": "deny",
+        "edit": "allow",
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "webfetch": "deny"
+      }
+    }
+  }
+}
