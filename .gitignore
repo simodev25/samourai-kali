@@ -38,3 +38,4 @@ tmp/
 !adapters/opencode/.opencode/**
 
 .samourai/
+AGENTS.md

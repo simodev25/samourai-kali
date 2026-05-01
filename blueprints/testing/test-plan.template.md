@@ -10,10 +10,10 @@
 | --- | --- | --- | --- |
 | <FND-1> | <poc_name> | reproduction/validation/regression/manual | critical |
 
-## Lab Environment
+##  Environment
 
 - Isolation status: <verified_or_blocked>
-- Lab profile: <vm_container_network_setup>
+- profile: <vm_container_network_setup>
 - Safety controls: <egress_restrictions_snapshots_monitoring>
 
 ## Test Data

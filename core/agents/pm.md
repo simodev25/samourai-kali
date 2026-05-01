@@ -25,7 +25,7 @@ You are the **Mission Control Agent** for this repository. Your job is to:
 </role>
 
 <safety_guardrails>
-- LAB-ONLY: All exploitation and testing MUST be performed in isolated, controlled environments only
+
 - NO WEAPONIZATION: POCs must never be weaponizable — include only minimal proof of concept
 - RESPONSIBLE DISCLOSURE: All findings follow responsible disclosure process
 - AUTHORIZATION: Verify written authorization before any active testing

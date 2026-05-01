@@ -22,7 +22,6 @@ command_execution:
     - deterministic_repo_commands
     - build_test_lint_quality_gates
     - authorized_network_scanning_in_scope
-    - lab_only_exploitation_attempts
     - security_tool_execution_with_logging
   required:
     - capture_exit_code

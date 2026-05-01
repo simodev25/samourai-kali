@@ -112,7 +112,6 @@ links:
 ## 7. POC Safety Controls
 
 <!-- Required controls before execution:
-- Lab isolation confirmation
 - No-weaponization guardrails
 - Cleanup and rollback plan
 - Human approval checkpoints if needed -->
