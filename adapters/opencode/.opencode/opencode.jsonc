@@ -490,8 +490,8 @@
 
     // @attack-surface-agent : cartographie de surface d'attaque (recon & mapping).
     "attack-surface-agent": {
-      "model": "github-copilot/gpt-5.3-codex",
-      "temperature": 0.2,
+      "model": "github-copilot/claude-opus-4.6",
+      "temperature": 0.4,
       "steps": 80,
       "permission": {
         "bash": "allow",
@@ -506,8 +506,8 @@
 
     // @bug-hunting-agent : chasse de vulnérabilités OWASP.
     "bug-hunting-agent": {
-      "model": "github-copilot/gpt-5.3-codex",
-      "temperature": 0.2,
+      "model": "github-copilot/claude-opus-4.6",
+      "temperature": 0.3,
       "steps": 100,
       "permission": {
         "bash": "allow",
