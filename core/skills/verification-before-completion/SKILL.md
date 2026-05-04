@@ -135,3 +135,28 @@ Security conclusions drive risk decisions. Unverified claims can produce false c
 Run the command. Read the output. THEN claim the result.
 
 This is non-negotiable.
+
+## Tools Used
+
+- Primary mode: no direct offensive tool execution; this skill governs planning, coordination, review, or delivery around Kali-generated evidence.
+- Kali evidence consumed or delegated: `nmap`, `nuclei`, `nikto`, `sqlmap`, `ffuf`, `gobuster`, `tcpdump`, `tshark`, `searchsploit`, `semgrep`.
+- Preflight command when tool-dependent evidence is required: `command -v nmap nuclei nikto sqlmap ffuf gobuster tcpdump searchsploit semgrep || true`.
+- Missing-tool behavior: record `missing_tools`, delegate execution/readiness to the correct agent, or stop with `NEEDS_TOOLING` before making technical claims.
+
+## Command Examples
+
+```bash
+command -v nmap nuclei nikto sqlmap ffuf gobuster tcpdump searchsploit semgrep || true
+rg -n "nmap|nuclei|nikto|sqlmap|ffuf|gobuster|tcpdump|searchsploit|semgrep" .samourai/docai .samourai/tmpai core || true
+sha256sum EVIDENCE_ARTIFACT
+```
+
+## Result Interpretation
+
+Use this skill to verify that Kali-derived evidence is present, scoped, reproducible, and routed to the right downstream artifact. Do not treat unsupported scanner output as a confirmed vulnerability.
+
+Interpretation rules:
+- Treat scanner output as a lead until independently reproduced.
+- Separate confirmed facts from inferred hypotheses.
+- Record false-positive risk and evidence path for every result.
+- Prefer French for summaries, reports, and final investigation artifacts.

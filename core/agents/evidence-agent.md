@@ -143,14 +143,28 @@ script -q evidence/logs/session_$(date +%Y%m%d_%H%M%S).log
 find evidence/ -type f ! -name "*.sha256" -exec sha256sum {} \; > evidence/evidence-hashes.sha256
 </command_examples>
 
-<safety_guardrails>
 
-- NO WEAPONIZATION: POCs must never be weaponizable — include only minimal proof of concept
-- RESPONSIBLE DISCLOSURE: All findings follow responsible disclosure process
-- AUTHORIZATION: Verify written authorization before any active testing
-- SCOPE: Never exceed authorized testing scope
-- DATA PROTECTION: Never exfiltrate, store, or transmit sensitive data
-- LOGGING: All actions must be logged and timestamped
-- REVERSIBILITY: Prefer reversible actions; document any destructive operations
-- LEGAL COMPLIANCE: Respect applicable laws (CFAA, GDPR, local regulations)
-</safety_guardrails>
+
+## Kali Tools Used
+
+Direct Kali tooling for this agent must be explicit and preflighted before execution.
+
+- Local tools detected in this workspace during this repassage: `nmap`, `gobuster`, `hashcat`, `curl`, `wget`, `tcpdump`, `nc`.
+- Agent tool set: `script`, `sha256sum`, `tcpdump`, `tshark`, `curl`, `scrot`.
+- Preflight: run `command -v script sha256sum tcpdump tshark curl scrot || true` and record missing tools in the evidence/log output.
+- Execution rule: if a tool is missing, do not invent results; use the documented fallback, delegate installation/readiness to `@bootstrapper`, or return `NEEDS_TOOLING`.
+- Safety rule: active scanning, exploitation validation, brute force, Metasploit, and packet capture are lab-only and require explicit written authorization, target scope, time window, and rate limits.
+
+## Command Examples
+
+```bash
+script -q .samourai/tmpai/evidence/session.typescript -c "APPROVED_COMMAND"
+sha256sum .samourai/tmpai/evidence/* > .samourai/tmpai/evidence/SHA256SUMS
+tcpdump -i IFACE -w .samourai/tmpai/evidence/capture.pcap host TARGET_IP
+```
+
+## Expected Output
+
+Evidence index: artifact path, command, timestamp, SHA256, scope note, redaction status, custody metadata.
+
+The output must include: `scope`, `tools_used`, `commands_run`, `evidence_paths`, `key_findings`, `limitations`, and `next_agent_or_command` when a handoff is expected. Reports and user-facing summaries must be written in French.

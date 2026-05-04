@@ -124,3 +124,27 @@ trufflehog filesystem --directory=./src/
 - Failing to retest and verify reproduction before reporting
 - Mixing out-of-scope endpoints into findings to inflate results
 
+## Tools Used
+
+- Primary Kali/tools: `nuclei`, `nikto`, `sqlmap`, `ffuf`, `gobuster`, `hydra`, `sslscan`, `testssl.sh`, `semgrep`, `bandit`, `trufflehog`, `curl`.
+- Preflight command: `command -v nuclei nikto sqlmap ffuf gobuster hydra sslscan testssl.sh || true`.
+- Missing-tool behavior: record `missing_tools`, choose a safe fallback when available, or stop with `NEEDS_TOOLING` before making technical claims.
+- Scope behavior: every active command must use only authorized lab targets and must write logs/evidence under `.samourai/tmpai/` or the approved change folder.
+
+## Command Examples
+
+```bash
+nuclei -u https://TARGET -severity critical,high,medium -rate-limit 5 -jsonl -o .samourai/tmpai/hunt/nuclei.jsonl
+nikto -h https://TARGET -nointeractive -Format json -output .samourai/tmpai/hunt/nikto.json
+sqlmap -u "https://TARGET/item?id=1" --batch --safe-url=https://TARGET/health --level=1 --risk=1 --output-dir=.samourai/tmpai/hunt/sqlmap
+```
+
+## Result Interpretation
+
+Findings register: finding ID, class/CWE, target, reproduction signal, severity hint, confidence, false-positive notes, evidence path.
+
+Interpretation rules:
+- Treat scanner output as a lead until independently reproduced.
+- Separate confirmed facts from inferred hypotheses.
+- Record false-positive risk and evidence path for every result.
+- Prefer French for summaries, reports, and final investigation artifacts.

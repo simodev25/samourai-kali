@@ -20,8 +20,7 @@ de sécurité :
 Le kit ne remplace pas l'expertise humaine en sécurité. Il structure le travail,
 automatise les tâches répétitives et garantit la traçabilité des preuves.
 
-**Garde-fous obligatoires** : LAB-ONLY, NO WEAPONIZATION, RESPONSIBLE DISCLOSURE,
-AUTHORIZATION requise, SCOPE respecté, DATA PROTECTION, LOGGING obligatoire.
+
 
 ## Modèle d'installation
 
@@ -106,7 +105,7 @@ L'orchestration peut être déléguée au Mission Control :
 | `@vulnerability-analysis-agent` | Analyse technique approfondie | burpsuite, zaproxy, tcpdump, strace, semgrep |
 | `@cve-intelligence-agent` | Recherche CVE et intelligence | searchsploit, NVD API, EPSS API |
 | `@exploitability-agent` | Scoring CVSS/EPSS | CVSS calculators, EPSS API |
-| `@safe-poc-agent` | POC minimal et sécurisé (lab-only) | curl, netcat, msfconsole, python3, nmap NSE |
+| `@safe-poc-agent` | POC minimal et sécurisé  | curl, netcat, msfconsole, python3, nmap NSE |
 | `@evidence-agent` | Collecte de preuves forensic-grade | sha256sum, tcpdump, tshark, script, scrot |
 | `@cve-report-agent` | Rapport CVE conforme aux standards | Rédaction uniquement |
 | `@remediation-agent` | Correctifs et vérification | nmap, nikto, nuclei, sqlmap, semgrep |
@@ -232,7 +231,7 @@ Phases :
 3. Analyse root cause
 4. Corrélation CVE (searchsploit)
 5. Scoring CVSS/EPSS
-6. Création POC safe (lab-only)
+6. Création POC safe 
 7. Collecte de preuves (hash + timestamp)
 8. Rédaction rapport CVE
 

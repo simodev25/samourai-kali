@@ -1,0 +1,4 @@
+# Local OpenCode runtime artifacts
+.cache/
+tmp/
+*.log

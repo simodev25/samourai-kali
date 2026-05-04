@@ -10,7 +10,7 @@ readonly APP_NAME="samourai-remote-install"
 readonly APP_VERSION="1.1.0"
 readonly LOG_TAG="(${APP_NAME})"
 
-DEFAULT_REPO="FR-PAR-SAMOUR-AI/samourai-devkit"
+DEFAULT_REPO="FR-PAR-SAMOUR-AI/samourai-kali"
 DEFAULT_REF="main"
 
 REPO="${SAMOURAI_REPO:-${DEFAULT_REPO}}"
@@ -124,8 +124,8 @@ main() {
   require_cmd tar
   require_cmd mktemp
 
-  TMP_DIR="$(mktemp -d "${TMPDIR:-/tmp}/samourai-devkit.XXXXXX")"
-  archive_path="${TMP_DIR}/samourai-devkit.tar.gz"
+  TMP_DIR="$(mktemp -d "${TMPDIR:-/tmp}/samourai-kali.XXXXXX")"
+  archive_path="${TMP_DIR}/samourai-kali.tar.gz"
   archive_url="https://github.com/${REPO}/archive/${REF}.tar.gz"
 
   log_info "Downloading ${REPO}@${REF}"

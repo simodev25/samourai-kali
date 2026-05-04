@@ -130,7 +130,7 @@ test_remote_installer_help() {
   local output
   output="$("${REMOTE_INSTALL_SCRIPT}" --help)"
 
-  [[ "${output}" == *"raw.githubusercontent.com/FR-PAR-SAMOUR-AI/samourai-devkit"* ]] || fail "expected remote installer curl example"
+  [[ "${output}" == *"raw.githubusercontent.com/FR-PAR-SAMOUR-AI/samourai-kali"* ]] || fail "expected remote installer curl example"
   [[ "${output}" == *"--ref <ref>"* ]] || fail "expected remote installer ref option"
   [[ "${output}" == *"Install options are forwarded"* ]] || fail "expected forwarded install options note"
 
@@ -200,6 +200,7 @@ test_install_and_uninstall() {
 
   assert_file "${manifest}"
   assert_file "${hash_manifest}"
+  assert_file "${repo}/.opencode/.gitignore"
   assert_file "${repo}/.opencode/opencode.jsonc"
   assert_file "${repo}/.opencode/agent/pm.md"
   assert_file "${repo}/.opencode/command/bootstrap.md"
@@ -229,6 +230,7 @@ test_install_and_uninstall() {
   assert_contains "${manifest}" ".samourai/core/decisions/README.md"
   assert_contains "${manifest}" ".samourai/blueprints/README.md"
   assert_contains "${manifest}" ".samourai/blueprints/agents/agent.blueprint.yaml"
+  assert_contains "${manifest}" ".opencode/.gitignore"
   assert_contains "${hash_manifest}" ".opencode/opencode.jsonc"
   assert_no_file "${repo}/AGENTS.md"
 
@@ -545,11 +547,11 @@ test_force_overwrite_audit() {
 
   assert_file "${overwritten}"
   assert_contains "${overwritten}" ".opencode/README.md"
-  assert_contains "${target_file}" "OpenCode Kit"
+  assert_contains "${target_file}" "OpenCode Adapter"
 
   run_uninstall "${repo}"
   assert_file "${target_file}"
-  assert_contains "${target_file}" "OpenCode Kit"
+  assert_contains "${target_file}" "OpenCode Adapter"
 
   ok "force overwrite audit"
 }

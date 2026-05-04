@@ -122,3 +122,27 @@ nikto -h https://target.example.com -output nikto.txt
 - Failing to de-duplicate results, causing blind spots and noisy prioritization
 - Assigning risk labels without consistent criteria or evidence
 
+## Tools Used
+
+- Primary Kali/tools: `nmap`, `masscan`, `amass`, `subfinder`, `theHarvester`, `whatweb`, `wafw00f`, `gobuster`, `ffuf`, `nikto`, `curl`.
+- Preflight command: `command -v nmap masscan amass subfinder theHarvester whatweb wafw00f gobuster || true`.
+- Missing-tool behavior: record `missing_tools`, choose a safe fallback when available, or stop with `NEEDS_TOOLING` before making technical claims.
+- Scope behavior: every active command must use only authorized lab targets and must write logs/evidence under `.samourai/tmpai/` or the approved change folder.
+
+## Command Examples
+
+```bash
+nmap -sV -sC -Pn --top-ports 1000 -oA .samourai/tmpai/recon/nmap-safe TARGET
+amass enum -passive -d DOMAIN -o .samourai/tmpai/recon/amass.txt
+gobuster dir -u https://TARGET -w /usr/share/wordlists/dirb/common.txt -t 10 -o .samourai/tmpai/recon/gobuster.txt
+```
+
+## Result Interpretation
+
+Attack surface map: assets, ports, services, technologies, endpoints, confidence, evidence path, and next recommended agent.
+
+Interpretation rules:
+- Treat scanner output as a lead until independently reproduced.
+- Separate confirmed facts from inferred hypotheses.
+- Record false-positive risk and evidence path for every result.
+- Prefer French for summaries, reports, and final investigation artifacts.

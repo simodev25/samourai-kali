@@ -1,6 +1,7 @@
 ---
 description: Run security scanning/security audit workflows through the repository's configured scan command(s).
 agent: runner
+subtask: true
 ---
 
 <purpose>
@@ -141,3 +142,16 @@ Failed run:
 - Top failure signal: first useful error snippet
 - Next step: `/check-fix` or `@fixer`
 </output>
+
+<kali_execution_context>
+  <tools>semgrep, bandit, trufflehog, nuclei, nikto, nmap, curl</tools>
+  <preflight>Run `command -v semgrep bandit trufflehog nuclei nikto nmap curl || true` before relying on any Kali tool. Record missing tools instead of inventing results.</preflight>
+  <input_expected>Authorized lab target, workItemRef/finding reference when applicable, explicit scope boundaries, allowed testing window, rate limits, and evidence destination.</input_expected>
+  <safe_defaults>Use passive or low-impact checks first; use `-Pn`, bounded ports, `--rate-limit`, `--batch`, `--safe-url`, low `--level/--risk`, and no destructive payloads unless the approved lab plan explicitly permits it.</safe_defaults>
+  <command_examples>
+    semgrep --config=auto --json -o .samourai/tmpai/scans/semgrep.json .
+    nuclei -u https://TARGET -severity critical,high -rate-limit 5
+    nikto -h https://TARGET -nointeractive
+  </command_examples>
+  <structured_output>Security scan summary with resolved command, logs, failures, and evidence paths. Include `tools_used`, `commands_run`, `evidence_paths`, `missing_tools`, `limitations`, and `next_step`.</structured_output>
+</kali_execution_context>

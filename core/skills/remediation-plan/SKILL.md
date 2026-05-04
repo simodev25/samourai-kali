@@ -136,9 +136,28 @@ diff before.conf after.conf
 ## Exit Criteria
 Plan is complete when it is prioritized, actionable, owner-assigned, time-bounded, verifiable, and operationally safe.
 
-## Safety Guardrails
-- **LAB-ONLY**: All fix testing and validation MUST occur in isolated lab environments
-- **NO WEAPONIZATION**: Remediation documentation must not enable attack reproduction
-- **AUTHORIZATION**: Verify authorization before implementing any fixes in target environments
-- **LOGGING**: All remediation actions must be logged and timestamped
-- **REVERSIBILITY**: All fixes must include rollback procedures
+
+## Tools Used
+
+- Primary Kali/tools: `nmap`, `nuclei`, `nikto`, `sqlmap`, `semgrep`, `sslscan`, `testssl.sh`, `curl`.
+- Preflight command: `command -v nmap nuclei nikto sqlmap semgrep sslscan testssl.sh curl || true`.
+- Missing-tool behavior: record `missing_tools`, choose a safe fallback when available, or stop with `NEEDS_TOOLING` before making technical claims.
+- Scope behavior: every active command must use only authorized lab targets and must write logs/evidence under `.samourai/tmpai/` or the approved change folder.
+
+## Command Examples
+
+```bash
+nmap -sV -sC -Pn -p PORTS -oA .samourai/tmpai/remediation/nmap-after TARGET
+nuclei -u https://TARGET -id TEMPLATE_ID -jsonl -o .samourai/tmpai/remediation/nuclei-after.jsonl
+semgrep --config=p/owasp-top-ten --json -o .samourai/tmpai/remediation/semgrep-after.json SRC
+```
+
+## Result Interpretation
+
+Remediation plan and validation: fix option, residual risk, before/after evidence, regression checks, acceptance status.
+
+Interpretation rules:
+- Treat scanner output as a lead until independently reproduced.
+- Separate confirmed facts from inferred hypotheses.
+- Record false-positive risk and evidence path for every result.
+- Prefer French for summaries, reports, and final investigation artifacts.

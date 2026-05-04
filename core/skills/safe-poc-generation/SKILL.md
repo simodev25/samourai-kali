@@ -117,3 +117,27 @@ python3 poc.py --target url-target --safe-mode --log output.log
 - Cleanup/rollback guide.
 - Traceability metadata committed with the POC.
 
+## Tools Used
+
+- Primary Kali/tools: `curl`, `python3`, `nc`, `nmap`, `msfconsole`.
+- Preflight command: `command -v curl python3 nc nmap msfconsole || true`.
+- Missing-tool behavior: record `missing_tools`, choose a safe fallback when available, or stop with `NEEDS_TOOLING` before making technical claims.
+- Scope behavior: every active command must use only authorized lab targets and must write logs/evidence under `.samourai/tmpai/` or the approved change folder.
+
+## Command Examples
+
+```bash
+curl -k -i --max-time 10 --path-as-is "https://LAB_TARGET/MINIMAL_TEST"
+python3 poc.py --target https://LAB_TARGET --safe-mode --dry-run
+nmap --script SAFE_NSE_SCRIPT -p PORT LAB_TARGET -oN .samourai/tmpai/poc/nse.txt
+```
+
+## Result Interpretation
+
+Safe POC package: hypothesis, lab markers, minimal command/script, expected signal, cleanup, logs.
+
+Interpretation rules:
+- Treat scanner output as a lead until independently reproduced.
+- Separate confirmed facts from inferred hypotheses.
+- Record false-positive risk and evidence path for every result.
+- Prefer French for summaries, reports, and final investigation artifacts.

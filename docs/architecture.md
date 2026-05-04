@@ -17,6 +17,22 @@ This document describes the delivery architecture and layering used by Samourai 
 6. **Skills (`core/skills/`)**
    - Reusable operational workflows injected into agent execution when relevant.
 
+## Kali tooling contract
+
+Samourai maps cyber agents and command prompts to real Kali tooling through the
+canonical matrix in `core/governance/conventions/kali-tooling-matrix.md`.
+
+Every tool-dependent workflow must:
+
+- preflight tool availability with `command -v ... || true`;
+- record missing tools instead of inventing results;
+- keep active testing lab-only and inside written authorization;
+- preserve `tools_used`, `commands_run`, `evidence_paths`, `missing_tools`,
+  `limitations`, and `next_step` across handoffs.
+
+Support agents do not run offensive tools directly by default. They consume or
+review evidence and delegate execution to `@runner` or the relevant cyber agent.
+
 ## Change artifacts
 
 Per-work-item delivery artifacts live under:

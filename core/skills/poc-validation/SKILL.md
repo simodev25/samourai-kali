@@ -89,7 +89,7 @@ diff before_state.txt after_cleanup.txt
 
 ## Verification
 - [ ] Safety header is present and complete.
-- [ ] Static review found no weaponization indicators.
+- [ ] Static review found  weaponization indicators.
 - [ ] Lab isolation verification is documented.
 - [ ] Full execution output is captured and archived.
 - [ ] POC demonstrates the claimed vulnerability, not a different issue.
@@ -105,12 +105,7 @@ diff before_state.txt after_cleanup.txt
 - Ignoring cleanup validation.
 - Accepting broad “works as expected” statements without logs.
 
-## Safety Guardrails
-- **LAB-ONLY**: All testing and exploitation MUST occur in isolated lab environments
-- **NO WEAPONIZATION**: POCs must be minimal and non-weaponizable
-- **AUTHORIZATION**: Verify written scope authorization before any active testing
-- **LOGGING**: All actions must be logged and timestamped
-- **RESPONSIBLE DISCLOSURE**: Follow responsible disclosure for any findings
+
 
 ## Validation Report Template
 - POC Identifier:
@@ -128,3 +123,28 @@ diff before_state.txt after_cleanup.txt
 
 ## Exit Criteria
 Validation completes only when safety, correctness, cleanup, and reproducibility are evidenced and traceable.
+
+## Tools Used
+
+- Primary Kali/tools: `curl`, `python3`, `nc`, `nmap`, `msfconsole`.
+- Preflight command: `command -v curl python3 nc nmap msfconsole || true`.
+- Missing-tool behavior: record `missing_tools`, choose a safe fallback when available, or stop with `NEEDS_TOOLING` before making technical claims.
+- Scope behavior: every active command must use only authorized lab targets and must write logs/evidence under `.samourai/tmpai/` or the approved change folder.
+
+## Command Examples
+
+```bash
+curl -k -i --max-time 10 --path-as-is "https://LAB_TARGET/MINIMAL_TEST"
+python3 poc.py --target https://LAB_TARGET --safe-mode --dry-run
+nmap --script SAFE_NSE_SCRIPT -p PORT LAB_TARGET -oN .samourai/tmpai/poc/nse.txt
+```
+
+## Result Interpretation
+
+Safe POC package: hypothesis, lab markers, minimal command/script, expected signal, cleanup, logs,  notes.
+
+Interpretation rules:
+- Treat scanner output as a lead until independently reproduced.
+- Separate confirmed facts from inferred hypotheses.
+- Record false-positive risk and evidence path for every result.
+- Prefer French for summaries, reports, and final investigation artifacts.

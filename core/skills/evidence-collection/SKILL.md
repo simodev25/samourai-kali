@@ -141,12 +141,7 @@ artifacts:
 - Editing files without documenting transformation/redaction steps.
 - Referencing evidence in reports that is absent from index.
 
-## Safety Guardrails
-- **LAB-ONLY**: All testing and exploitation MUST occur in isolated lab environments
-- **NO WEAPONIZATION**: POCs must be minimal and non-weaponizable
-- **AUTHORIZATION**: Verify written scope authorization before any active testing
-- **LOGGING**: All actions must be logged and timestamped
-- **RESPONSIBLE DISCLOSURE**: Follow responsible disclosure for any findings
+
 
 ## Deliverables
 - Structured `evidence/<workItemRef>/` directory.
@@ -157,3 +152,28 @@ artifacts:
 
 ## Exit Criteria
 Evidence is considered complete only when indexed, hashed, timestamped, redacted, traceable, and mapped to all findings.
+
+## Tools Used
+
+- Primary Kali/tools: `script`, `sha256sum`, `tcpdump`, `tshark`, `curl`, `scrot`.
+- Preflight command: `command -v script sha256sum tcpdump tshark curl scrot || true`.
+- Missing-tool behavior: record `missing_tools`, choose a safe fallback when available, or stop with `NEEDS_TOOLING` before making technical claims.
+- Scope behavior: every active command must use only authorized lab targets and must write logs/evidence under `.samourai/tmpai/` or the approved change folder.
+
+## Command Examples
+
+```bash
+script -q .samourai/tmpai/evidence/session.typescript -c "APPROVED_COMMAND"
+sha256sum .samourai/tmpai/evidence/* > .samourai/tmpai/evidence/SHA256SUMS
+tcpdump -i IFACE -w .samourai/tmpai/evidence/capture.pcap host TARGET_IP
+```
+
+## Result Interpretation
+
+Evidence index: artifact path, command, timestamp, SHA256, scope note, redaction status, custody metadata.
+
+Interpretation rules:
+- Treat scanner output as a lead until independently reproduced.
+- Separate confirmed facts from inferred hypotheses.
+- Record false-positive risk and evidence path for every result.
+- Prefer French for summaries, reports, and final investigation artifacts.

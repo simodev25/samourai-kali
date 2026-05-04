@@ -13,6 +13,7 @@
 - Templates: [core/templates/README.md](core/templates/README.md)
 - Lab setup: [core/governance/conventions/onboarding-existing-project.md](core/governance/conventions/onboarding-existing-project.md)
 - Investigation lifecycle: [core/governance/conventions/change-lifecycle.md](core/governance/conventions/change-lifecycle.md)
+- Kali tooling matrix: [core/governance/conventions/kali-tooling-matrix.md](core/governance/conventions/kali-tooling-matrix.md)
 - Agents & commands: [core/governance/conventions/opencode-agents-and-commands-guide.md](core/governance/conventions/opencode-agents-and-commands-guide.md)
 
 ---
@@ -44,7 +45,7 @@ Samourai Kali delivers:
 
 - A deterministic investigation workflow
 - Specialized, orchestrated cyber agents
-- Built-in ethical and legal guardrails (LAB-ONLY, NO WEAPONIZATION)
+- Built-in ethical and legal guardrails
 - Standardization via blueprints and reporting templates
 
 ---
@@ -193,7 +194,7 @@ Automatically used by:
 Every agent and skill enforces mandatory guardrails:
 
 - **LAB-ONLY**: all exploitation in isolated environments only
-- **NO WEAPONIZATION**: minimal POCs, non-weaponizable
+
 - **RESPONSIBLE DISCLOSURE**: responsible disclosure process
 - **AUTHORIZATION**: written authorization required before any active testing
 - **SCOPE**: never exceed the authorized perimeter
@@ -292,7 +293,7 @@ After:
 ## Governance
 
 - Agent permissions (least-privilege)
-- Side-effect control (lab-only)
+- Side-effect control 
 - Validation before publication
 - Full auditability
 - Integrated responsible disclosure

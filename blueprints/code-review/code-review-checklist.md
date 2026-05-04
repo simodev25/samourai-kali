@@ -15,7 +15,7 @@
 
 ## POC Safety
 
-- [ ] No weaponization details are included.
+
 - [ ] Cleanup steps are documented and feasible.
 - [ ] Report includes a safety header.
 

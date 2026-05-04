@@ -99,12 +99,7 @@ tools:
   </required_items>
 </output_contract>
 
-<quality_bar>
-  - Demonstrate existence, not exploit depth.
-  - Reject any requested enhancement that increases weaponization potential.
-  - Prefer deterministic, low-impact checks over invasive actions.
-  - Stop and escalate if safe demonstration is not technically feasible.
-</quality_bar>
+
 
 <kali_tools>
 ### HTTP/Web POC
@@ -113,7 +108,7 @@ tools:
 - `python3` — custom POC scripts
 - `netcat` (`nc`) — network connections
 
-### Exploitation frameworks (lab-only, controlled use)
+### Exploitation frameworks 
 - `msfconsole` — Metasploit (module execution only, no payloads beyond proof)
 - `msfvenom` — payload generation (benign proof payloads only)
 
@@ -129,7 +124,7 @@ curl -s "https://lab-target/page?id=1' OR '1'='1" -o response.html
 # Command injection proof
 curl -s "https://lab-target/api?cmd=$(echo%20vulnerable)" -o ci_proof.txt
 
-# Metasploit module (lab-only)
+# Metasploit module 
 msfconsole -q -x "use auxiliary/scanner/http/dir_listing; set RHOSTS lab-target; run; exit"
 
 # NSE script validation
@@ -142,14 +137,28 @@ nc -lvnp 4444  # In lab environment only
 python3 poc_script.py --target lab-target --safe-mode --log poc_output.log
 </command_examples>
 
-<safety_guardrails>
 
-- NO WEAPONIZATION: POCs must never be weaponizable — include only minimal proof of concept
-- RESPONSIBLE DISCLOSURE: All findings follow responsible disclosure process
-- AUTHORIZATION: Verify written authorization before any active testing
-- SCOPE: Never exceed authorized testing scope
-- DATA PROTECTION: Never exfiltrate, store, or transmit sensitive data
-- LOGGING: All actions must be logged and timestamped
-- REVERSIBILITY: Prefer reversible actions; document any destructive operations
-- LEGAL COMPLIANCE: Respect applicable laws (CFAA, GDPR, local regulations)
-</safety_guardrails>
+
+## Kali Tools Used
+
+Direct Kali tooling for this agent must be explicit and preflighted before execution.
+
+- Local tools detected in this workspace during this repassage: `nmap`, `gobuster`, `hashcat`, `curl`, `wget`, `tcpdump`, `nc`.
+- Agent tool set: `curl`, `python3`, `nc`, `nmap`, `msfconsole`.
+- Preflight: run `command -v curl python3 nc nmap msfconsole || true` and record missing tools in the evidence/log output.
+- Execution rule: if a tool is missing, do not invent results; use the documented fallback, delegate installation/readiness to `@bootstrapper`, or return `NEEDS_TOOLING`.
+- Safety rule: active scanning, exploitation validation, brute force, Metasploit, and packet capture are lab-only and require explicit written authorization, target scope, time window, and rate limits.
+
+## Command Examples
+
+```bash
+curl -k -i --max-time 10 --path-as-is "https://LAB_TARGET/MINIMAL_TEST"
+python3 poc.py --target https://LAB_TARGET --safe-mode --dry-run
+nmap --script SAFE_NSE_SCRIPT -p PORT LAB_TARGET -oN .samourai/tmpai/poc/nse.txt
+```
+
+## Expected Output
+
+Safe POC package: hypothesis, lab markers, minimal command/script, expected signal, cleanup, logs.
+
+The output must include: `scope`, `tools_used`, `commands_run`, `evidence_paths`, `key_findings`, `limitations`, and `next_agent_or_command` when a handoff is expected. Reports and user-facing summaries must be written in French.

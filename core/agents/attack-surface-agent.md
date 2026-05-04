@@ -146,13 +146,28 @@ gobuster dir -u https://example.com -w /usr/share/wordlists/dirb/common.txt -o g
 wafw00f https://example.com
 </command_examples>
 
-<safety_guardrails>
-- NO WEAPONIZATION: POCs must never be weaponizable — include only minimal proof of concept
-- RESPONSIBLE DISCLOSURE: All findings follow responsible disclosure process
-- AUTHORIZATION: Verify written authorization before any active testing
-- SCOPE: Never exceed authorized testing scope
-- DATA PROTECTION: Never exfiltrate, store, or transmit sensitive data
-- LOGGING: All actions must be logged and timestamped
-- REVERSIBILITY: Prefer reversible actions; document any destructive operations
-- LEGAL COMPLIANCE: Respect applicable laws (CFAA, GDPR, local regulations)
-</safety_guardrails>
+
+
+## Kali Tools Used
+
+Direct Kali tooling for this agent must be explicit and preflighted before execution.
+
+- Local tools detected in this workspace during this repassage: `nmap`, `gobuster`, `hashcat`, `curl`, `wget`, `tcpdump`, `nc`.
+- Agent tool set: `nmap`, `masscan`, `amass`, `subfinder`, `theHarvester`, `whatweb`, `wafw00f`, `gobuster`, `ffuf`, `nikto`, `curl`.
+- Preflight: run `command -v nmap masscan amass subfinder theHarvester whatweb wafw00f gobuster || true` and record missing tools in the evidence/log output.
+- Execution rule: if a tool is missing, do not invent results; use the documented fallback, delegate installation/readiness to `@bootstrapper`, or return `NEEDS_TOOLING`.
+- Safety rule: active scanning, exploitation validation, brute force, Metasploit, and packet capture are lab-only and require explicit written authorization, target scope, time window, and rate limits.
+
+## Command Examples
+
+```bash
+nmap -sV -sC -Pn --top-ports 1000 -oA .samourai/tmpai/recon/nmap-safe TARGET
+amass enum -passive -d DOMAIN -o .samourai/tmpai/recon/amass.txt
+gobuster dir -u https://TARGET -w /usr/share/wordlists/dirb/common.txt -t 10 -o .samourai/tmpai/recon/gobuster.txt
+```
+
+## Expected Output
+
+Attack surface map: assets, ports, services, technologies, endpoints, confidence, evidence path, and next recommended agent.
+
+The output must include: `scope`, `tools_used`, `commands_run`, `evidence_paths`, `key_findings`, `limitations`, and `next_agent_or_command` when a handoff is expected. Reports and user-facing summaries must be written in French.

@@ -197,7 +197,7 @@ version_impact: <from-spec>
 
 **Confirmation Criteria**:
 
-- Must: POC confirms finding without enabling weaponization.
+- Must: POC confirms 
 
 **Files and modules**:
 

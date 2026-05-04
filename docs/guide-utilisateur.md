@@ -18,8 +18,7 @@ Samourai Kali installs an AI-assisted work framework in a security environment:
 The kit does not replace human security expertise. It structures work,
 automates repetitive tasks, and ensures evidence traceability.
 
-**Mandatory guardrails**: LAB-ONLY, NO WEAPONIZATION, RESPONSIBLE DISCLOSURE,
-AUTHORIZATION required, SCOPE respected, DATA PROTECTION, LOGGING mandatory.
+
 
 ## Installation Model
 
@@ -104,7 +103,7 @@ Orchestration can be delegated to Mission Control:
 | `@vulnerability-analysis-agent` | In-depth technical analysis | burpsuite, zaproxy, tcpdump, strace, semgrep |
 | `@cve-intelligence-agent` | CVE research and intelligence | searchsploit, NVD API, EPSS API |
 | `@exploitability-agent` | CVSS/EPSS scoring | CVSS calculators, EPSS API |
-| `@safe-poc-agent` | Minimal, safe POC (lab-only) | curl, netcat, msfconsole, python3, nmap NSE |
+| `@safe-poc-agent` | Minimal, safe POC  | curl, netcat, msfconsole, python3, nmap NSE |
 | `@evidence-agent` | Forensic-grade evidence collection | sha256sum, tcpdump, tshark, script, scrot |
 | `@cve-report-agent` | Standards-compliant CVE report | Writing only |
 | `@remediation-agent` | Fixes and verification | nmap, nikto, nuclei, sqlmap, semgrep |
@@ -230,7 +229,7 @@ Phases:
 3. Root cause analysis
 4. CVE correlation (searchsploit)
 5. CVSS/EPSS scoring
-6. Safe POC creation (lab-only)
+6. Safe POC creation 
 7. Evidence collection (hash + timestamp)
 8. CVE report writing
 

@@ -108,3 +108,27 @@ Provide a structured response:
   - 1–3 concrete commands the parent agent could ask you to run next (e.g., rerun single test, open report path)
 
 Be concise. Prefer pointers + excerpts over full logs.
+
+## Kali Tools Used
+
+Direct Kali tooling for this agent must be explicit and preflighted before execution.
+
+- Local tools detected in this workspace during this repassage: `nmap`, `gobuster`, `hashcat`, `curl`, `wget`, `tcpdump`, `nc`.
+- Agent tool set: `nmap`, `masscan`, `amass`, `subfinder`, `theHarvester`, `whatweb`, `wafw00f`, `nikto`, `gobuster`, `dirsearch`, `ffuf`, `wfuzz`, `nuclei`, `sqlmap`, `commix`, `dalfox`, `hydra`, `sslscan`, `testssl.sh`, `tcpdump`, `tshark`, `searchsploit`, `semgrep`, `bandit`, `trufflehog`, `msfconsole`.
+- Preflight: run `command -v nmap masscan amass subfinder theHarvester whatweb wafw00f nikto || true` and record missing tools in the evidence/log output.
+- Execution rule: if a tool is missing, do not invent results; use the documented fallback, delegate installation/readiness to `@bootstrapper`, or return `NEEDS_TOOLING`.
+- Safety rule: active scanning, exploitation validation, brute force, Metasploit, and packet capture are lab-only and require explicit written authorization, target scope, time window, and rate limits.
+
+## Command Examples
+
+```bash
+command -v nmap nuclei nikto sqlmap ffuf gobuster tcpdump || true
+nmap -sV -sC -Pn --top-ports 1000 -oA .samourai/tmpai/run-logs-runner/DATE/nmap TARGET
+nuclei -u https://TARGET -severity critical,high -rate-limit 5 -jsonl -o .samourai/tmpai/run-logs-runner/DATE/nuclei.jsonl
+```
+
+## Expected Output
+
+Runner log bundle: command, exit code, duration, stdout/stderr log, metadata JSON, and concise interpretation without source edits.
+
+The output must include: `scope`, `tools_used`, `commands_run`, `evidence_paths`, `key_findings`, `limitations`, and `next_agent_or_command` when a handoff is expected. Reports and user-facing summaries must be written in French.

@@ -109,12 +109,6 @@ links:
 - Validation data generation and cleanup
 - Isolation strategy and safety controls -->
 
-## 7. POC Safety Controls
-
-<!-- Required controls before execution:
-- No-weaponization guardrails
-- Cleanup and rollback plan
-- Human approval checkpoints if needed -->
 
 ## 8. Reproducibility and Evidence Integrity Mapping
 

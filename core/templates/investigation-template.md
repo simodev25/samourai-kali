@@ -8,12 +8,7 @@
 - Target:
 - Scope:
 
-## Authorization and Safety
 
-- Authorization reference:
-- In-scope assets:
-- Out-of-scope assets:
-- Safety constraints (lab-only, no weaponization):
 
 ## Reconnaissance Summary
 
